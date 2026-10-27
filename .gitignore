@@ -29,3 +29,11 @@ video/voice/
 video/assets/*.wav
 video/out/qa-film/
 video/out/test-*.mp4
+
+# demo render scratch
+video/frames-demo/
+video/demo-stills/
+video/voice-demo/
+video/demo-static.html
+video/demo-test.html
+deck/page-*.png

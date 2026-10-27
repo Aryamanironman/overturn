@@ -10,10 +10,37 @@ Result: **84 / 100 — solid — conditional.** Supply the one missing letter an
 
 ---
 
-## Film
+## Films
 
-A **76-second marketing-pitch film**, built with the huashu-motion method: one
-paused GSAP timeline, `window.seek(t)`, the skill's fonts, and its signature.
+### Workflow demo — the submission video
+
+`video/out/overturn-demo.mp4` — **2 min 20 s**, 1920 × 1080, 30 fps,
+H.264/AAC. Built for the hackathon's 1–4 minute demo requirement: it runs the
+actual system, shows the traced loop, the real packet values, the four
+reasons, the hash-chained ledger, the counterfactuals and the sponsor stack.
+
+Scenes: title → the case → the seven Zetaris tables → the agent loop → the
+real CLI run → reasons 1–4 → the evidence ledger → counterfactuals → sponsor
+stack → the packet → close.
+
+Rebuild:
+
+```bash
+python video/make_demo_voice.py    # VoiceStudio TTS + scene timings
+python video/build_demo.py --audio # ducked bed + voice mix
+python video/render_demo.py --frames
+python video/build_demo.py --encode
+```
+
+The run shown is **SAMPLE_MODE** and labelled as such: the same control flow,
+deterministic model stubs, and a read-only SQLite mirror of the seven Zetaris
+tables. The sponsor scene describes the live wiring; it does not claim a live
+run.
+
+### 76-second pitch film
+
+A shorter marketing cut, built with the huashu-motion method: one paused GSAP
+timeline, `window.seek(t)`, the skill's fonts, and its signature.
 
 - `video/out/overturn-film.mp4` — 1920 × 1080, 30 fps, H.264/AAC, 76 s
 - `video/out/overturn-film.gif` — opening 8 s, 640 px
@@ -21,23 +48,13 @@ paused GSAP timeline, `window.seek(t)`, the skill's fonts, and its signature.
 - `out/overturn-film.mp4` — convenience copy
 - `video/share.md` — the post and the licence note
 
-Narration is **The Podcaster** (VoiceStudio / OmniVoice; young Australian
-woman, high pitch), generated locally. The 120 BPM bed ducks under the voice.
-The film shows the four reasons, the agent loop, the missing letter and the
-84 → 100 next action. The OmniVoice weights are non-commercial; see
-`THIRD_PARTY.md`.
+Narration in both films is **The Podcaster** (VoiceStudio / OmniVoice; young
+Australian woman, high pitch), generated locally. The OmniVoice weights are
+non-commercial; see `THIRD_PARTY.md`.
 
-Rebuild:
-
-```bash
-python video/make_voice.py      # VoiceStudio TTS + scene timings
-python video/make_score.py      # 120 BPM bed + voice mix
-python video/render_film.py --frames
-# encode with FFmpeg (see video/share.md)
-```
-
-The film is a pitch, not the required 1–4 minute workflow demo; the demo still
-needs a screen recording of the live system.
+The slide deck for the submission is `deck/OVERTURN-deck.pdf` (15 pages,
+16:9). The sponsor-technology answer is `SPONSOR_TECH.md`; the paste-ready
+version is `SUBMISSION_COPY.md`.
 
 ---
 
@@ -151,9 +168,10 @@ Removing the EOB leaves the code/record argument intact, so the score does not m
 | **Zetaris** | The only data path. Policy clauses, denial reasons, clinical records, EOB, procedure codes, document checklist and ICD-10 descriptions are registered as tables/views; `run_sql` is the single data tool. `scripts/register_zetaris_sources.sql` has the registration, semantic view and smoke queries. |
 | **Meterless World Model** | Holds the shared case: evidence lines, denial reasons, missing documents and the packet. The Reconciler writes; the Critic reads; `tests/test_meterless_adapters.py` exercises the adapter. |
 | **Meterless H-MEM** | Remembers the claimant's appeal pattern and the insurer's denial pattern. Run two recalls run one (`tests/test_hmem.py`). |
-| **Meterless Scout Intent** | The deterministic router selects denial appeal, billing error or prior auth before any agent runs. |
 | **Meterless Nightshift** | The primary AI provider. `llm.py` implements the OpenAI-compatible contract with `meterless-app` and `meterless-scope` headers, `/v1/models` discovery and served-model logging. |
-| **NVIDIA Nemotron** | The Critic and Advocate share the pinned Nemotron lane. The Advocate's strongest move — the live ICD-10 re-check — is a Nemotron-class reasoning task, not a generic chat call. The trace shows the served model. |
+| **NVIDIA Nemotron** | The Critic and Advocate share the pinned Nemotron lane. The Advocate's strongest move — re-checking a code/diagnosis mismatch against the ICD-10 table — is a Nemotron-class reasoning task, not a generic chat call. The trace shows the served model. |
+
+The two Meterless engines integrated here are **H-MEM** and the **World Model**. The router in `overturn/router.py` is deterministic local Python, not a Meterless Scout Intent adapter, and is not claimed as one. See `SPONSOR_TECH.md` for the exact code paths, tests and the verified/live split.
 
 The live contract tests use local HTTP doubles so they run with no credentials:
 
@@ -237,7 +255,19 @@ data/
 tests/              36 tests
 input_examples/     ava_request.json
 output_examples/    a committed sample run
+video/
+  demo.html         the workflow-demo film (seek-driven GSAP)
+  demo.json         scene timings + narration
+  make_demo_voice.py / build_demo.py / render_demo.py
+  out/overturn-demo.mp4   the 2 min 20 s submission demo
+  out/overturn-film.mp4   the 76 s pitch film
+deck/
+  index.html        the 15-slide submission deck
+  OVERTURN-deck.pdf the exported deck
 APPEAL_SCORE.md     the deterministic score and counterfactual rules
+SPONSOR_TECH.md     required sponsor-technology explanation
+SUBMISSION_COPY.md  paste-ready version of the sponsor answer
+SUBMISSION.md       HackOS submission sheet and declarations
 ```
 
 ---
@@ -253,5 +283,6 @@ APPEAL_SCORE.md     the deterministic score and counterfactual rules
 - [x] Meterless World Model + H-MEM feature tests.
 - [x] No secrets; `.env.example` placeholders only.
 - [ ] Live Zetaris + Nightshift run (pending the platform bundle and credentials).
-- [ ] 1–4 minute demo video, slide deck and public GitHub repository.
-- [ ] The missing specialist letter is supplied for a 100/ready packet (the product tells the human exactly what to send).
+- [x] 1–4 minute demo video (`video/out/overturn-demo.mp4`) and 15-page deck (`deck/OVERTURN-deck.pdf`).
+- [ ] Public GitHub repository (push pending; the local repo is committed).
+- [ ] The missing specialist letter is supplied for a 100/ready packet. This is deliberately left as an action for the human: the product's point is that it will not invent it.
