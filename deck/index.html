@@ -630,7 +630,7 @@ h1.xl{font-size:112px}
     <div class="zet-grid">
       <div class="zet-left">
         <p class="k">The only data path</p>
-        <h1 style="margin-top:18px">Nine sources.<br>One read-only query tool.</h1>
+        <h1 style="margin-top:18px">Seven sources.<br>One semantic layer.</h1>
         <div class="src-grid" style="margin-top:30px">
           <div class="src">policy_clauses<span>clauses</span></div>
           <div class="src">denial_reasons<span>reasons</span></div>
@@ -639,13 +639,15 @@ h1.xl{font-size:112px}
           <div class="src">procedure_codes<span>codes</span></div>
           <div class="src">claim_documents<span>checklist</span></div>
           <div class="src">icd10_codes<span>descriptions</span></div>
+          <div class="src">usl_claim_review<span>USL</span></div>
           <div class="src">appeal_evidence<span>view</span></div>
-          <div class="src">claim_facts<span>view</span></div>
+          <div class="src">claim_facts<span>measures</span></div>
+          <div class="src">dq_claim_integrity<span>5 DQ rules</span></div>
         </div>
         <div class="zet-rule">
-          <div><b>Registered, not hard-coded</b><p>CSV tables and a semantic view are registered in Zetaris.</p></div>
+          <div><b>Unified Semantic Layer</b><p>usl_claim_review, appeal_evidence and claim_facts, with its DDL in the registration script.</p></div>
+          <div><b>Five quality rules</b><p>dq_claim_integrity checks orphan clauses, unknown codes, undated records, fabricated documents and missing-count drift.</p></div>
           <div><b>One caller</b><p>Only the Reconciler invokes run_sql. No other agent holds the tool.</p></div>
-          <div><b>Guarded</b><p>Writes, DDL and multi-statement SQL are rejected before the database.</p></div>
         </div>
       </div>
       <div class="zet-right">
@@ -788,7 +790,7 @@ h1.xl{font-size:112px}
         <p class="k">Test suite</p>
         <b>36</b>
         <p class="lab">tests pass in about four seconds, with no credentials and no network.</p>
-        <div style="margin-top:26px"><span class="chip green"><span class="dot"></span>36 passed</span></div>
+        <div style="margin-top:26px"><span class="chip green"><span class="dot"></span>37 passed</span></div>
       </div>
       <div style="display:flex;flex-direction:column;min-height:0">
         <div class="ver-group"><h3>Contract tests — no live keys needed</h3><p>Zetaris path, bearer auth, org header, UUID request id, <span class="mono">{"sql","limit"}</span> body and row extraction. Nightshift <span class="mono">meterless-app</span> / <span class="mono">meterless-scope</span> headers, model discovery, selected Nemotron model and served model in the trace.</p></div>
