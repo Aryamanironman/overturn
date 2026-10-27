@@ -1,0 +1,1910 @@
+{
+ "source": "recording:narration.wav",
+ "precision": "silence",
+ "offset": 0,
+ "duration": 140.123,
+ "sentences": [
+  {
+   "text": "This is OVERTURN.",
+   "start": 0.8,
+   "end": 2.311
+  },
+  {
+   "text": "It answers a health-insurance denial with evidence.",
+   "start": 2.311,
+   "end": 5.485
+  },
+  {
+   "text": "This is the system running.",
+   "start": 5.485,
+   "end": 7.564
+  },
+  {
+   "text": "Ava is thirty-four.",
+   "start": 7.564,
+   "end": 8.656
+  },
+  {
+   "text": "Northbridge Health denied her lumbar MRI.",
+   "start": 8.656,
+   "end": 10.475
+  },
+  {
+   "text": "Four reasons.",
+   "start": 10.475,
+   "end": 11.021
+  },
+  {
+   "text": "Three are contradicted by the file.",
+   "start": 11.021,
+   "end": 15.669
+  },
+  {
+   "text": "Every fact comes through one door: Zetaris.",
+   "start": 15.669,
+   "end": 18.034
+  },
+  {
+   "text": "Seven tables: policy, denial, medical record, benefits, procedure codes, claim documents and diagnosis codes.",
+   "start": 18.034,
+   "end": 26.317
+  },
+  {
+   "text": "A planner queries.",
+   "start": 26.317,
+   "end": 27.227
+  },
+  {
+   "text": "A reconciler builds the ledger.",
+   "start": 27.227,
+   "end": 28.864
+  },
+  {
+   "text": "A critic attacks it.",
+   "start": 28.864,
+   "end": 29.956
+  },
+  {
+   "text": "An advocate argues the insurer's side.",
+   "start": 29.956,
+   "end": 32.503
+  },
+  {
+   "text": "Either can force a re-query.",
+   "start": 32.503,
+   "end": 34.14
+  },
+  {
+   "text": "A deterministic scorer grades it, and a reporter writes the packet.",
+   "start": 34.14,
+   "end": 39.169
+  },
+  {
+   "text": "One command runs the loop.",
+   "start": 39.169,
+   "end": 40.443
+  },
+  {
+   "text": "This run is sample mode: same control flow, deterministic stubs, SQLite mirror.",
+   "start": 40.443,
+   "end": 44.446
+  },
+  {
+   "text": "Every step is traced.",
+   "start": 44.446,
+   "end": 48.585
+  },
+  {
+   "text": "Reason one: they call the MRI experimental.",
+   "start": 48.585,
+   "end": 51.44
+  },
+  {
+   "text": "The clause they cite excludes spinal fusion, not diagnostic imaging.",
+   "start": 51.44,
+   "end": 55.31
+  },
+  {
+   "text": "The clause that applies covers this scan.",
+   "start": 55.31,
+   "end": 58.656
+  },
+  {
+   "text": "Rebutted.",
+   "start": 58.656,
+   "end": 59.433
+  },
+  {
+   "text": "Reason two: they cite the contrast study, which needs prior authorisation.",
+   "start": 59.433,
+   "end": 63.323
+  },
+  {
+   "text": "The order and the record use the non-contrast code.",
+   "start": 63.323,
+   "end": 66.322
+  },
+  {
+   "text": "Code mismatch.",
+   "start": 66.322,
+   "end": 68.966
+  },
+  {
+   "text": "Rebutted.",
+   "start": 68.966,
+   "end": 69.512
+  },
+  {
+   "text": "Reason three: no conservative treatment documented.",
+   "start": 69.512,
+   "end": 72.241
+  },
+  {
+   "text": "The record shows twelve physiotherapy sessions over twelve weeks.",
+   "start": 72.241,
+   "end": 75.799
+  },
+  {
+   "text": "The policy asks for six.",
+   "start": 75.799,
+   "end": 77.073
+  },
+  {
+   "text": "Rebutted.",
+   "start": 77.073,
+   "end": 78.626
+  },
+  {
+   "text": "Reason four: a specialist letter is missing.",
+   "start": 78.626,
+   "end": 80.809
+  },
+  {
+   "text": "It is genuinely missing.",
+   "start": 80.809,
+   "end": 82.264
+  },
+  {
+   "text": "OVERTURN names the exact document and refuses to invent it.",
+   "start": 82.264,
+   "end": 85.907
+  },
+  {
+   "text": "The appeal is conditional, not perfect.",
+   "start": 85.907,
+   "end": 87.909
+  },
+  {
+   "text": "Forty-seven evidence lines.",
+   "start": 87.909,
+   "end": 90.782
+  },
+  {
+   "text": "Each carries its source row, its status, and a SHA-256 hash chained to the line before it.",
+   "start": 90.782,
+   "end": 95.695
+  },
+  {
+   "text": "Change one row and the chain breaks.",
+   "start": 95.695,
+   "end": 97.663
+  },
+  {
+   "text": "Remove a source and the score tells you what it was worth.",
+   "start": 97.663,
+   "end": 101.512
+  },
+  {
+   "text": "Pull the policy, the record, or the codes, and eighty-four drops to sixty-five.",
+   "start": 101.512,
+   "end": 106.097
+  },
+  {
+   "text": "Zetaris is the only data path: one tool, run SQL.",
+   "start": 106.097,
+   "end": 110.787
+  },
+  {
+   "text": "Meterless H-MEM remembers the case across runs.",
+   "start": 110.787,
+   "end": 113.334
+  },
+  {
+   "text": "The World Model is the shared ledger.",
+   "start": 113.334,
+   "end": 115.154
+  },
+  {
+   "text": "Nightshift is the primary model provider, with critic and advocate pinned to NVIDIA Nemotron.",
+   "start": 115.154,
+   "end": 120.248
+  },
+  {
+   "text": "The output is one document a human can send: cover letter, four cited rebuttals, evidence map, and one action left — get the letter.",
+   "start": 120.248,
+   "end": 131.685
+  },
+  {
+   "text": "Eighty-four.",
+   "start": 131.685,
+   "end": 132.231
+  },
+  {
+   "text": "Solid.",
+   "start": 132.231,
+   "end": 132.594
+  },
+  {
+   "text": "Conditional.",
+   "start": 132.594,
+   "end": 133.697
+  },
+  {
+   "text": "Supply the letter, and it becomes one hundred.",
+   "start": 133.697,
+   "end": 136.244
+  },
+  {
+   "text": "The denial, answered.",
+   "start": 136.244,
+   "end": 137.336
+  }
+ ],
+ "words": [
+  {
+   "word": "This",
+   "start": 0.8,
+   "end": 1.359
+  },
+  {
+   "word": "is",
+   "start": 1.359,
+   "end": 1.541
+  },
+  {
+   "word": "OVERTURN",
+   "start": 1.541,
+   "end": 2.311
+  },
+  {
+   "word": "It",
+   "start": 2.311,
+   "end": 2.493
+  },
+  {
+   "word": "answers",
+   "start": 2.493,
+   "end": 2.857
+  },
+  {
+   "word": "a",
+   "start": 2.857,
+   "end": 3.038
+  },
+  {
+   "word": "health-insurance",
+   "start": 3.038,
+   "end": 3.948
+  },
+  {
+   "word": "denial",
+   "start": 3.948,
+   "end": 4.312
+  },
+  {
+   "word": "with",
+   "start": 4.312,
+   "end": 4.494
+  },
+  {
+   "word": "evidence",
+   "start": 4.494,
+   "end": 5.485
+  },
+  {
+   "word": "This",
+   "start": 5.485,
+   "end": 5.667
+  },
+  {
+   "word": "is",
+   "start": 5.667,
+   "end": 5.849
+  },
+  {
+   "word": "the",
+   "start": 5.849,
+   "end": 6.031
+  },
+  {
+   "word": "system",
+   "start": 6.031,
+   "end": 7.2
+  },
+  {
+   "word": "running",
+   "start": 7.2,
+   "end": 7.564
+  },
+  {
+   "word": "Ava",
+   "start": 7.564,
+   "end": 7.928
+  },
+  {
+   "word": "is",
+   "start": 7.928,
+   "end": 8.11
+  },
+  {
+   "word": "thirty-four",
+   "start": 8.11,
+   "end": 8.656
+  },
+  {
+   "word": "Northbridge",
+   "start": 8.656,
+   "end": 9.202
+  },
+  {
+   "word": "Health",
+   "start": 9.202,
+   "end": 9.384
+  },
+  {
+   "word": "denied",
+   "start": 9.384,
+   "end": 9.748
+  },
+  {
+   "word": "her",
+   "start": 9.748,
+   "end": 9.93
+  },
+  {
+   "word": "lumbar",
+   "start": 9.93,
+   "end": 10.294
+  },
+  {
+   "word": "MRI",
+   "start": 10.294,
+   "end": 10.475
+  },
+  {
+   "word": "Four",
+   "start": 10.475,
+   "end": 10.657
+  },
+  {
+   "word": "reasons",
+   "start": 10.657,
+   "end": 11.021
+  },
+  {
+   "word": "Three",
+   "start": 11.021,
+   "end": 11.203
+  },
+  {
+   "word": "are",
+   "start": 11.203,
+   "end": 11.567
+  },
+  {
+   "word": "contradicted",
+   "start": 11.567,
+   "end": 12.295
+  },
+  {
+   "word": "by",
+   "start": 12.295,
+   "end": 12.477
+  },
+  {
+   "word": "the",
+   "start": 12.477,
+   "end": 12.659
+  },
+  {
+   "word": "file",
+   "start": 12.659,
+   "end": 15.669
+  },
+  {
+   "word": "Every",
+   "start": 15.669,
+   "end": 16.21
+  },
+  {
+   "word": "fact",
+   "start": 16.21,
+   "end": 16.391
+  },
+  {
+   "word": "comes",
+   "start": 16.391,
+   "end": 16.752
+  },
+  {
+   "word": "through",
+   "start": 16.752,
+   "end": 16.933
+  },
+  {
+   "word": "one",
+   "start": 16.933,
+   "end": 17.294
+  },
+  {
+   "word": "door",
+   "start": 17.294,
+   "end": 17.474
+  },
+  {
+   "word": "Zetaris",
+   "start": 17.492,
+   "end": 18.034
+  },
+  {
+   "word": "Seven",
+   "start": 18.034,
+   "end": 18.399
+  },
+  {
+   "word": "tables",
+   "start": 18.399,
+   "end": 18.764
+  },
+  {
+   "word": "policy",
+   "start": 18.764,
+   "end": 19.317
+  },
+  {
+   "word": "denial",
+   "start": 19.317,
+   "end": 19.691
+  },
+  {
+   "word": "medical",
+   "start": 19.691,
+   "end": 20.236
+  },
+  {
+   "word": "record",
+   "start": 20.236,
+   "end": 20.599
+  },
+  {
+   "word": "benefits",
+   "start": 20.599,
+   "end": 21.152
+  },
+  {
+   "word": "procedure",
+   "start": 21.152,
+   "end": 21.876
+  },
+  {
+   "word": "codes",
+   "start": 21.876,
+   "end": 22.239
+  },
+  {
+   "word": "claim",
+   "start": 22.239,
+   "end": 22.418
+  },
+  {
+   "word": "documents",
+   "start": 22.418,
+   "end": 22.958
+  },
+  {
+   "word": "and",
+   "start": 22.958,
+   "end": 23.138
+  },
+  {
+   "word": "diagnosis",
+   "start": 23.138,
+   "end": 25.957
+  },
+  {
+   "word": "codes",
+   "start": 25.957,
+   "end": 26.317
+  },
+  {
+   "word": "A",
+   "start": 26.317,
+   "end": 26.499
+  },
+  {
+   "word": "planner",
+   "start": 26.499,
+   "end": 26.863
+  },
+  {
+   "word": "queries",
+   "start": 26.863,
+   "end": 27.227
+  },
+  {
+   "word": "A",
+   "start": 27.227,
+   "end": 27.409
+  },
+  {
+   "word": "reconciler",
+   "start": 27.409,
+   "end": 28.136
+  },
+  {
+   "word": "builds",
+   "start": 28.136,
+   "end": 28.318
+  },
+  {
+   "word": "the",
+   "start": 28.318,
+   "end": 28.5
+  },
+  {
+   "word": "ledger",
+   "start": 28.5,
+   "end": 28.864
+  },
+  {
+   "word": "A",
+   "start": 28.864,
+   "end": 29.046
+  },
+  {
+   "word": "critic",
+   "start": 29.046,
+   "end": 29.41
+  },
+  {
+   "word": "attacks",
+   "start": 29.41,
+   "end": 29.774
+  },
+  {
+   "word": "it",
+   "start": 29.774,
+   "end": 29.956
+  },
+  {
+   "word": "An",
+   "start": 29.956,
+   "end": 30.138
+  },
+  {
+   "word": "advocate",
+   "start": 30.138,
+   "end": 30.866
+  },
+  {
+   "word": "argues",
+   "start": 30.866,
+   "end": 31.229
+  },
+  {
+   "word": "the",
+   "start": 31.229,
+   "end": 31.411
+  },
+  {
+   "word": "insurer's",
+   "start": 31.411,
+   "end": 32.139
+  },
+  {
+   "word": "side",
+   "start": 32.139,
+   "end": 32.503
+  },
+  {
+   "word": "Either",
+   "start": 32.503,
+   "end": 32.867
+  },
+  {
+   "word": "can",
+   "start": 32.867,
+   "end": 33.049
+  },
+  {
+   "word": "force",
+   "start": 33.049,
+   "end": 33.413
+  },
+  {
+   "word": "a",
+   "start": 33.413,
+   "end": 33.595
+  },
+  {
+   "word": "re-query",
+   "start": 33.595,
+   "end": 34.14
+  },
+  {
+   "word": "A",
+   "start": 34.14,
+   "end": 34.405
+  },
+  {
+   "word": "deterministic",
+   "start": 34.405,
+   "end": 35.73
+  },
+  {
+   "word": "scorer",
+   "start": 35.73,
+   "end": 36.259
+  },
+  {
+   "word": "grades",
+   "start": 36.259,
+   "end": 36.789
+  },
+  {
+   "word": "it",
+   "start": 36.789,
+   "end": 37.054
+  },
+  {
+   "word": "and",
+   "start": 38.262,
+   "end": 38.353
+  },
+  {
+   "word": "a",
+   "start": 38.353,
+   "end": 38.443
+  },
+  {
+   "word": "reporter",
+   "start": 38.443,
+   "end": 38.716
+  },
+  {
+   "word": "writes",
+   "start": 38.716,
+   "end": 38.897
+  },
+  {
+   "word": "the",
+   "start": 38.897,
+   "end": 38.988
+  },
+  {
+   "word": "packet",
+   "start": 38.988,
+   "end": 39.169
+  },
+  {
+   "word": "One",
+   "start": 39.169,
+   "end": 39.533
+  },
+  {
+   "word": "command",
+   "start": 39.533,
+   "end": 39.897
+  },
+  {
+   "word": "runs",
+   "start": 39.897,
+   "end": 40.079
+  },
+  {
+   "word": "the",
+   "start": 40.079,
+   "end": 40.261
+  },
+  {
+   "word": "loop",
+   "start": 40.261,
+   "end": 40.443
+  },
+  {
+   "word": "This",
+   "start": 40.443,
+   "end": 40.622
+  },
+  {
+   "word": "run",
+   "start": 40.622,
+   "end": 40.802
+  },
+  {
+   "word": "is",
+   "start": 40.802,
+   "end": 40.981
+  },
+  {
+   "word": "sample",
+   "start": 40.981,
+   "end": 41.34
+  },
+  {
+   "word": "mode",
+   "start": 41.34,
+   "end": 41.699
+  },
+  {
+   "word": "same",
+   "start": 41.717,
+   "end": 42.076
+  },
+  {
+   "word": "control",
+   "start": 42.076,
+   "end": 42.435
+  },
+  {
+   "word": "flow",
+   "start": 42.435,
+   "end": 42.615
+  },
+  {
+   "word": "deterministic",
+   "start": 42.633,
+   "end": 43.53
+  },
+  {
+   "word": "stubs",
+   "start": 43.53,
+   "end": 43.71
+  },
+  {
+   "word": "SQLite",
+   "start": 43.728,
+   "end": 44.087
+  },
+  {
+   "word": "mirror",
+   "start": 44.087,
+   "end": 44.446
+  },
+  {
+   "word": "Every",
+   "start": 44.446,
+   "end": 44.991
+  },
+  {
+   "word": "step",
+   "start": 44.991,
+   "end": 45.173
+  },
+  {
+   "word": "is",
+   "start": 45.173,
+   "end": 45.355
+  },
+  {
+   "word": "traced",
+   "start": 45.355,
+   "end": 48.585
+  },
+  {
+   "word": "Reason",
+   "start": 48.585,
+   "end": 49.695
+  },
+  {
+   "word": "one",
+   "start": 49.695,
+   "end": 50.805
+  },
+  {
+   "word": "they",
+   "start": 51.295,
+   "end": 51.311
+  },
+  {
+   "word": "call",
+   "start": 51.311,
+   "end": 51.327
+  },
+  {
+   "word": "the",
+   "start": 51.327,
+   "end": 51.343
+  },
+  {
+   "word": "MRI",
+   "start": 51.343,
+   "end": 51.36
+  },
+  {
+   "word": "experimental",
+   "start": 51.36,
+   "end": 51.44
+  },
+  {
+   "word": "The",
+   "start": 51.44,
+   "end": 51.679
+  },
+  {
+   "word": "clause",
+   "start": 51.679,
+   "end": 52.157
+  },
+  {
+   "word": "they",
+   "start": 52.157,
+   "end": 52.396
+  },
+  {
+   "word": "cite",
+   "start": 52.396,
+   "end": 52.874
+  },
+  {
+   "word": "excludes",
+   "start": 52.874,
+   "end": 53.59
+  },
+  {
+   "word": "spinal",
+   "start": 53.59,
+   "end": 54.068
+  },
+  {
+   "word": "fusion",
+   "start": 54.068,
+   "end": 54.546
+  },
+  {
+   "word": "not",
+   "start": 54.777,
+   "end": 54.853
+  },
+  {
+   "word": "diagnostic",
+   "start": 54.853,
+   "end": 55.082
+  },
+  {
+   "word": "imaging",
+   "start": 55.082,
+   "end": 55.31
+  },
+  {
+   "word": "The",
+   "start": 55.31,
+   "end": 55.492
+  },
+  {
+   "word": "clause",
+   "start": 55.492,
+   "end": 55.856
+  },
+  {
+   "word": "that",
+   "start": 55.856,
+   "end": 56.038
+  },
+  {
+   "word": "applies",
+   "start": 56.038,
+   "end": 56.402
+  },
+  {
+   "word": "covers",
+   "start": 56.402,
+   "end": 57.12
+  },
+  {
+   "word": "this",
+   "start": 57.12,
+   "end": 57.302
+  },
+  {
+   "word": "scan",
+   "start": 57.302,
+   "end": 58.656
+  },
+  {
+   "word": "Rebutted",
+   "start": 58.656,
+   "end": 59.433
+  },
+  {
+   "word": "Reason",
+   "start": 59.433,
+   "end": 59.804
+  },
+  {
+   "word": "two",
+   "start": 59.804,
+   "end": 59.989
+  },
+  {
+   "word": "they",
+   "start": 59.989,
+   "end": 60.17
+  },
+  {
+   "word": "cite",
+   "start": 60.17,
+   "end": 60.533
+  },
+  {
+   "word": "the",
+   "start": 60.533,
+   "end": 60.714
+  },
+  {
+   "word": "contrast",
+   "start": 60.714,
+   "end": 61.077
+  },
+  {
+   "word": "study",
+   "start": 61.077,
+   "end": 61.44
+  },
+  {
+   "word": "which",
+   "start": 61.44,
+   "end": 61.621
+  },
+  {
+   "word": "needs",
+   "start": 61.621,
+   "end": 61.802
+  },
+  {
+   "word": "prior",
+   "start": 61.802,
+   "end": 61.984
+  },
+  {
+   "word": "authorisation",
+   "start": 61.984,
+   "end": 63.323
+  },
+  {
+   "word": "The",
+   "start": 63.323,
+   "end": 63.505
+  },
+  {
+   "word": "order",
+   "start": 63.505,
+   "end": 63.869
+  },
+  {
+   "word": "and",
+   "start": 63.869,
+   "end": 64.051
+  },
+  {
+   "word": "the",
+   "start": 64.051,
+   "end": 64.233
+  },
+  {
+   "word": "record",
+   "start": 64.233,
+   "end": 64.597
+  },
+  {
+   "word": "use",
+   "start": 64.597,
+   "end": 64.961
+  },
+  {
+   "word": "the",
+   "start": 64.961,
+   "end": 65.143
+  },
+  {
+   "word": "non-contrast",
+   "start": 65.143,
+   "end": 65.958
+  },
+  {
+   "word": "code",
+   "start": 65.958,
+   "end": 66.322
+  },
+  {
+   "word": "Code",
+   "start": 66.322,
+   "end": 66.685
+  },
+  {
+   "word": "mismatch",
+   "start": 66.685,
+   "end": 68.966
+  },
+  {
+   "word": "Rebutted",
+   "start": 68.966,
+   "end": 69.512
+  },
+  {
+   "word": "Reason",
+   "start": 69.512,
+   "end": 69.874
+  },
+  {
+   "word": "three",
+   "start": 69.874,
+   "end": 70.054
+  },
+  {
+   "word": "no",
+   "start": 70.072,
+   "end": 70.253
+  },
+  {
+   "word": "conservative",
+   "start": 70.253,
+   "end": 71.157
+  },
+  {
+   "word": "treatment",
+   "start": 71.157,
+   "end": 71.518
+  },
+  {
+   "word": "documented",
+   "start": 71.518,
+   "end": 72.241
+  },
+  {
+   "word": "The",
+   "start": 72.241,
+   "end": 72.423
+  },
+  {
+   "word": "record",
+   "start": 72.423,
+   "end": 72.787
+  },
+  {
+   "word": "shows",
+   "start": 72.787,
+   "end": 72.969
+  },
+  {
+   "word": "twelve",
+   "start": 72.969,
+   "end": 73.333
+  },
+  {
+   "word": "physiotherapy",
+   "start": 73.333,
+   "end": 74.243
+  },
+  {
+   "word": "sessions",
+   "start": 74.243,
+   "end": 74.606
+  },
+  {
+   "word": "over",
+   "start": 74.606,
+   "end": 75.253
+  },
+  {
+   "word": "twelve",
+   "start": 75.253,
+   "end": 75.617
+  },
+  {
+   "word": "weeks",
+   "start": 75.617,
+   "end": 75.799
+  },
+  {
+   "word": "The",
+   "start": 75.799,
+   "end": 75.981
+  },
+  {
+   "word": "policy",
+   "start": 75.981,
+   "end": 76.527
+  },
+  {
+   "word": "asks",
+   "start": 76.527,
+   "end": 76.709
+  },
+  {
+   "word": "for",
+   "start": 76.709,
+   "end": 76.891
+  },
+  {
+   "word": "six",
+   "start": 76.891,
+   "end": 77.073
+  },
+  {
+   "word": "Rebutted",
+   "start": 77.073,
+   "end": 78.626
+  },
+  {
+   "word": "Reason",
+   "start": 78.626,
+   "end": 78.986
+  },
+  {
+   "word": "four",
+   "start": 78.986,
+   "end": 79.167
+  },
+  {
+   "word": "a",
+   "start": 79.185,
+   "end": 79.365
+  },
+  {
+   "word": "specialist",
+   "start": 79.365,
+   "end": 79.907
+  },
+  {
+   "word": "letter",
+   "start": 79.907,
+   "end": 80.268
+  },
+  {
+   "word": "is",
+   "start": 80.268,
+   "end": 80.448
+  },
+  {
+   "word": "missing",
+   "start": 80.448,
+   "end": 80.809
+  },
+  {
+   "word": "It",
+   "start": 80.809,
+   "end": 80.991
+  },
+  {
+   "word": "is",
+   "start": 80.991,
+   "end": 81.173
+  },
+  {
+   "word": "genuinely",
+   "start": 81.173,
+   "end": 81.901
+  },
+  {
+   "word": "missing",
+   "start": 81.901,
+   "end": 82.264
+  },
+  {
+   "word": "OVERTURN",
+   "start": 82.264,
+   "end": 82.81
+  },
+  {
+   "word": "names",
+   "start": 82.81,
+   "end": 83.174
+  },
+  {
+   "word": "the",
+   "start": 83.174,
+   "end": 83.356
+  },
+  {
+   "word": "exact",
+   "start": 83.356,
+   "end": 83.72
+  },
+  {
+   "word": "document",
+   "start": 83.72,
+   "end": 84.452
+  },
+  {
+   "word": "and",
+   "start": 84.452,
+   "end": 84.634
+  },
+  {
+   "word": "refuses",
+   "start": 84.634,
+   "end": 85.18
+  },
+  {
+   "word": "to",
+   "start": 85.18,
+   "end": 85.362
+  },
+  {
+   "word": "invent",
+   "start": 85.362,
+   "end": 85.725
+  },
+  {
+   "word": "it",
+   "start": 85.725,
+   "end": 85.907
+  },
+  {
+   "word": "The",
+   "start": 85.907,
+   "end": 86.088
+  },
+  {
+   "word": "appeal",
+   "start": 86.088,
+   "end": 86.448
+  },
+  {
+   "word": "is",
+   "start": 86.448,
+   "end": 86.629
+  },
+  {
+   "word": "conditional",
+   "start": 86.629,
+   "end": 87.35
+  },
+  {
+   "word": "not",
+   "start": 87.368,
+   "end": 87.548
+  },
+  {
+   "word": "perfect",
+   "start": 87.548,
+   "end": 87.909
+  },
+  {
+   "word": "Forty-seven",
+   "start": 87.909,
+   "end": 89.69
+  },
+  {
+   "word": "evidence",
+   "start": 89.69,
+   "end": 90.418
+  },
+  {
+   "word": "lines",
+   "start": 90.418,
+   "end": 90.782
+  },
+  {
+   "word": "Each",
+   "start": 90.782,
+   "end": 90.963
+  },
+  {
+   "word": "carries",
+   "start": 90.963,
+   "end": 91.324
+  },
+  {
+   "word": "its",
+   "start": 91.324,
+   "end": 91.505
+  },
+  {
+   "word": "source",
+   "start": 91.505,
+   "end": 91.866
+  },
+  {
+   "word": "row",
+   "start": 91.866,
+   "end": 92.046
+  },
+  {
+   "word": "its",
+   "start": 92.064,
+   "end": 92.245
+  },
+  {
+   "word": "status",
+   "start": 92.245,
+   "end": 92.606
+  },
+  {
+   "word": "and",
+   "start": 92.624,
+   "end": 92.805
+  },
+  {
+   "word": "a",
+   "start": 92.805,
+   "end": 92.986
+  },
+  {
+   "word": "SHA-256",
+   "start": 92.986,
+   "end": 93.708
+  },
+  {
+   "word": "hash",
+   "start": 93.708,
+   "end": 93.889
+  },
+  {
+   "word": "chained",
+   "start": 93.889,
+   "end": 94.25
+  },
+  {
+   "word": "to",
+   "start": 94.25,
+   "end": 94.43
+  },
+  {
+   "word": "the",
+   "start": 94.43,
+   "end": 94.611
+  },
+  {
+   "word": "line",
+   "start": 94.611,
+   "end": 94.972
+  },
+  {
+   "word": "before",
+   "start": 94.972,
+   "end": 95.514
+  },
+  {
+   "word": "it",
+   "start": 95.514,
+   "end": 95.695
+  },
+  {
+   "word": "Change",
+   "start": 95.695,
+   "end": 96.389
+  },
+  {
+   "word": "one",
+   "start": 96.389,
+   "end": 96.753
+  },
+  {
+   "word": "row",
+   "start": 96.753,
+   "end": 96.935
+  },
+  {
+   "word": "and",
+   "start": 96.935,
+   "end": 97.117
+  },
+  {
+   "word": "the",
+   "start": 97.117,
+   "end": 97.299
+  },
+  {
+   "word": "chain",
+   "start": 97.299,
+   "end": 97.481
+  },
+  {
+   "word": "breaks",
+   "start": 97.481,
+   "end": 97.663
+  },
+  {
+   "word": "Remove",
+   "start": 97.663,
+   "end": 99.147
+  },
+  {
+   "word": "a",
+   "start": 99.147,
+   "end": 99.329
+  },
+  {
+   "word": "source",
+   "start": 99.329,
+   "end": 99.693
+  },
+  {
+   "word": "and",
+   "start": 99.693,
+   "end": 99.875
+  },
+  {
+   "word": "the",
+   "start": 99.875,
+   "end": 100.057
+  },
+  {
+   "word": "score",
+   "start": 100.057,
+   "end": 100.42
+  },
+  {
+   "word": "tells",
+   "start": 100.42,
+   "end": 100.602
+  },
+  {
+   "word": "you",
+   "start": 100.602,
+   "end": 100.784
+  },
+  {
+   "word": "what",
+   "start": 100.784,
+   "end": 100.966
+  },
+  {
+   "word": "it",
+   "start": 100.966,
+   "end": 101.148
+  },
+  {
+   "word": "was",
+   "start": 101.148,
+   "end": 101.33
+  },
+  {
+   "word": "worth",
+   "start": 101.33,
+   "end": 101.512
+  },
+  {
+   "word": "Pull",
+   "start": 101.512,
+   "end": 102.276
+  },
+  {
+   "word": "the",
+   "start": 102.276,
+   "end": 102.459
+  },
+  {
+   "word": "policy",
+   "start": 102.459,
+   "end": 103.005
+  },
+  {
+   "word": "the",
+   "start": 103.005,
+   "end": 103.19
+  },
+  {
+   "word": "record",
+   "start": 103.19,
+   "end": 103.559
+  },
+  {
+   "word": "or",
+   "start": 103.559,
+   "end": 103.743
+  },
+  {
+   "word": "the",
+   "start": 103.743,
+   "end": 103.926
+  },
+  {
+   "word": "codes",
+   "start": 103.926,
+   "end": 104.292
+  },
+  {
+   "word": "and",
+   "start": 104.292,
+   "end": 104.473
+  },
+  {
+   "word": "eighty-four",
+   "start": 104.473,
+   "end": 105.014
+  },
+  {
+   "word": "drops",
+   "start": 105.014,
+   "end": 105.194
+  },
+  {
+   "word": "to",
+   "start": 105.194,
+   "end": 105.375
+  },
+  {
+   "word": "sixty-five",
+   "start": 105.375,
+   "end": 106.097
+  },
+  {
+   "word": "Zetaris",
+   "start": 106.097,
+   "end": 108.598
+  },
+  {
+   "word": "is",
+   "start": 108.598,
+   "end": 108.778
+  },
+  {
+   "word": "the",
+   "start": 108.778,
+   "end": 108.959
+  },
+  {
+   "word": "only",
+   "start": 108.959,
+   "end": 109.319
+  },
+  {
+   "word": "data",
+   "start": 109.319,
+   "end": 109.679
+  },
+  {
+   "word": "path",
+   "start": 109.679,
+   "end": 109.859
+  },
+  {
+   "word": "one",
+   "start": 109.859,
+   "end": 110.228
+  },
+  {
+   "word": "tool",
+   "start": 110.228,
+   "end": 110.412
+  },
+  {
+   "word": "run",
+   "start": 110.412,
+   "end": 110.6
+  },
+  {
+   "word": "SQL",
+   "start": 110.6,
+   "end": 110.787
+  },
+  {
+   "word": "Meterless",
+   "start": 110.787,
+   "end": 111.333
+  },
+  {
+   "word": "H-MEM",
+   "start": 111.333,
+   "end": 111.697
+  },
+  {
+   "word": "remembers",
+   "start": 111.697,
+   "end": 112.243
+  },
+  {
+   "word": "the",
+   "start": 112.243,
+   "end": 112.424
+  },
+  {
+   "word": "case",
+   "start": 112.424,
+   "end": 112.788
+  },
+  {
+   "word": "across",
+   "start": 112.788,
+   "end": 113.152
+  },
+  {
+   "word": "runs",
+   "start": 113.152,
+   "end": 113.334
+  },
+  {
+   "word": "The",
+   "start": 113.334,
+   "end": 113.516
+  },
+  {
+   "word": "World",
+   "start": 113.516,
+   "end": 113.698
+  },
+  {
+   "word": "Model",
+   "start": 113.698,
+   "end": 114.062
+  },
+  {
+   "word": "is",
+   "start": 114.062,
+   "end": 114.244
+  },
+  {
+   "word": "the",
+   "start": 114.244,
+   "end": 114.426
+  },
+  {
+   "word": "shared",
+   "start": 114.426,
+   "end": 114.79
+  },
+  {
+   "word": "ledger",
+   "start": 114.79,
+   "end": 115.154
+  },
+  {
+   "word": "Nightshift",
+   "start": 115.154,
+   "end": 115.516
+  },
+  {
+   "word": "is",
+   "start": 115.516,
+   "end": 115.697
+  },
+  {
+   "word": "the",
+   "start": 115.697,
+   "end": 115.879
+  },
+  {
+   "word": "primary",
+   "start": 115.879,
+   "end": 116.423
+  },
+  {
+   "word": "model",
+   "start": 116.423,
+   "end": 116.785
+  },
+  {
+   "word": "provider",
+   "start": 116.785,
+   "end": 117.329
+  },
+  {
+   "word": "with",
+   "start": 117.347,
+   "end": 117.529
+  },
+  {
+   "word": "critic",
+   "start": 117.529,
+   "end": 117.891
+  },
+  {
+   "word": "and",
+   "start": 117.891,
+   "end": 118.072
+  },
+  {
+   "word": "advocate",
+   "start": 118.072,
+   "end": 118.798
+  },
+  {
+   "word": "pinned",
+   "start": 118.798,
+   "end": 119.16
+  },
+  {
+   "word": "to",
+   "start": 119.16,
+   "end": 119.341
+  },
+  {
+   "word": "NVIDIA",
+   "start": 119.341,
+   "end": 119.704
+  },
+  {
+   "word": "Nemotron",
+   "start": 119.704,
+   "end": 120.248
+  },
+  {
+   "word": "The",
+   "start": 120.248,
+   "end": 120.428
+  },
+  {
+   "word": "output",
+   "start": 120.428,
+   "end": 122.199
+  },
+  {
+   "word": "is",
+   "start": 122.199,
+   "end": 122.38
+  },
+  {
+   "word": "one",
+   "start": 122.38,
+   "end": 122.741
+  },
+  {
+   "word": "document",
+   "start": 122.741,
+   "end": 123.282
+  },
+  {
+   "word": "a",
+   "start": 123.282,
+   "end": 123.463
+  },
+  {
+   "word": "human",
+   "start": 123.463,
+   "end": 123.824
+  },
+  {
+   "word": "can",
+   "start": 123.824,
+   "end": 124.004
+  },
+  {
+   "word": "send",
+   "start": 124.004,
+   "end": 124.184
+  },
+  {
+   "word": "cover",
+   "start": 124.184,
+   "end": 124.552
+  },
+  {
+   "word": "letter",
+   "start": 124.552,
+   "end": 124.919
+  },
+  {
+   "word": "four",
+   "start": 124.919,
+   "end": 125.101
+  },
+  {
+   "word": "cited",
+   "start": 125.101,
+   "end": 125.466
+  },
+  {
+   "word": "rebuttals",
+   "start": 125.466,
+   "end": 126.012
+  },
+  {
+   "word": "evidence",
+   "start": 126.012,
+   "end": 126.743
+  },
+  {
+   "word": "map",
+   "start": 126.743,
+   "end": 126.926
+  },
+  {
+   "word": "and",
+   "start": 126.926,
+   "end": 127.108
+  },
+  {
+   "word": "one",
+   "start": 127.108,
+   "end": 127.473
+  },
+  {
+   "word": "action",
+   "start": 127.473,
+   "end": 127.837
+  },
+  {
+   "word": "left",
+   "start": 127.837,
+   "end": 128.019
+  },
+  {
+   "word": "get",
+   "start": 128.019,
+   "end": 128.41
+  },
+  {
+   "word": "the",
+   "start": 128.41,
+   "end": 128.593
+  },
+  {
+   "word": "letter",
+   "start": 128.593,
+   "end": 131.685
+  },
+  {
+   "word": "Eighty-four",
+   "start": 131.685,
+   "end": 132.231
+  },
+  {
+   "word": "Solid",
+   "start": 132.231,
+   "end": 132.594
+  },
+  {
+   "word": "Conditional",
+   "start": 132.594,
+   "end": 133.697
+  },
+  {
+   "word": "Supply",
+   "start": 133.697,
+   "end": 134.058
+  },
+  {
+   "word": "the",
+   "start": 134.058,
+   "end": 134.239
+  },
+  {
+   "word": "letter",
+   "start": 134.239,
+   "end": 134.6
+  },
+  {
+   "word": "and",
+   "start": 134.618,
+   "end": 134.799
+  },
+  {
+   "word": "it",
+   "start": 134.799,
+   "end": 134.98
+  },
+  {
+   "word": "becomes",
+   "start": 134.98,
+   "end": 135.522
+  },
+  {
+   "word": "one",
+   "start": 135.522,
+   "end": 135.883
+  },
+  {
+   "word": "hundred",
+   "start": 135.883,
+   "end": 136.244
+  },
+  {
+   "word": "The",
+   "start": 136.244,
+   "end": 136.423
+  },
+  {
+   "word": "denial",
+   "start": 136.423,
+   "end": 136.781
+  },
+  {
+   "word": "answered",
+   "start": 136.799,
+   "end": 137.336
+  }
+ ]
+}

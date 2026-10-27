@@ -37,3 +37,12 @@ video/voice-demo/
 video/demo-static.html
 video/demo-test.html
 deck/page-*.png
+
+# huashu-motion project scratch (the final film lives in video/out)
+demo-film/out/
+demo-film/assets/*.wav
+demo-film/index-*.png
+demo-film/shot-*.png
+demo-film/frame*.png
+demo-film/.om/
+.claude/worktrees/

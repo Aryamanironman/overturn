@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[
+  {"id":"title","type":"string","label":"Title","default":"OVERTURN"},
+  {"id":"subtitle","type":"string","label":"Subtitle","default":"The denial, answered with evidence."},
+  {"id":"score","type":"number","label":"Appeal score","default":84,"min":0,"max":100,"step":1},
+  {"id":"missingDoc","type":"string","label":"Missing document","default":"DOC-003"},
+  {"id":"paper","type":"color","label":"Paper","default":"#eef1f4"},
+  {"id":"ink","type":"color","label":"Ink","default":"#10202b"},
+  {"id":"green","type":"color","label":"Verified","default":"#1b6b4a"},
+  {"id":"red","type":"color","label":"Missing","default":"#b3261e"},
+  {"id":"blue","type":"color","label":"Citation","default":"#1d4ed8"},
+  {"id":"amber","type":"color","label":"Counterfactual","default":"#8a5a12"},
+  {"id":"endHold","type":"number","label":"End hold (s)","default":0.4,"min":0,"max":6,"step":0.1,"group":"Rhythm"}
+]'>
+<head>
+<meta charset="utf-8">
+<title>OVERTURN — the working system</title>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/om.js"></script>
+<style>
+@font-face{font-family:"Archivo";src:url("assets/fonts/ArchivoBlack-400.woff") format("woff");font-weight:400;font-style:normal}
+@font-face{font-family:"Inter";src:url("assets/fonts/Inter-var.woff") format("woff");font-weight:100 900;font-style:normal}
+:root{
+  --paper:#eef1f4; --ink:#10202b; --muted:#5f6d79; --rule:#c4cfd8;
+  --blue:#1d4ed8; --green:#1b6b4a; --amber:#8a5a12; --red:#b3261e;
+  --sans:"Inter",ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --display:"Archivo",ui-sans-serif,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--paper)}
+#film{position:relative;width:100%;height:100%;overflow:hidden;color:var(--ink);font-family:var(--sans);background:var(--paper)}
+.grid{position:absolute;inset:-72px;background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);background-size:48px 48px;opacity:.26}
+.grid::after{content:"";position:absolute;inset:0;background:radial-gradient(1200px 700px at 18% 0%,#ffffffdd,transparent 62%),radial-gradient(900px 600px at 100% 100%,#dfe7ee99,transparent 60%)}
+#spine{position:absolute;left:140px;right:140px;bottom:120px;height:2px;background:var(--rule);transform-origin:0 50%;z-index:4}
+#case-tag{position:absolute;top:52px;right:140px;font:600 14px/1.4 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);z-index:5}
+#episode{position:absolute;top:52px;left:140px;font:600 14px/1.4 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);z-index:5}
+#scenes{position:absolute;inset:0;z-index:2}
+.scene{position:absolute;inset:0;padding:118px 140px 190px;display:none;flex-direction:column;justify-content:center}
+.scene.ink{color:var(--paper)}
+.wash{position:absolute;inset:0;z-index:-1;background:var(--paper);opacity:0}
+.wash.ink{background:var(--ink);opacity:1}
+.wash.red{background:var(--red);opacity:.06}
+.wash.blue{background:var(--blue);opacity:.05}
+.wash.green{background:var(--green);opacity:.06}
+.frame{position:relative;z-index:1;max-width:1660px;transform-origin:50% 55%}
+.kicker{font:600 18px/1.4 var(--sans);letter-spacing:.19em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
+.scene.ink .kicker{color:#a9b7c2}
+h2.big{margin:0 0 8px;font:700 92px/1.0 var(--sans);letter-spacing:-.045em;max-width:1500px}
+h2.big.small{font-size:76px}
+.sub{margin:18px 0 0;font:400 42px/1.24 var(--sans);color:#394956;max-width:1400px}
+.scene.ink .sub{color:#c7d2da}
+.note{margin:26px 0 0;font:400 25px/1.45 var(--sans);color:var(--muted);max-width:1350px}
+.mark{margin:0;font:400 250px/0.9 var(--display);letter-spacing:-.01em}
+.title-rule{width:900px;height:8px;background:var(--green);margin:34px 0 0;transform-origin:0 50%}
+.wipe{position:absolute;inset:0;background:var(--ink);transform:scaleX(0);transform-origin:0 50%;z-index:40}
+.hook{position:absolute;left:0;top:46%;display:flex;gap:26px;font:700 66px/1.05 var(--sans);letter-spacing:-.035em;opacity:0;visibility:hidden;white-space:nowrap}
+.hook .wrong{color:var(--red)}
+.hook-rule{position:absolute;left:0;top:calc(46% + 92px);width:760px;height:6px;background:var(--red);transform-origin:0 50%;transform:scaleX(0)}
+.hook-stamp{position:absolute;right:0;top:30%;font:400 210px/1 var(--display);color:var(--red);letter-spacing:-.06em;opacity:0;visibility:hidden;transform-origin:60% 50%}
+.cite-rule{display:block;height:3px;background:var(--blue);margin-top:10px;transform-origin:0 50%;transform:scaleX(0)}
+.name{font:400 250px/0.9 var(--display);letter-spacing:-.04em;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;max-width:1500px}
+.chip{font:500 19px/1.3 var(--mono);color:#344551;background:#fff;border:1px solid var(--rule);padding:9px 14px}
+.chip.hot{border-color:var(--red);color:var(--red)}
+
+.src-table{margin-top:26px;max-width:1500px}
+.src-row{display:grid;grid-template-columns:420px 110px 1fr;gap:0 26px;border-bottom:1px solid var(--rule)}
+.src-name{font:500 25px/1.9 var(--mono);color:#23343f}
+.src-count{font:400 34px/1.55 var(--display);color:var(--blue);text-align:right}
+.src-desc{font:400 22px/2.0 var(--sans);color:var(--muted)}
+.source-badge{display:inline-block;margin-top:26px;border:2px solid var(--blue);color:var(--blue);font:700 19px/1 var(--sans);letter-spacing:.1em;padding:12px 16px;text-transform:uppercase}
+
+.agents{display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin-top:30px}
+.ac{font:700 24px/1.2 var(--sans);border:2px solid var(--rule);background:#fff;padding:16px 20px;color:#344551}
+.ac[data-a="Planner"]{border-color:#344551}
+.ac[data-a="Reconciler"]{border-color:var(--blue);color:var(--blue)}
+.ac[data-a="Critic"]{border-color:var(--amber);color:var(--amber)}
+.ac[data-a="Advocate"]{border-color:var(--red);color:var(--red)}
+.ac[data-a="Reporter"]{border-color:var(--green);color:var(--green)}
+.ar{font:26px var(--mono);color:var(--muted)}
+.loopback{font:700 17px/1.3 var(--mono);color:var(--blue);border:2px dashed var(--blue);padding:12px 14px}
+.under{display:flex;gap:34px;margin-top:36px;flex-wrap:wrap}
+.under span{font:600 18px/1.3 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-top:2px solid var(--rule);padding-top:10px}
+
+.terminal{margin-top:24px;background:#0d1a23;border:1px solid #22343f;width:1560px;box-shadow:0 24px 60px #10202b22}
+.term-bar{height:44px;display:flex;align-items:center;gap:9px;padding:0 18px;background:#132531;border-bottom:1px solid #22343f}
+.dot{width:11px;height:11px;border-radius:50%;background:#3b5361}
+.term-title{margin-left:10px;font:500 14px/1 var(--mono);color:#7e95a4}
+.term-body{padding:20px 26px 24px}
+.tline{font:500 22px/1.6 var(--mono);color:#c9d6df;white-space:pre}
+.tline.prompt{color:#8fd0a8}
+.tline.ok{color:#8fd0a8}
+.tline.warn{color:#e2b06a}
+.tline.dim{color:#7e95a4}
+
+.reason-grid{display:grid;grid-template-columns:1fr 2px 1fr;gap:64px;align-items:start;margin-top:16px}
+.seam{width:2px;height:100%;min-height:360px;background:var(--rule)}
+.claim-col{position:relative}
+.label{font:700 17px/1.4 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.claim{font:700 76px/1.04 var(--sans);letter-spacing:-.04em;max-width:740px}
+.claim-wrap{position:relative;display:inline-block}
+.strike{position:absolute;left:-.02em;right:-.02em;top:52%;height:9px;background:var(--red);transform:scaleX(0);transform-origin:0 50%}
+.stamp{display:inline-block;margin-top:34px;border:7px solid var(--green);color:var(--green);padding:4px 20px 10px;font:400 62px/0.98 var(--display);transform:rotate(-2deg);opacity:0;visibility:hidden}
+.stamp.red{border-color:var(--red);color:var(--red)}
+.evidence-text{margin:0;font:400 34px/1.4 var(--sans);color:#2b3c48;max-width:720px}
+.citation{margin-top:22px;font:500 18px/1.5 var(--mono);color:var(--blue);border-left:4px solid var(--blue);padding-left:14px}
+
+.stats{display:flex;gap:26px;margin-top:22px}
+.stat{flex:1;border-top:3px solid var(--ink);padding-top:16px;max-width:330px}
+.stat b{display:block;font:400 92px/0.95 var(--display);letter-spacing:-.04em;color:var(--ink)}
+.stat span{display:block;margin-top:8px;font:600 17px/1.3 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.chain{display:flex;align-items:center;gap:0;margin-top:34px}
+.hblock{font:500 16px/1 var(--mono);color:#344551;background:#fff;border:1px solid var(--rule);padding:12px 10px}
+.hlink{display:inline-block;width:26px;height:2px;background:var(--rule)}
+.hash{margin-top:22px;font:500 18px/1.4 var(--mono);color:var(--green)}
+
+.cf-table{margin-top:24px;max-width:1420px}
+.cf-row{display:grid;grid-template-columns:360px 150px 1fr 120px;gap:20px;align-items:center;border-bottom:1px solid var(--rule);padding:12px 0}
+.cf-name{font:500 23px/1.4 var(--mono);color:#23343f}
+.cf-before{font:400 38px/1 var(--display);color:var(--muted);text-align:right}
+.cf-bar{height:16px;background:var(--rule);position:relative;overflow:hidden}
+.cf-fill{position:absolute;inset:0;background:var(--amber);transform-origin:0 50%;transform:scaleX(0)}
+.cf-delta{font:400 34px/1 var(--display);color:var(--red);text-align:right}
+
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:24px;max-width:1560px}
+.card{border:1px solid var(--rule);background:#fff;padding:24px 26px 26px;border-top:5px solid var(--ink)}
+.card:nth-child(1){border-top-color:var(--blue)}
+.card:nth-child(2){border-top-color:var(--green)}
+.card:nth-child(3){border-top-color:var(--amber)}
+.card:nth-child(4){border-top-color:var(--red)}
+.card h3{margin:0 0 10px;font:700 22px/1.2 var(--sans);letter-spacing:.1em;text-transform:uppercase}
+.card p{margin:0;font:400 24px/1.42 var(--sans);color:#394956}
+
+.packet{display:grid;grid-template-columns:1fr 820px;gap:44px;margin-top:20px;align-items:start}
+.pitem{display:grid;grid-template-columns:60px 1fr;gap:16px;border-top:1px solid var(--rule);padding:14px 0}
+.pnum{font:400 34px/1 var(--display);color:var(--blue)}
+.ptitle{font:700 28px/1.2 var(--sans)}
+.pdesc{font:400 20px/1.4 var(--sans);color:var(--muted);margin-top:4px}
+.receipt{border:1px solid var(--rule);background:#fff;padding:10px;box-shadow:0 22px 50px #10202b1f;overflow:hidden}
+.receipt img{display:block;width:100%;height:470px;object-fit:cover;object-position:top left}
+.receipt .cap{display:flex;justify-content:space-between;gap:20px;padding:10px 4px 2px;font:500 14px/1.3 var(--mono);color:var(--muted)}
+.receipt .cap b{color:var(--green);font-weight:700}
+
+.close-sub{margin:26px 0 0;font:400 40px/1.3 var(--sans);color:#c7d2da;max-width:1350px}
+.sponsor-line{margin-top:44px;display:flex;gap:30px;font:600 16px/1.3 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:#8fa0ad}
+#poster{position:absolute;inset:0;padding:118px 140px 190px;display:flex;flex-direction:column;justify-content:center;z-index:3}
+</style>
+</head>
+<body>
+<div id="film" data-composition-id="film" data-width="1920" data-height="1080">
+  <audio id="om-sound" src="assets/sound.wav" data-start="0" data-duration="140.523" data-track-index="8" data-volume="1"></audio>
+  <div class="grid" data-om-id="grid"></div>
+  <div id="spine" data-om-id="spine"></div>
+  <div id="episode" data-om-id="episode">OVERTURN · WORKFLOW DEMO</div>
+  <div id="case-tag" data-om-id="case-tag">CASE CLM-2026-0915 · NORTHBRIDGE HEALTH</div>
+  <div id="scenes"></div>
+  <div id="poster" data-om-id="poster" data-layout-allow-overlap>
+    <div class="kicker">OPEN AGENT HACKATHON 2026 · TRACK 2</div>
+    <h1 class="mark">OVERTURN</h1>
+    <p class="sub">The denial, answered with evidence.</p>
+    <div class="title-rule"></div>
+  </div>
+</div>
+
+<script>
+const V = OM.vars();
+const root = document.documentElement.style;
+root.setProperty('--paper', V.paper);
+root.setProperty('--ink', V.ink);
+root.setProperty('--green', V.green);
+root.setProperty('--red', V.red);
+root.setProperty('--blue', V.blue);
+root.setProperty('--amber', V.amber);
+const SCENES = [{"id":"title","layout":"title","kicker":"OPEN AGENT HACKATHON 2026 · TRACK 2","big":"OVERTURN","sub":"The denial, answered with evidence.","voice":"This is OVERTURN. It answers a health-insurance denial with evidence. This is the system running.","hold":6.0,"start":0.6,"end":6.877,"duration":6.277,"voice_start":0.75,"index":1},{"id":"case","layout":"case","kicker":"THE CASE","big":"AVA.","sub":"34. Sydney. Northbridge Health denied her lumbar MRI.","chips":["CLM-2026-0915","MRI-LS-001","4 denial reasons","3 contradicted by the file","1 document missing"],"voice":"Ava is thirty-four. Northbridge Health denied her lumbar MRI. Four reasons. Three are contradicted by the file.","hold":8.5,"start":6.877,"end":15.377,"duration":8.5,"voice_start":7.027,"index":2},{"id":"sources","layout":"sources","kicker":"ONE DATA PATH","big":"Seven source tables. One door.","rows":[["policy_clauses","12","the policy it cites"],["denial_reasons","4","what the insurer said"],["medical_records","20","what the clinician recorded"],["eob","1","what was billed"],["procedure_codes","6","what the codes mean"],["claim_documents","5","what is in the file"],["icd10_codes","3","what the diagnosis means"]],"note":"Every read is a read-only run_sql call through Zetaris.","voice":"Every fact comes through one door: Zetaris. Seven tables: policy, denial, medical record, benefits, procedure codes, claim documents and diagnosis codes.","hold":10.0,"start":15.377,"end":25.377,"duration":10.0,"voice_start":15.527,"index":3},{"id":"loop","layout":"architecture","kicker":"THE AGENT LOOP","big":"Plan. Reconcile. Attack. Re-query.","voice":"A planner queries. A reconciler builds the ledger. A critic attacks it. An advocate argues the insurer's side. Either can force a re-query. A deterministic scorer grades it, and a reporter writes the packet.","hold":11.0,"start":25.377,"end":38.013,"duration":12.636,"voice_start":25.527,"index":4},{"id":"run","layout":"terminal","kicker":"THE RUN","big":"One command.","lines":["$ python -m overturn.run --case ava --out out/","OVERTURN · case ava · mode sample","  appeal strength 84/100 (solid, conditional)","  reasons: 3 rebutted, 1 missing, 0 unresolved","  DEN-01: rebutted — service is experimental?","  DEN-02: rebutted — wrong procedure code","  DEN-03: rebutted — no conservative treatment?","  DEN-04: missing — specialist referral letter","  wrote out/appeal_packet.json","  wrote out/receipt.html","  trace out/trace.jsonl"],"note":"SAMPLE_MODE: the same control flow, deterministic model stubs, a SQLite mirror of the Zetaris tables. Every step is traced.","voice":"One command runs the loop. This run is sample mode: same control flow, deterministic stubs, SQLite mirror. Every step is traced.","hold":10.0,"start":38.013,"end":48.013,"duration":10.0,"voice_start":38.163,"index":5},{"id":"r1","layout":"reason","kicker":"REASON 01 · DEN-01","claim":"The service is experimental.","big":"Experimental.","rightLabel":"THE FILE","rightValue":"POL-4.3 excludes spinal fusion — it states it does not apply to diagnostic MRI of the lumbar spine. POL-4.1 covers this scan.","citation":"policy_clauses · POL-4.3 · line L0006","stamp":"REBUTTED","stampAt":3.1,"voice":"Reason one: they call the MRI experimental. The clause they cite excludes spinal fusion, not diagnostic imaging. The clause that applies covers this scan. Rebutted.","hold":10.0,"start":48.013,"end":58.247,"duration":10.234,"voice_start":48.163,"index":6},{"id":"r2","layout":"reason","kicker":"REASON 02 · DEN-02","claim":"The contrast MRI is not covered.","big":"Wrong code.","rightLabel":"THE FILE","rightValue":"The denial cites MRI-LS-002, the contrast study. The order, the EOB and the record all use MRI-LS-001 — no contrast, no prior authorisation.","citation":"procedure_codes · MRI-LS-001 · line L0035","stamp":"REBUTTED","stampAt":3.0,"voice":"Reason two: they cite the contrast study, which needs prior authorisation. The order and the record use the non-contrast code. Code mismatch. Rebutted.","hold":10.0,"start":58.247,"end":68.247,"duration":10.0,"voice_start":58.397,"index":7},{"id":"r3","layout":"reason","kicker":"REASON 03 · DEN-03","claim":"No conservative treatment documented.","big":"Twelve weeks.","rightLabel":"THE FILE","rightValue":"Twelve physiotherapy sessions across twelve weeks, plus an NSAID trial. The policy asks for six weeks. The treatment is documented.","citation":"medical_records · REC-002 to REC-013 · line L0018","stamp":"REBUTTED","stampAt":3.0,"voice":"Reason three: no conservative treatment documented. The record shows twelve physiotherapy sessions over twelve weeks. The policy asks for six. Rebutted.","hold":9.5,"start":68.247,"end":77.935,"duration":9.688,"voice_start":68.397,"index":8},{"id":"r4","layout":"honesty","kicker":"REASON 04 · DEN-04","big":"MISSING.","rightLabel":"THE FILE","rightValue":"DOC-003, the specialist referral letter, is genuinely absent. Requested 20 August. Not received.","citation":"claim_documents · DOC-003 · line L0045","stamp":"UNVERIFIED","stampAt":3.2,"note":"The appeal is conditional. OVERTURN will not fabricate the letter.","voice":"Reason four: a specialist letter is missing. It is genuinely missing. OVERTURN names the exact document and refuses to invent it. The appeal is conditional, not perfect.","hold":10.5,"start":77.935,"end":88.523,"duration":10.588,"voice_start":78.085,"index":9},{"id":"ledger","layout":"evidence","kicker":"THE EVIDENCE LEDGER","big":"47 lines. Every one traceable.","stats":[["47","evidence lines"],["0","fabricated"],["47","hash chain links"],["84","appeal strength"]],"hash":"head · 387f5f91b90accb1…","note":"Each line carries its source row, verification status and a SHA-256 hash chained to the line before it. Change one row and the chain breaks.","voice":"Forty-seven evidence lines. Each carries its source row, its status, and a SHA-256 hash chained to the line before it. Change one row and the chain breaks.","hold":10.0,"start":88.523,"end":98.601,"duration":10.078,"voice_start":88.673,"index":10},{"id":"counterfactual","layout":"counterfactual","kicker":"WHAT THE EVIDENCE IS WORTH","big":"Remove a source. Watch the score.","rows":[["policy_clauses","84","65","−19"],["medical_records","84","65","−19"],["procedure_codes","84","65","−19"],["icd10_codes","84","65","−19"],["eob","84","84","0"]],"note":"Counterfactual scoring: every source has to earn its place in the packet.","voice":"Remove a source and the score tells you what it was worth. Pull the policy, the record, or the codes, and eighty-four drops to sixty-five.","hold":9.5,"start":98.601,"end":108.101,"duration":9.5,"voice_start":98.751,"index":11},{"id":"sponsors","layout":"sponsors","kicker":"THE SPONSOR STACK","big":"Plumbing we did not have to rebuild.","cards":[["ZETARIS","The only data path. Seven tables, one tool: run_sql. Read-only by construction."],["METERLESS · H-MEM","Persistent case memory. Recalls the insurer's denial pattern across runs."],["METERLESS · WORLD MODEL","The shared ledger the Reconciler and Critic both mutate and read."],["METERLESS · NIGHTSHIFT","Primary model provider. Critic and Advocate are pinned to NVIDIA Nemotron."]],"note":"Every request logs the model that actually served it.","voice":"Zetaris is the only data path: one tool, run SQL. Meterless H-MEM remembers the case across runs. The World Model is the shared ledger. Nightshift is the primary model provider, with critic and advocate pinned to NVIDIA Nemotron.","hold":12.5,"start":108.101,"end":121.923,"duration":13.823,"voice_start":108.251,"index":12},{"id":"packet","layout":"packet","kicker":"THE OUTPUT","big":"One document a human can send.","items":[["Cover letter","to Northbridge Health, dated, ready to sign"],["Four rebuttals","each with clause, code and record citations"],["Evidence map","47 rows, verification status, hash chain"],["Missing-evidence list","one action: obtain DOC-003"]],"voice":"The output is one document a human can send: cover letter, four cited rebuttals, evidence map, and one action left — get the letter.","hold":9.5,"start":121.923,"end":131.423,"duration":9.5,"voice_start":122.073,"index":13},{"id":"close","layout":"close","kicker":"THE DENIAL, ANSWERED WITH EVIDENCE","big":"OVERTURN","sub":"84 — solid — conditional.  Supply DOC-003 and it becomes 100 — ready.","voice":"Eighty-four. Solid. Conditional. Supply the letter, and it becomes one hundred. The denial, answered.","hold":7.5,"start":131.423,"end":138.923,"duration":7.5,"voice_start":131.573,"index":14}];
+
+const $ = (s) => document.querySelector(s);
+const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const lines = (text) => String(text || '').split('\n').map(line =>
+  `<span class="line"><span class="inner">${esc(line)}</span></span>`).join('');
+
+const WASH = {paper:'#eef1f4', ink:'#10202b', red:'#b3261e', blue:'#1d4ed8', green:'#1b6b4a', amber:'#8a5a12'};
+
+function renderScene(scene){
+  const ink = scene.layout === 'close' ? ' ink' : '';
+  const wash = scene.layout === 'close' ? 'ink' : (scene.wash || 'paper');
+  const kicker = scene.kicker ? `<div class="kicker" data-om-id="${scene.id}-kicker">${esc(scene.kicker)}</div>` : '';
+  let body = '';
+  switch(scene.layout){
+    case 'title':
+      body = `<h1 class="mark" data-om-id="title" data-var-text="title">${esc(V.title)}</h1>
+        <p class="sub" data-om-id="subtitle" data-var-text="subtitle">${esc(V.subtitle)}</p><div class="title-rule" data-om-id="title-rule"></div>
+        <div class="hook" data-om-id="hook"><span>4 reasons.</span><span class="wrong">3 are wrong.</span></div>
+        <div class="hook-rule" data-om-id="hook-rule"></div>
+        <div class="hook-stamp" data-om-id="hook-stamp">3/4</div><div class="wipe" data-om-id="wipe"></div>`;
+      break;
+    case 'case':
+      body = `<h1 class="name" data-om-id="name">${esc(scene.big)}</h1><p class="sub">${esc(scene.sub)}</p>
+        <div class="chips">${(scene.chips||[]).map((c,i)=>`<span class="chip${i>2?' hot':''}" data-om-id="chip-${i}">${esc(c)}</span>`).join('')}</div>`;
+      break;
+    case 'sources':
+      body = `<h2 class="big small" data-om-id="sources-title">${esc(scene.big)}</h2>
+        <div class="src-table">${(scene.rows||[]).map(r=>
+          `<div class="src-row" data-om-id="src-${esc(r[0])}"><div class="src-name">${esc(r[0])}</div><div class="src-count">${esc(r[1])}</div><div class="src-desc">${esc(r[2])}</div></div>`).join('')}</div>
+        <div class="source-badge" data-om-id="source-badge">ZETARIS · run_sql only</div>
+        ${scene.note?`<p class="note">${esc(scene.note)}</p>`:''}`;
+      break;
+    case 'architecture':
+      body = `<h2 class="big" data-om-id="loop-title">${esc(scene.big)}</h2>
+        <div class="agents" data-om-id="agents">
+          <span class="ac" data-a="Planner">Planner</span><span class="ar">→</span>
+          <span class="ac" data-a="Reconciler">Reconciler</span><span class="ar">→</span>
+          <span class="ac" data-a="Critic">Critic</span><span class="ar">↔</span>
+          <span class="ac" data-a="Advocate">Advocate</span><span class="ar">→</span>
+          <span class="ac" data-a="Reporter">Reporter</span>
+          <span class="loopback">re-query ⟲</span>
+        </div>
+        <div class="under"><span>deterministic scorer</span><span>SHA-256 evidence chain</span><span>model logged per request</span></div>`;
+      break;
+    case 'terminal':
+      body = `<h2 class="big small" data-om-id="run-title">${esc(scene.big)}</h2>
+        <div class="terminal" data-om-id="terminal"><div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="term-title">overturn — python</span></div>
+        <div class="term-body">${(scene.lines||[]).map((l,i)=>{
+          const cls = i===0?'prompt':(l.includes('missing')?'warn':(l.includes('rebutted')?'ok':(l.startsWith('  wrote')||l.startsWith('  trace')?'dim':'')));
+          return `<div class="tline ${cls}" data-om-id="tline-${i}">${esc(l)}</div>`;
+        }).join('')}</div></div>
+        ${scene.note?`<p class="note">${esc(scene.note)}</p>`:''}`;
+      break;
+    case 'reason':
+      body = `<h2 class="big small" data-om-id="${scene.id}-title" style="margin-bottom:26px">${esc(scene.big)}</h2>
+        <div class="reason-grid">
+          <div class="claim-col"><div class="label">THE DENIAL SAYS</div>
+            <div class="claim-wrap" data-om-id="${scene.id}-claim"><div class="claim">${esc(scene.claim)}</div><span class="strike"></span></div>
+            <div class="stamp" data-om-id="${scene.id}-stamp">${esc(scene.stamp)}</div>
+          </div>
+          <div class="seam"></div>
+          <div class="file-col" data-om-id="${scene.id}-file"><div class="label">${esc(scene.rightLabel||'THE FILE')}</div>
+            <p class="evidence-text">${esc(scene.rightValue)}</p>
+            <div class="citation">${esc(scene.citation)}<span class="cite-rule"></span></div>
+          </div>
+        </div>`;
+      break;
+    case 'honesty':
+      body = `<h2 class="big small" data-om-id="missing-title" style="margin-bottom:26px">${esc(scene.big)}</h2>
+        <div class="reason-grid">
+          <div class="claim-col"><div class="label">THE DOCUMENT</div>
+            <div class="claim-wrap" data-om-id="missing-claim"><div class="claim">${esc(V.missingDoc)}</div><span class="strike"></span></div>
+            <div class="stamp red" data-om-id="missing-stamp">${esc(scene.stamp)}</div>
+          </div>
+          <div class="seam"></div>
+          <div class="file-col" data-om-id="missing-file"><div class="label">${esc(scene.rightLabel||'THE FILE')}</div>
+            <p class="evidence-text">${esc(scene.rightValue)}</p>
+            <div class="citation">${esc(scene.citation)}<span class="cite-rule"></span></div>
+            <p class="note" style="max-width:700px">${esc(scene.note)}</p>
+          </div>
+        </div>`;
+      break;
+    case 'evidence':
+      body = `<h2 class="big small" data-om-id="ledger-title">${esc(scene.big)}</h2>
+        <div class="stats">${(scene.stats||[]).map(s=>
+          `<div class="stat" data-om-id="stat-${esc(String(s[1]).replace(/\s+/g,'-'))}"><b data-v="${esc(s[0])}">${esc(s[0])}</b><span>${esc(s[1])}</span></div>`).join('')}</div>
+        <div class="chain" data-om-id="chain">${['L0001','L0002','L0003','…','L0047'].map((x,i)=>
+          (i?'<span class="hlink"></span>':'')+`<span class="hblock">${esc(x)}</span>`).join('')}</div>
+        <div class="hash" data-om-id="hash">${esc(scene.hash)}</div>
+        ${scene.note?`<p class="note">${esc(scene.note)}</p>`:''}`;
+      break;
+    case 'counterfactual':
+      body = `<h2 class="big small" data-om-id="cf-title">${esc(scene.big)}</h2>
+        <div class="cf-table">${(scene.rows||[]).map(r=>
+          `<div class="cf-row" data-om-id="cf-${esc(r[0])}"><div class="cf-name">${esc(r[0])}</div><div class="cf-before">${esc(r[1])}</div>
+           <div class="cf-bar"><div class="cf-fill" data-w="${Number(r[2])/100}"></div></div>
+           <div class="cf-delta">${esc(r[3])}</div></div>`).join('')}</div>
+        ${scene.note?`<p class="note">${esc(scene.note)}</p>`:''}`;
+      break;
+    case 'sponsors':
+      body = `<h2 class="big small" data-om-id="sponsors-title">${esc(scene.big)}</h2>
+        <div class="cards">${(scene.cards||[]).map((c,i)=>
+          `<div class="card" data-om-id="card-${i}"><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p></div>`).join('')}</div>
+        ${scene.note?`<p class="note">${esc(scene.note)}</p>`:''}`;
+      break;
+    case 'packet':
+      body = `<h2 class="big small" data-om-id="packet-title">${esc(scene.big)}</h2>
+        <div class="packet"><div>${(scene.items||[]).map((it,i)=>
+          `<div class="pitem" data-om-id="pitem-${i}"><div class="pnum">0${i+1}</div><div><div class="ptitle">${esc(it[0])}</div><div class="pdesc">${esc(it[1])}</div></div></div>`).join('')}</div>
+          <div class="receipt" data-om-id="receipt"><img src="assets/receipt.png" alt="The generated evidence map">
+          <div class="cap"><span>out/receipt.html</span><b>47 lines · hash-chained</b></div></div></div>`;
+      break;
+    case 'close':
+      body = `<h1 class="mark" data-om-id="close-mark">${esc(scene.big)}</h1><p class="close-sub" data-om-id="close-sub">${esc(scene.sub).replace('84', V.score)}</p>
+        <div class="sponsor-line" data-om-id="sponsor-line"><span>Zetaris</span><span>Meterless H-MEM</span><span>Meterless World Model</span><span>Meterless Nightshift</span><span>NVIDIA Nemotron</span></div>`;
+      break;
+    default:
+      body = `<h2 class="big">${esc(scene.big)}</h2>`;
+  }
+  return `<section class="scene${ink}" id="scene-${scene.id}" data-om-id="scene-${scene.id}" data-wash="${wash}"${scene.id==='title'?' style="display:flex"':''}>
+    <div class="wash ${wash}"></div><div class="frame" data-om-id="frame-${scene.id}">${kicker}${body}</div></section>`;
+}
+
+$('#scenes').innerHTML = SCENES.map(renderScene).join('');
+
+const TOTAL = Math.max(SCENES[SCENES.length-1].end, 140.123);
+const tl = gsap.timeline({paused:true});
+window.__timelines['film'] = tl;
+
+// Only the scenes near the playhead are mounted. This keeps a 14-scene 1080p
+// film inside a single renderer's memory. The setter runs on every timeline
+// render, including seeks that suppress onUpdate.
+function mount(t){
+  const at = clamp(t, 0, TOTAL);
+  SCENES.forEach((sc,index)=>{
+    const el = document.getElementById('scene-'+sc.id);
+    if(!el) return;
+    const nextStart = index < SCENES.length-1 ? SCENES[index+1].start : TOTAL;
+    const on = at >= sc.start - 0.45 && (index === SCENES.length-1 || at < nextStart + 0.25);
+    el.style.display = on ? 'flex' : 'none';
+  });
+}
+const mountProxy = {t:0};
+Object.defineProperty(mountProxy,'t',{set:(v)=>{mount(v);}});
+tl.fromTo(mountProxy,{t:0},{t:TOTAL,duration:TOTAL,ease:'none',immediateRender:false},0);
+mount(0);
+
+tl.set('#spine',{scaleX:0},0);
+tl.to('#spine',{scaleX:1,duration:TOTAL-0.6,ease:'none'},0.3);
+tl.fromTo('.grid',{y:0},{y:-72,duration:TOTAL,ease:'none'},0);
+
+SCENES.forEach((scene,index)=>{
+  const el = document.getElementById('scene-'+scene.id);
+  const start = scene.start;
+  const voiceAt = scene.voice_start;
+  const color = scene.layout==='close' ? '#eef1f4' : (WASH[scene.wash]||'#c4cfd8');
+
+  tl.addLabel('scene:'+scene.id, start);
+
+  if(index===0){
+    tl.set(el,{autoAlpha:1},0);
+    tl.fromTo(el.querySelector('.mark'),{scale:1.06,autoAlpha:1},{scale:1,autoAlpha:1,duration:1.4,ease:'expo.out'},0);
+    tl.fromTo(el.querySelector('.sub'),{y:24,autoAlpha:1},{y:0,autoAlpha:1,duration:0.9,ease:'power2.out'},0.15);
+    tl.fromTo(el.querySelector('.title-rule'),{scaleX:0},{scaleX:1,duration:0.9,ease:'expo.inOut'},0.7);
+    // second shot: a wipe reveals the hook
+    const hookAt = 2.95;
+    tl.set('#poster',{autoAlpha:0},0.03);
+    tl.to(el.querySelector('.mark'),{autoAlpha:0,y:-120,duration:.3,ease:'power2.in'},hookAt);
+    tl.to(el.querySelector('.sub'),{autoAlpha:0,y:10,duration:.3,ease:'power2.in'},hookAt);
+    tl.to(el.querySelector('.title-rule'),{autoAlpha:0,duration:.2},hookAt);
+    tl.fromTo(el.querySelector('.wipe'),{scaleX:0},{scaleX:1,duration:0.22,ease:'power2.in'},hookAt);
+    tl.to(el.querySelector('.wipe'),{scaleX:0,transformOrigin:'100% 50%',duration:0.22,ease:'power2.out'},hookAt+0.22);
+    tl.fromTo(el.querySelector('.hook'),{autoAlpha:0,x:120,y:36,scale:1.2},{autoAlpha:1,x:0,y:0,scale:1,duration:.42,ease:'expo.out'},hookAt+0.2);
+    tl.fromTo(el.querySelector('.hook'),{scale:1},{scale:1.035,duration:3.0,ease:'none'},hookAt+0.7);
+    tl.to(el.querySelector('.hook-rule'),{scaleX:1,duration:0.4,ease:'power2.out'},4.1);
+    tl.fromTo(el.querySelector('.hook-stamp'),{autoAlpha:0,scale:1.4,rotation:-6},{autoAlpha:1,scale:1,rotation:-2,duration:.4,ease:'back.out(1.6)'},4.55);
+    tl.to(el.querySelector('.hook'),{autoAlpha:0,y:-24,duration:.3,ease:'power2.in'},6.35);
+    tl.to(el.querySelector('.hook-rule'),{autoAlpha:0,duration:.25},6.35);
+    tl.to(el.querySelector('.hook-stamp'),{autoAlpha:0,duration:.25},6.35);
+    OM.sfx('stamp',4.58,{gain:0.85});
+  } else {
+    const prev = document.getElementById('scene-'+SCENES[index-1].id);
+    tl.set(prev,{autoAlpha:0,y:0},start-0.01);
+    tl.set(el,{autoAlpha:1,y:0},start);
+  }
+
+  tl.to('#spine',{backgroundColor:color,duration:0.5},start);
+  tl.to('#case-tag',{autoAlpha:scene.layout==='close'?0:1,duration:0.4},start);
+  tl.to('#episode',{color:scene.layout==='close'?'#8fa0ad':'#5f6d79',duration:0.4},start);
+
+  const frame = el.querySelector('.frame');
+  if(index===0){
+    tl.fromTo(frame,{scale:1.0},{scale:1.03,duration:1.7,ease:'linear'},0);
+    tl.fromTo(frame,{scale:1.0},{scale:1.0,duration:1.05,ease:'linear'},1.7);
+    tl.fromTo(frame,{scale:1.0},{scale:1.0,duration:0.2,ease:'linear'},2.75);
+    tl.fromTo(frame,{scale:1.0},{scale:1.02,duration:1.2,ease:'linear'},2.95);
+    tl.fromTo(frame,{scale:1.02},{scale:1.03,duration:1.35,ease:'linear'},4.15);
+    tl.fromTo(frame,{scale:1.12,x:-820},{scale:1.1,x:-820,duration:0.8,ease:'linear'},5.5);
+    tl.fromTo(frame,{scale:1.0,x:0},{scale:1.03,x:0,duration:0.58,ease:'linear'},6.3);
+  } else {
+    const FOCUS = {case:[0,-20], sources:[0,0], loop:[0,0], run:[0,-60],
+                   r1:[0,0], r2:[0,0], r3:[0,0], r4:[0,0],
+                   ledger:[0,-20], counterfactual:[0,0], sponsors:[0,-40],
+                   packet:[0,0], close:[0,0]};
+    const [fx,fy] = FOCUS[scene.id] || [0,0];
+    const firstLen = Math.max(2.0, Math.min(scene.duration*0.42, 5.0));
+    const closeLen = 2.2;
+    tl.fromTo(frame,{scale:1.06},{scale:1.0,duration:firstLen,ease:'power1.out'},start);
+    if(scene.duration > 7.5){
+      const c1 = start + firstLen;
+      const c2 = c1 + closeLen;
+      tl.fromTo(frame,{scale:1.15,x:fx,y:fy},{scale:1.12,x:fx*1.06,y:fy*1.06,duration:closeLen,ease:'linear'},c1);
+      tl.fromTo(frame,{scale:1.0,x:0,y:0},{scale:1.035,duration:Math.max(0.4,scene.end-c2),ease:'none'},c2);
+    } else {
+      tl.fromTo(frame,{scale:1.0},{scale:1.035,duration:Math.max(0.4,scene.duration-firstLen),ease:'none'},start+firstLen);
+    }
+  }
+
+  const kicker = el.querySelector('.kicker');
+  if(kicker && index>0) tl.fromTo(kicker,{autoAlpha:0,y:12},{autoAlpha:1,y:0,duration:0.5,ease:'power2.out'},start+0.06);
+  const big = el.querySelector('h2.big, .name, .mark');
+  if(big && index>0) tl.fromTo(big,{autoAlpha:0,y:22},{autoAlpha:1,y:0,duration:0.7,ease:'expo.out'},start+0.16);
+  const sub = el.querySelector('.sub, .close-sub');
+  if(sub && index>0) tl.fromTo(sub,{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:0.65,ease:'power2.out'},start+0.4);
+  const note = el.querySelector('.note');
+  if(note) tl.fromTo(note,{autoAlpha:0,y:12},{autoAlpha:1,y:0,duration:0.55,ease:'power2.out'},start+0.85);
+
+  const chips = el.querySelectorAll('.chip');
+  if(chips.length) tl.fromTo(chips,{autoAlpha:0,y:10},{autoAlpha:1,y:0,duration:0.38,stagger:0.08,ease:'power2.out'},start+0.65);
+
+  if(scene.layout==='sources'){
+    tl.fromTo(el.querySelectorAll('.src-row'),{autoAlpha:0,x:-16},{autoAlpha:1,x:0,duration:0.36,stagger:0.1,ease:'power2.out'},start+0.5);
+    tl.fromTo(el.querySelector('.source-badge'),{autoAlpha:0,scale:.94},{autoAlpha:1,scale:1,duration:0.45,ease:'back.out(1.5)'},start+1.35);
+  }
+  if(scene.layout==='architecture'){
+    tl.fromTo(el.querySelectorAll('.ac'),{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:0.36,stagger:0.14,ease:'power2.out'},start+0.45);
+    tl.fromTo(el.querySelectorAll('.ar'),{autoAlpha:0},{autoAlpha:1,duration:0.22,stagger:0.14},start+0.55);
+    tl.fromTo(el.querySelector('.loopback'),{autoAlpha:0,x:-12},{autoAlpha:1,x:0,duration:0.4,ease:'power2.out'},start+1.35);
+    tl.fromTo(el.querySelectorAll('.under span'),{autoAlpha:0,y:10},{autoAlpha:1,y:0,duration:0.4,stagger:0.1},start+1.6);
+  }
+  if(scene.layout==='terminal'){
+    tl.fromTo(el.querySelectorAll('.tline'),{autoAlpha:0,x:-8},{autoAlpha:1,x:0,duration:0.2,stagger:0.3,ease:'none'},start+0.5);
+  }
+  if(scene.layout==='reason' || scene.layout==='honesty'){
+    tl.fromTo(el.querySelector('.file-col'),{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:0.6,ease:'power2.out'},start+0.6);
+    const stampAt = voiceAt + (scene.stampAt||3.0);
+    tl.to(el.querySelector('.strike'),{scaleX:1,duration:0.4,ease:'power2.inOut'},stampAt-0.18);
+    tl.fromTo(el.querySelector('.stamp'),{autoAlpha:0,scale:1.35,rotation:-9},{autoAlpha:1,scale:1,rotation:-2,duration:0.45,ease:'back.out(1.6)'},stampAt);
+    const cr = el.querySelector('.cite-rule');
+    if(cr) tl.to(cr,{scaleX:1,duration:0.5,ease:'power2.out'},stampAt+0.35);
+  }
+  if(scene.layout==='evidence'){
+    tl.fromTo(el.querySelectorAll('.stat'),{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:0.45,stagger:0.1,ease:'power2.out'},start+0.45);
+    el.querySelectorAll('.stat b').forEach((b,i)=>{
+      const target = Number(b.dataset.v)||0;
+      if(!target) return;
+      const p={v:0};
+      Object.defineProperty(p,'v',{set:(v)=>{b.textContent=String(Math.round(v));}});
+      tl.fromTo(p,{v:0},{v:target,duration:1.1,ease:'power2.out',immediateRender:false},start+0.5+i*0.1);
+    });
+    tl.fromTo(el.querySelectorAll('.hblock'),{autoAlpha:0,y:10},{autoAlpha:1,y:0,duration:0.26,stagger:0.1},start+0.9);
+    tl.fromTo(el.querySelectorAll('.hlink'),{scaleX:0},{scaleX:1,duration:0.22,stagger:0.1,transformOrigin:'0 50%'},start+1.0);
+    const hash = el.querySelector('.hash'); if(hash) tl.fromTo(hash,{autoAlpha:0},{autoAlpha:1,duration:0.55},start+1.55);
+  }
+  if(scene.layout==='counterfactual'){
+    tl.fromTo(el.querySelectorAll('.cf-row'),{autoAlpha:0,y:12},{autoAlpha:1,y:0,duration:0.36,stagger:0.12,ease:'power2.out'},start+0.45);
+    el.querySelectorAll('.cf-fill').forEach((fill,i)=>{
+      tl.to(fill,{scaleX:Number(fill.dataset.w),duration:0.7,ease:'power2.out'},start+0.6+i*0.12);
+    });
+  }
+  if(scene.layout==='sponsors'){
+    tl.fromTo(el.querySelectorAll('.card'),{autoAlpha:0,y:20},{autoAlpha:1,y:0,duration:0.5,stagger:0.14,ease:'power2.out'},start+0.45);
+  }
+  if(scene.layout==='packet'){
+    tl.fromTo(el.querySelectorAll('.pitem'),{autoAlpha:0,x:-14},{autoAlpha:1,x:0,duration:0.4,stagger:0.14,ease:'power2.out'},start+0.45);
+    tl.fromTo(el.querySelector('.receipt'),{autoAlpha:0,y:18,scale:.98},{autoAlpha:1,y:0,scale:1,duration:0.7,ease:'expo.out'},start+0.7);
+  }
+  if(scene.layout==='close'){
+    tl.fromTo(el.querySelector('.mark'),{autoAlpha:0,scale:.96},{autoAlpha:1,scale:1,duration:1.0,ease:'expo.out'},start+0.05);
+    tl.fromTo(el.querySelector('.close-sub'),{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:0.7,ease:'power2.out'},start+0.6);
+    tl.fromTo(el.querySelectorAll('.sponsor-line span'),{autoAlpha:0},{autoAlpha:1,duration:0.45,stagger:0.08},start+1.0);
+  }
+
+  // sound: a cut that fits what arrives, then the thing that lands
+  const CUTS = {title:'impact', case:'whoosh', sources:'paper', loop:'whoosh', run:'tick',
+                r1:'whoosh', r2:'paper', r3:'paper', r4:'whoosh', ledger:'whoosh',
+                counterfactual:'slide', sponsors:'riser', packet:'paper', close:'chime'};
+  const cut = CUTS[scene.id] || 'whoosh';
+  OM.sfx(cut, start, {gain: cut==='impact'?0.9:cut==='riser'?0.55:0.38});
+  if(scene.layout==='reason' || scene.layout==='honesty'){
+    OM.sfx('stamp', voiceAt + (scene.stampAt||3.0) + 0.05, {gain:0.8});
+  }
+  if(scene.layout==='evidence'){
+    OM.sfx('count', start+0.42, {gain:0.45});
+  }
+  if(scene.layout==='counterfactual'){
+    OM.sfx('slide', start+0.5, {gain:0.35});
+  }
+  if(scene.layout==='close'){
+    OM.sfx('chime', start+0.1, {gain:0.6});
+  }
+});
+
+tl.to({}, {duration: Math.max(V.endHold, 0.01)}, TOTAL);
+
+// Apply the t=0 state before the engine captures the poster frame.
+tl.seek(0, false);
+mount(0);
+
+OM.music({
+  product: 'explainer',
+  drop: 'sponsors',
+  ending: 'button',
+  bpm: 96,
+  energy: {title:0.35, case:0.4, sources:0.5, loop:0.55, run:0.6, r1:0.65, r2:0.68, r3:0.7, r4:0.55, ledger:0.75, counterfactual:0.7, sponsors:0.85, packet:0.6, close:0.9}
+});
+</script>
+<script type="application/json" id="om-cues">{"source":"recording:narration.wav","precision":"silence","offset":0,"duration":140.123,"words":[
+{"word":"This","start":0.8,"end":1.359},
+{"word":"is","start":1.359,"end":1.541},
+{"word":"OVERTURN","start":1.541,"end":2.311},
+{"word":"It","start":2.311,"end":2.493},
+{"word":"answers","start":2.493,"end":2.857},
+{"word":"a","start":2.857,"end":3.038},
+{"word":"health-insurance","start":3.038,"end":3.948},
+{"word":"denial","start":3.948,"end":4.312},
+{"word":"with","start":4.312,"end":4.494},
+{"word":"evidence","start":4.494,"end":5.485},
+{"word":"This","start":5.485,"end":5.667},
+{"word":"is","start":5.667,"end":5.849},
+{"word":"the","start":5.849,"end":6.031},
+{"word":"system","start":6.031,"end":7.2},
+{"word":"running","start":7.2,"end":7.564},
+{"word":"Ava","start":7.564,"end":7.928},
+{"word":"is","start":7.928,"end":8.11},
+{"word":"thirty-four","start":8.11,"end":8.656},
+{"word":"Northbridge","start":8.656,"end":9.202},
+{"word":"Health","start":9.202,"end":9.384},
+{"word":"denied","start":9.384,"end":9.748},
+{"word":"her","start":9.748,"end":9.93},
+{"word":"lumbar","start":9.93,"end":10.294},
+{"word":"MRI","start":10.294,"end":10.475},
+{"word":"Four","start":10.475,"end":10.657},
+{"word":"reasons","start":10.657,"end":11.021},
+{"word":"Three","start":11.021,"end":11.203},
+{"word":"are","start":11.203,"end":11.567},
+{"word":"contradicted","start":11.567,"end":12.295},
+{"word":"by","start":12.295,"end":12.477},
+{"word":"the","start":12.477,"end":12.659},
+{"word":"file","start":12.659,"end":15.669},
+{"word":"Every","start":15.669,"end":16.21},
+{"word":"fact","start":16.21,"end":16.391},
+{"word":"comes","start":16.391,"end":16.752},
+{"word":"through","start":16.752,"end":16.933},
+{"word":"one","start":16.933,"end":17.294},
+{"word":"door","start":17.294,"end":17.474},
+{"word":"Zetaris","start":17.492,"end":18.034},
+{"word":"Seven","start":18.034,"end":18.399},
+{"word":"tables","start":18.399,"end":18.764},
+{"word":"policy","start":18.764,"end":19.317},
+{"word":"denial","start":19.317,"end":19.691},
+{"word":"medical","start":19.691,"end":20.236},
+{"word":"record","start":20.236,"end":20.599},
+{"word":"benefits","start":20.599,"end":21.152},
+{"word":"procedure","start":21.152,"end":21.876},
+{"word":"codes","start":21.876,"end":22.239},
+{"word":"claim","start":22.239,"end":22.418},
+{"word":"documents","start":22.418,"end":22.958},
+{"word":"and","start":22.958,"end":23.138},
+{"word":"diagnosis","start":23.138,"end":25.957},
+{"word":"codes","start":25.957,"end":26.317},
+{"word":"A","start":26.317,"end":26.499},
+{"word":"planner","start":26.499,"end":26.863},
+{"word":"queries","start":26.863,"end":27.227},
+{"word":"A","start":27.227,"end":27.409},
+{"word":"reconciler","start":27.409,"end":28.136},
+{"word":"builds","start":28.136,"end":28.318},
+{"word":"the","start":28.318,"end":28.5},
+{"word":"ledger","start":28.5,"end":28.864},
+{"word":"A","start":28.864,"end":29.046},
+{"word":"critic","start":29.046,"end":29.41},
+{"word":"attacks","start":29.41,"end":29.774},
+{"word":"it","start":29.774,"end":29.956},
+{"word":"An","start":29.956,"end":30.138},
+{"word":"advocate","start":30.138,"end":30.866},
+{"word":"argues","start":30.866,"end":31.229},
+{"word":"the","start":31.229,"end":31.411},
+{"word":"insurer's","start":31.411,"end":32.139},
+{"word":"side","start":32.139,"end":32.503},
+{"word":"Either","start":32.503,"end":32.867},
+{"word":"can","start":32.867,"end":33.049},
+{"word":"force","start":33.049,"end":33.413},
+{"word":"a","start":33.413,"end":33.595},
+{"word":"re-query","start":33.595,"end":34.14},
+{"word":"A","start":34.14,"end":34.405},
+{"word":"deterministic","start":34.405,"end":35.73},
+{"word":"scorer","start":35.73,"end":36.259},
+{"word":"grades","start":36.259,"end":36.789},
+{"word":"it","start":36.789,"end":37.054},
+{"word":"and","start":38.262,"end":38.353},
+{"word":"a","start":38.353,"end":38.443},
+{"word":"reporter","start":38.443,"end":38.716},
+{"word":"writes","start":38.716,"end":38.897},
+{"word":"the","start":38.897,"end":38.988},
+{"word":"packet","start":38.988,"end":39.169},
+{"word":"One","start":39.169,"end":39.533},
+{"word":"command","start":39.533,"end":39.897},
+{"word":"runs","start":39.897,"end":40.079},
+{"word":"the","start":40.079,"end":40.261},
+{"word":"loop","start":40.261,"end":40.443},
+{"word":"This","start":40.443,"end":40.622},
+{"word":"run","start":40.622,"end":40.802},
+{"word":"is","start":40.802,"end":40.981},
+{"word":"sample","start":40.981,"end":41.34},
+{"word":"mode","start":41.34,"end":41.699},
+{"word":"same","start":41.717,"end":42.076},
+{"word":"control","start":42.076,"end":42.435},
+{"word":"flow","start":42.435,"end":42.615},
+{"word":"deterministic","start":42.633,"end":43.53},
+{"word":"stubs","start":43.53,"end":43.71},
+{"word":"SQLite","start":43.728,"end":44.087},
+{"word":"mirror","start":44.087,"end":44.446},
+{"word":"Every","start":44.446,"end":44.991},
+{"word":"step","start":44.991,"end":45.173},
+{"word":"is","start":45.173,"end":45.355},
+{"word":"traced","start":45.355,"end":48.585},
+{"word":"Reason","start":48.585,"end":49.695},
+{"word":"one","start":49.695,"end":50.805},
+{"word":"they","start":51.295,"end":51.311},
+{"word":"call","start":51.311,"end":51.327},
+{"word":"the","start":51.327,"end":51.343},
+{"word":"MRI","start":51.343,"end":51.36},
+{"word":"experimental","start":51.36,"end":51.44},
+{"word":"The","start":51.44,"end":51.679},
+{"word":"clause","start":51.679,"end":52.157},
+{"word":"they","start":52.157,"end":52.396},
+{"word":"cite","start":52.396,"end":52.874},
+{"word":"excludes","start":52.874,"end":53.59},
+{"word":"spinal","start":53.59,"end":54.068},
+{"word":"fusion","start":54.068,"end":54.546},
+{"word":"not","start":54.777,"end":54.853},
+{"word":"diagnostic","start":54.853,"end":55.082},
+{"word":"imaging","start":55.082,"end":55.31},
+{"word":"The","start":55.31,"end":55.492},
+{"word":"clause","start":55.492,"end":55.856},
+{"word":"that","start":55.856,"end":56.038},
+{"word":"applies","start":56.038,"end":56.402},
+{"word":"covers","start":56.402,"end":57.12},
+{"word":"this","start":57.12,"end":57.302},
+{"word":"scan","start":57.302,"end":58.656},
+{"word":"Rebutted","start":58.656,"end":59.433},
+{"word":"Reason","start":59.433,"end":59.804},
+{"word":"two","start":59.804,"end":59.989},
+{"word":"they","start":59.989,"end":60.17},
+{"word":"cite","start":60.17,"end":60.533},
+{"word":"the","start":60.533,"end":60.714},
+{"word":"contrast","start":60.714,"end":61.077},
+{"word":"study","start":61.077,"end":61.44},
+{"word":"which","start":61.44,"end":61.621},
+{"word":"needs","start":61.621,"end":61.802},
+{"word":"prior","start":61.802,"end":61.984},
+{"word":"authorisation","start":61.984,"end":63.323},
+{"word":"The","start":63.323,"end":63.505},
+{"word":"order","start":63.505,"end":63.869},
+{"word":"and","start":63.869,"end":64.051},
+{"word":"the","start":64.051,"end":64.233},
+{"word":"record","start":64.233,"end":64.597},
+{"word":"use","start":64.597,"end":64.961},
+{"word":"the","start":64.961,"end":65.143},
+{"word":"non-contrast","start":65.143,"end":65.958},
+{"word":"code","start":65.958,"end":66.322},
+{"word":"Code","start":66.322,"end":66.685},
+{"word":"mismatch","start":66.685,"end":68.966},
+{"word":"Rebutted","start":68.966,"end":69.512},
+{"word":"Reason","start":69.512,"end":69.874},
+{"word":"three","start":69.874,"end":70.054},
+{"word":"no","start":70.072,"end":70.253},
+{"word":"conservative","start":70.253,"end":71.157},
+{"word":"treatment","start":71.157,"end":71.518},
+{"word":"documented","start":71.518,"end":72.241},
+{"word":"The","start":72.241,"end":72.423},
+{"word":"record","start":72.423,"end":72.787},
+{"word":"shows","start":72.787,"end":72.969},
+{"word":"twelve","start":72.969,"end":73.333},
+{"word":"physiotherapy","start":73.333,"end":74.243},
+{"word":"sessions","start":74.243,"end":74.606},
+{"word":"over","start":74.606,"end":75.253},
+{"word":"twelve","start":75.253,"end":75.617},
+{"word":"weeks","start":75.617,"end":75.799},
+{"word":"The","start":75.799,"end":75.981},
+{"word":"policy","start":75.981,"end":76.527},
+{"word":"asks","start":76.527,"end":76.709},
+{"word":"for","start":76.709,"end":76.891},
+{"word":"six","start":76.891,"end":77.073},
+{"word":"Rebutted","start":77.073,"end":78.626},
+{"word":"Reason","start":78.626,"end":78.986},
+{"word":"four","start":78.986,"end":79.167},
+{"word":"a","start":79.185,"end":79.365},
+{"word":"specialist","start":79.365,"end":79.907},
+{"word":"letter","start":79.907,"end":80.268},
+{"word":"is","start":80.268,"end":80.448},
+{"word":"missing","start":80.448,"end":80.809},
+{"word":"It","start":80.809,"end":80.991},
+{"word":"is","start":80.991,"end":81.173},
+{"word":"genuinely","start":81.173,"end":81.901},
+{"word":"missing","start":81.901,"end":82.264},
+{"word":"OVERTURN","start":82.264,"end":82.81},
+{"word":"names","start":82.81,"end":83.174},
+{"word":"the","start":83.174,"end":83.356},
+{"word":"exact","start":83.356,"end":83.72},
+{"word":"document","start":83.72,"end":84.452},
+{"word":"and","start":84.452,"end":84.634},
+{"word":"refuses","start":84.634,"end":85.18},
+{"word":"to","start":85.18,"end":85.362},
+{"word":"invent","start":85.362,"end":85.725},
+{"word":"it","start":85.725,"end":85.907},
+{"word":"The","start":85.907,"end":86.088},
+{"word":"appeal","start":86.088,"end":86.448},
+{"word":"is","start":86.448,"end":86.629},
+{"word":"conditional","start":86.629,"end":87.35},
+{"word":"not","start":87.368,"end":87.548},
+{"word":"perfect","start":87.548,"end":87.909},
+{"word":"Forty-seven","start":87.909,"end":89.69},
+{"word":"evidence","start":89.69,"end":90.418},
+{"word":"lines","start":90.418,"end":90.782},
+{"word":"Each","start":90.782,"end":90.963},
+{"word":"carries","start":90.963,"end":91.324},
+{"word":"its","start":91.324,"end":91.505},
+{"word":"source","start":91.505,"end":91.866},
+{"word":"row","start":91.866,"end":92.046},
+{"word":"its","start":92.064,"end":92.245},
+{"word":"status","start":92.245,"end":92.606},
+{"word":"and","start":92.624,"end":92.805},
+{"word":"a","start":92.805,"end":92.986},
+{"word":"SHA-256","start":92.986,"end":93.708},
+{"word":"hash","start":93.708,"end":93.889},
+{"word":"chained","start":93.889,"end":94.25},
+{"word":"to","start":94.25,"end":94.43},
+{"word":"the","start":94.43,"end":94.611},
+{"word":"line","start":94.611,"end":94.972},
+{"word":"before","start":94.972,"end":95.514},
+{"word":"it","start":95.514,"end":95.695},
+{"word":"Change","start":95.695,"end":96.389},
+{"word":"one","start":96.389,"end":96.753},
+{"word":"row","start":96.753,"end":96.935},
+{"word":"and","start":96.935,"end":97.117},
+{"word":"the","start":97.117,"end":97.299},
+{"word":"chain","start":97.299,"end":97.481},
+{"word":"breaks","start":97.481,"end":97.663},
+{"word":"Remove","start":97.663,"end":99.147},
+{"word":"a","start":99.147,"end":99.329},
+{"word":"source","start":99.329,"end":99.693},
+{"word":"and","start":99.693,"end":99.875},
+{"word":"the","start":99.875,"end":100.057},
+{"word":"score","start":100.057,"end":100.42},
+{"word":"tells","start":100.42,"end":100.602},
+{"word":"you","start":100.602,"end":100.784},
+{"word":"what","start":100.784,"end":100.966},
+{"word":"it","start":100.966,"end":101.148},
+{"word":"was","start":101.148,"end":101.33},
+{"word":"worth","start":101.33,"end":101.512},
+{"word":"Pull","start":101.512,"end":102.276},
+{"word":"the","start":102.276,"end":102.459},
+{"word":"policy","start":102.459,"end":103.005},
+{"word":"the","start":103.005,"end":103.19},
+{"word":"record","start":103.19,"end":103.559},
+{"word":"or","start":103.559,"end":103.743},
+{"word":"the","start":103.743,"end":103.926},
+{"word":"codes","start":103.926,"end":104.292},
+{"word":"and","start":104.292,"end":104.473},
+{"word":"eighty-four","start":104.473,"end":105.014},
+{"word":"drops","start":105.014,"end":105.194},
+{"word":"to","start":105.194,"end":105.375},
+{"word":"sixty-five","start":105.375,"end":106.097},
+{"word":"Zetaris","start":106.097,"end":108.598},
+{"word":"is","start":108.598,"end":108.778},
+{"word":"the","start":108.778,"end":108.959},
+{"word":"only","start":108.959,"end":109.319},
+{"word":"data","start":109.319,"end":109.679},
+{"word":"path","start":109.679,"end":109.859},
+{"word":"one","start":109.859,"end":110.228},
+{"word":"tool","start":110.228,"end":110.412},
+{"word":"run","start":110.412,"end":110.6},
+{"word":"SQL","start":110.6,"end":110.787},
+{"word":"Meterless","start":110.787,"end":111.333},
+{"word":"H-MEM","start":111.333,"end":111.697},
+{"word":"remembers","start":111.697,"end":112.243},
+{"word":"the","start":112.243,"end":112.424},
+{"word":"case","start":112.424,"end":112.788},
+{"word":"across","start":112.788,"end":113.152},
+{"word":"runs","start":113.152,"end":113.334},
+{"word":"The","start":113.334,"end":113.516},
+{"word":"World","start":113.516,"end":113.698},
+{"word":"Model","start":113.698,"end":114.062},
+{"word":"is","start":114.062,"end":114.244},
+{"word":"the","start":114.244,"end":114.426},
+{"word":"shared","start":114.426,"end":114.79},
+{"word":"ledger","start":114.79,"end":115.154},
+{"word":"Nightshift","start":115.154,"end":115.516},
+{"word":"is","start":115.516,"end":115.697},
+{"word":"the","start":115.697,"end":115.879},
+{"word":"primary","start":115.879,"end":116.423},
+{"word":"model","start":116.423,"end":116.785},
+{"word":"provider","start":116.785,"end":117.329},
+{"word":"with","start":117.347,"end":117.529},
+{"word":"critic","start":117.529,"end":117.891},
+{"word":"and","start":117.891,"end":118.072},
+{"word":"advocate","start":118.072,"end":118.798},
+{"word":"pinned","start":118.798,"end":119.16},
+{"word":"to","start":119.16,"end":119.341},
+{"word":"NVIDIA","start":119.341,"end":119.704},
+{"word":"Nemotron","start":119.704,"end":120.248},
+{"word":"The","start":120.248,"end":120.428},
+{"word":"output","start":120.428,"end":122.199},
+{"word":"is","start":122.199,"end":122.38},
+{"word":"one","start":122.38,"end":122.741},
+{"word":"document","start":122.741,"end":123.282},
+{"word":"a","start":123.282,"end":123.463},
+{"word":"human","start":123.463,"end":123.824},
+{"word":"can","start":123.824,"end":124.004},
+{"word":"send","start":124.004,"end":124.184},
+{"word":"cover","start":124.184,"end":124.552},
+{"word":"letter","start":124.552,"end":124.919},
+{"word":"four","start":124.919,"end":125.101},
+{"word":"cited","start":125.101,"end":125.466},
+{"word":"rebuttals","start":125.466,"end":126.012},
+{"word":"evidence","start":126.012,"end":126.743},
+{"word":"map","start":126.743,"end":126.926},
+{"word":"and","start":126.926,"end":127.108},
+{"word":"one","start":127.108,"end":127.473},
+{"word":"action","start":127.473,"end":127.837},
+{"word":"left","start":127.837,"end":128.019},
+{"word":"get","start":128.019,"end":128.41},
+{"word":"the","start":128.41,"end":128.593},
+{"word":"letter","start":128.593,"end":131.685},
+{"word":"Eighty-four","start":131.685,"end":132.231},
+{"word":"Solid","start":132.231,"end":132.594},
+{"word":"Conditional","start":132.594,"end":133.697},
+{"word":"Supply","start":133.697,"end":134.058},
+{"word":"the","start":134.058,"end":134.239},
+{"word":"letter","start":134.239,"end":134.6},
+{"word":"and","start":134.618,"end":134.799},
+{"word":"it","start":134.799,"end":134.98},
+{"word":"becomes","start":134.98,"end":135.522},
+{"word":"one","start":135.522,"end":135.883},
+{"word":"hundred","start":135.883,"end":136.244},
+{"word":"The","start":136.244,"end":136.423},
+{"word":"denial","start":136.423,"end":136.781},
+{"word":"answered","start":136.799,"end":137.336}
+]}</script>
+<audio id="om-voice" src="assets/voice.wav" data-start="0" data-duration="140.123" data-track-index="9" data-volume="1"></audio>
+</body>
+</html>
