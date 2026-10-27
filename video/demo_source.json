@@ -1,0 +1,195 @@
+[
+  {
+    "id": "title",
+    "layout": "title",
+    "kicker": "OPEN AGENT HACKATHON 2026 · TRACK 2",
+    "big": "OVERTURN",
+    "sub": "The denial, answered with evidence.",
+    "voice": "This is OVERTURN. It answers a health-insurance denial with evidence. This is the system running.",
+    "hold": 6.0
+  },
+  {
+    "id": "case",
+    "layout": "case",
+    "kicker": "THE CASE",
+    "big": "AVA.",
+    "sub": "34. Sydney. Northbridge Health denied her lumbar MRI.",
+    "chips": ["CLM-2026-0915", "MRI-LS-001", "4 denial reasons", "3 contradicted by the file", "1 document missing"],
+    "voice": "Ava is thirty-four. Northbridge Health denied her lumbar MRI. Four reasons. Three are contradicted by the file.",
+    "hold": 8.5
+  },
+  {
+    "id": "sources",
+    "layout": "sources",
+    "kicker": "ONE DATA PATH",
+    "big": "Seven source tables. One door.",
+    "rows": [
+      ["policy_clauses", "12", "the policy it cites"],
+      ["denial_reasons", "4", "what the insurer said"],
+      ["medical_records", "20", "what the clinician recorded"],
+      ["eob", "1", "what was billed"],
+      ["procedure_codes", "6", "what the codes mean"],
+      ["claim_documents", "5", "what is in the file"],
+      ["icd10_codes", "3", "what the diagnosis means"]
+    ],
+    "note": "Every read is a read-only run_sql call through Zetaris.",
+    "voice": "Every fact comes through one door: Zetaris. Seven tables: policy, denial, medical record, benefits, procedure codes, claim documents and diagnosis codes.",
+    "hold": 10.0
+  },
+  {
+    "id": "loop",
+    "layout": "architecture",
+    "kicker": "THE AGENT LOOP",
+    "big": "Plan. Reconcile. Attack. Re-query.",
+    "voice": "A planner queries. A reconciler builds the ledger. A critic attacks it. An advocate argues the insurer's side. Either can force a re-query. A deterministic scorer grades it, and a reporter writes the packet.",
+    "hold": 11.0
+  },
+  {
+    "id": "run",
+    "layout": "terminal",
+    "kicker": "THE RUN",
+    "big": "One command.",
+    "lines": [
+      "$ python -m overturn.run --case ava --out out/",
+      "OVERTURN · case ava · mode sample",
+      "  appeal strength 84/100 (solid, conditional)",
+      "  reasons: 3 rebutted, 1 missing, 0 unresolved",
+      "  DEN-01: rebutted — service is experimental?",
+      "  DEN-02: rebutted — wrong procedure code",
+      "  DEN-03: rebutted — no conservative treatment?",
+      "  DEN-04: missing — specialist referral letter",
+      "  wrote out/appeal_packet.json",
+      "  wrote out/receipt.html",
+      "  trace out/trace.jsonl"
+    ],
+    "note": "SAMPLE_MODE: the same control flow, deterministic model stubs, a SQLite mirror of the Zetaris tables. Every step is traced.",
+    "voice": "One command runs the loop. This run is sample mode: same control flow, deterministic stubs, SQLite mirror. Every step is traced.",
+    "hold": 10.0
+  },
+  {
+    "id": "r1",
+    "layout": "reason",
+    "kicker": "REASON 01 · DEN-01",
+    "claim": "The service is experimental.",
+    "big": "Experimental.",
+    "rightLabel": "THE FILE",
+    "rightValue": "POL-4.3 excludes spinal fusion — it states it does not apply to diagnostic MRI of the lumbar spine. POL-4.1 covers this scan.",
+    "citation": "policy_clauses · POL-4.3 · line L0006",
+    "stamp": "REBUTTED",
+    "stampAt": 3.1,
+    "voice": "Reason one: they call the MRI experimental. The clause they cite excludes spinal fusion, not diagnostic imaging. The clause that applies covers this scan. Rebutted.",
+    "hold": 10.0
+  },
+  {
+    "id": "r2",
+    "layout": "reason",
+    "kicker": "REASON 02 · DEN-02",
+    "claim": "The contrast MRI is not covered.",
+    "big": "Wrong code.",
+    "rightLabel": "THE FILE",
+    "rightValue": "The denial cites MRI-LS-002, the contrast study. The order, the EOB and the record all use MRI-LS-001 — no contrast, no prior authorisation.",
+    "citation": "procedure_codes · MRI-LS-001 · line L0035",
+    "stamp": "REBUTTED",
+    "stampAt": 3.0,
+    "voice": "Reason two: they cite the contrast study, which needs prior authorisation. The order and the record use the non-contrast code. Code mismatch. Rebutted.",
+    "hold": 10.0
+  },
+  {
+    "id": "r3",
+    "layout": "reason",
+    "kicker": "REASON 03 · DEN-03",
+    "claim": "No conservative treatment documented.",
+    "big": "Twelve weeks.",
+    "rightLabel": "THE FILE",
+    "rightValue": "Twelve physiotherapy sessions across twelve weeks, plus an NSAID trial. The policy asks for six weeks. The treatment is documented.",
+    "citation": "medical_records · REC-002 to REC-013 · line L0018",
+    "stamp": "REBUTTED",
+    "stampAt": 3.0,
+    "voice": "Reason three: no conservative treatment documented. The record shows twelve physiotherapy sessions over twelve weeks. The policy asks for six. Rebutted.",
+    "hold": 9.5
+  },
+  {
+    "id": "r4",
+    "layout": "honesty",
+    "kicker": "REASON 04 · DEN-04",
+    "big": "MISSING.",
+    "rightLabel": "THE FILE",
+    "rightValue": "DOC-003, the specialist referral letter, is genuinely absent. Requested 20 August. Not received.",
+    "citation": "claim_documents · DOC-003 · line L0045",
+    "stamp": "UNVERIFIED",
+    "stampAt": 3.2,
+    "note": "The appeal is conditional. OVERTURN will not fabricate the letter.",
+    "voice": "Reason four: a specialist letter is missing. It is genuinely missing. OVERTURN names the exact document and refuses to invent it. The appeal is conditional, not perfect.",
+    "hold": 10.5
+  },
+  {
+    "id": "ledger",
+    "layout": "evidence",
+    "kicker": "THE EVIDENCE LEDGER",
+    "big": "47 lines. Every one traceable.",
+    "stats": [
+      ["47", "evidence lines"],
+      ["0", "fabricated"],
+      ["47", "hash chain links"],
+      ["84", "appeal strength"]
+    ],
+    "hash": "head · 387f5f91b90accb1…",
+    "note": "Each line carries its source row, verification status and a SHA-256 hash chained to the line before it. Change one row and the chain breaks.",
+    "voice": "Forty-seven evidence lines. Each carries its source row, its status, and a SHA-256 hash chained to the line before it. Change one row and the chain breaks.",
+    "hold": 10.0
+  },
+  {
+    "id": "counterfactual",
+    "layout": "counterfactual",
+    "kicker": "WHAT THE EVIDENCE IS WORTH",
+    "big": "Remove a source. Watch the score.",
+    "rows": [
+      ["policy_clauses", "84", "65", "−19"],
+      ["medical_records", "84", "65", "−19"],
+      ["procedure_codes", "84", "65", "−19"],
+      ["icd10_codes", "84", "65", "−19"],
+      ["eob", "84", "84", "0"]
+    ],
+    "note": "Counterfactual scoring: every source has to earn its place in the packet.",
+    "voice": "Remove a source and the score tells you what it was worth. Pull the policy, the record, or the codes, and eighty-four drops to sixty-five.",
+    "hold": 9.5
+  },
+  {
+    "id": "sponsors",
+    "layout": "sponsors",
+    "kicker": "THE SPONSOR STACK",
+    "big": "Plumbing we did not have to rebuild.",
+    "cards": [
+      ["ZETARIS", "The only data path. Seven tables, one tool: run_sql. Read-only by construction."],
+      ["METERLESS · H-MEM", "Persistent case memory. Recalls the insurer's denial pattern across runs."],
+      ["METERLESS · WORLD MODEL", "The shared ledger the Reconciler and Critic both mutate and read."],
+      ["METERLESS · NIGHTSHIFT", "Primary model provider. Critic and Advocate are pinned to NVIDIA Nemotron."]
+    ],
+    "note": "Every request logs the model that actually served it.",
+    "voice": "Zetaris is the only data path: one tool, run SQL. Meterless H-MEM remembers the case across runs. The World Model is the shared ledger. Nightshift is the primary model provider, with critic and advocate pinned to NVIDIA Nemotron.",
+    "hold": 12.5
+  },
+  {
+    "id": "packet",
+    "layout": "packet",
+    "kicker": "THE OUTPUT",
+    "big": "One document a human can send.",
+    "items": [
+      ["Cover letter", "to Northbridge Health, dated, ready to sign"],
+      ["Four rebuttals", "each with clause, code and record citations"],
+      ["Evidence map", "47 rows, verification status, hash chain"],
+      ["Missing-evidence list", "one action: obtain DOC-003"]
+    ],
+    "voice": "The output is one document a human can send: cover letter, four cited rebuttals, evidence map, and one action left — get the letter.",
+    "hold": 9.5
+  },
+  {
+    "id": "close",
+    "layout": "close",
+    "kicker": "THE DENIAL, ANSWERED WITH EVIDENCE",
+    "big": "OVERTURN",
+    "sub": "84 — solid — conditional.  Supply DOC-003 and it becomes 100 — ready.",
+    "voice": "Eighty-four. Solid. Conditional. Supply the letter, and it becomes one hundred. The denial, answered.",
+    "hold": 7.5
+  }
+]

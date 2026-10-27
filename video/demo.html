@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en" data-composition-id="overturn-demo" data-fps="30" data-width="1920" data-height="1080">
+<head>
+<meta charset="utf-8">
+<title>OVERTURN — the working system</title>
+<style>
+@font-face{font-family:"Archivo";src:url("assets/fonts/ArchivoBlack-400.woff") format("woff");font-weight:400;font-style:normal}
+@font-face{font-family:"Inter";src:url("assets/fonts/Inter-var.woff") format("woff");font-weight:100 900;font-style:normal}
+:root{
+  --paper:#eef1f4; --ink:#10202b; --muted:#5f6d79; --rule:#c4cfd8;
+  --blue:#1d4ed8; --green:#1b6b4a; --amber:#8a5a12; --red:#b3261e;
+  --sans:"Inter",ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --display:"Archivo",ui-sans-serif,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--paper)}
+#film{position:relative;width:1920px;height:1080px;overflow:hidden;color:var(--ink);font-family:var(--sans);background:var(--paper)}
+.grid{position:absolute;inset:0;background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);background-size:48px 48px;opacity:.26}
+.grid::after{content:"";position:absolute;inset:0;background:radial-gradient(1200px 700px at 18% 0%,#ffffffdd,transparent 62%),radial-gradient(900px 600px at 100% 100%,#dfe7ee99,transparent 60%)}
+#spine{position:absolute;left:140px;right:140px;bottom:120px;height:2px;background:var(--rule);transform-origin:0 50%;z-index:4}
+#case-tag{position:absolute;top:52px;right:140px;font:600 14px/1.4 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);z-index:5}
+#episode{position:absolute;top:52px;left:140px;font:600 14px/1.4 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);z-index:5}
+#scenes{position:absolute;inset:0;z-index:2}
+.scene{position:absolute;inset:0;padding:118px 140px 190px;display:flex;flex-direction:column;justify-content:center;opacity:0;visibility:hidden}
+.scene.ink{color:var(--paper)}
+.wash{position:absolute;inset:0;z-index:-1;background:var(--paper);opacity:0}
+.wash.ink{background:var(--ink);opacity:1}
+.wash.red{background:var(--red);opacity:.06}
+.wash.blue{background:var(--blue);opacity:.05}
+.wash.green{background:var(--green);opacity:.06}
+.frame{position:relative;z-index:1;max-width:1660px}
+.kicker{font:600 18px/1.4 var(--sans);letter-spacing:.19em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
+.scene.ink .kicker{color:#a9b7c2}
+h2.big{margin:0 0 8px;font:700 92px/1.0 var(--sans);letter-spacing:-.045em;max-width:1500px}
+h2.big.small{font-size:76px}
+.sub{margin:18px 0 0;font:400 42px/1.24 var(--sans);color:#394956;max-width:1400px}
+.scene.ink .sub{color:#c7d2da}
+.note{margin:26px 0 0;font:400 25px/1.45 var(--sans);color:var(--muted);max-width:1350px}
+.mark{margin:0;font:400 250px/0.9 var(--display);letter-spacing:-.01em}
+.title-rule{width:220px;height:8px;background:var(--green);margin:34px 0 0}
+.name{font:400 250px/0.9 var(--display);letter-spacing:-.04em;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;max-width:1500px}
+.chip{font:500 19px/1.3 var(--mono);color:#344551;background:#fff;border:1px solid var(--rule);padding:9px 14px}
+.chip.hot{border-color:var(--red);color:var(--red)}
+
+/* sources */
+.src-table{margin-top:26px;max-width:1500px}
+.src-row{display:grid;grid-template-columns:420px 110px 1fr;gap:0 26px;border-bottom:1px solid var(--rule)}
+.src-name{font:500 25px/1.9 var(--mono);color:#23343f}
+.src-count{font:400 34px/1.55 var(--display);color:var(--blue);text-align:right}
+.src-desc{font:400 22px/2.0 var(--sans);color:var(--muted)}
+.source-badge{display:inline-block;margin-top:26px;border:2px solid var(--blue);color:var(--blue);font:700 19px/1 var(--sans);letter-spacing:.1em;padding:12px 16px;text-transform:uppercase}
+
+/* architecture */
+.agents{display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin-top:30px}
+.ac{font:700 24px/1.2 var(--sans);border:2px solid var(--rule);background:#fff;padding:16px 20px;color:#344551}
+.ac[data-a="Planner"]{border-color:#344551}
+.ac[data-a="Reconciler"]{border-color:var(--blue);color:var(--blue)}
+.ac[data-a="Critic"]{border-color:var(--amber);color:var(--amber)}
+.ac[data-a="Advocate"]{border-color:var(--red);color:var(--red)}
+.ac[data-a="Reporter"]{border-color:var(--green);color:var(--green)}
+.ar{font:26px var(--mono);color:var(--muted)}
+.loopback{font:700 17px/1.3 var(--mono);color:var(--blue);border:2px dashed var(--blue);padding:12px 14px}
+.under{display:flex;gap:34px;margin-top:36px;flex-wrap:wrap}
+.under span{font:600 18px/1.3 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-top:2px solid var(--rule);padding-top:10px}
+
+/* terminal */
+.terminal{margin-top:24px;background:#0d1a23;border:1px solid #22343f;width:1500px;box-shadow:0 24px 60px #10202b22}
+.term-bar{height:44px;display:flex;align-items:center;gap:9px;padding:0 18px;background:#132531;border-bottom:1px solid #22343f}
+.dot{width:11px;height:11px;border-radius:50%;background:#3b5361}
+.term-title{margin-left:10px;font:500 14px/1 var(--mono);color:#7e95a4}
+.term-body{padding:20px 26px 24px}
+.tline{font:500 21px/1.62 var(--mono);color:#c9d6df;white-space:pre}
+.tline.prompt{color:#8fd0a8}
+.tline.ok{color:#8fd0a8}
+.tline.warn{color:#e2b06a}
+.tline.dim{color:#7e95a4}
+.tline .hl{color:#ffffff;font-weight:700}
+
+/* reasons */
+.reason-grid{display:grid;grid-template-columns:1fr 2px 1fr;gap:64px;align-items:start;margin-top:16px}
+.seam{width:2px;height:100%;min-height:360px;background:var(--rule)}
+.claim-col{position:relative}
+.label{font:700 17px/1.4 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.claim{font:700 76px/1.04 var(--sans);letter-spacing:-.04em;max-width:740px}
+.claim-wrap{position:relative;display:inline-block}
+.strike{position:absolute;left:-.02em;right:-.02em;top:52%;height:9px;background:var(--red);transform:scaleX(0);transform-origin:0 50%}
+.stamp{display:inline-block;margin-top:34px;border:7px solid var(--green);color:var(--green);padding:4px 20px 10px;font:400 62px/0.98 var(--display);transform:rotate(-2deg);opacity:0;visibility:hidden}
+.stamp.red{border-color:var(--red);color:var(--red)}
+.evidence-text{margin:0;font:400 34px/1.4 var(--sans);color:#2b3c48;max-width:720px}
+.citation{margin-top:22px;font:500 18px/1.5 var(--mono);color:var(--blue);border-left:4px solid var(--blue);padding-left:14px}
+
+/* evidence */
+.stats{display:flex;gap:26px;margin-top:22px}
+.stat{flex:1;border-top:3px solid var(--ink);padding-top:16px;max-width:330px}
+.stat b{display:block;font:400 92px/0.95 var(--display);letter-spacing:-.04em;color:var(--ink)}
+.stat span{display:block;margin-top:8px;font:600 17px/1.3 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.chain{display:flex;align-items:center;gap:0;margin-top:34px}
+.hblock{font:500 16px/1 var(--mono);color:#344551;background:#fff;border:1px solid var(--rule);padding:12px 10px}
+.hlink{display:inline-block;width:26px;height:2px;background:var(--rule)}
+.hash{margin-top:22px;font:500 18px/1.4 var(--mono);color:var(--green)}
+
+/* counterfactual */
+.cf-table{margin-top:24px;max-width:1420px}
+.cf-row{display:grid;grid-template-columns:360px 150px 1fr 120px;gap:20px;align-items:center;border-bottom:1px solid var(--rule);padding:12px 0}
+.cf-name{font:500 23px/1.4 var(--mono);color:#23343f}
+.cf-before{font:400 38px/1 var(--display);color:var(--muted);text-align:right}
+.cf-bar{height:16px;background:var(--rule);position:relative;overflow:hidden}
+.cf-fill{position:absolute;inset:0;background:var(--amber);transform-origin:0 50%;transform:scaleX(0)}
+.cf-delta{font:400 34px/1 var(--display);color:var(--red);text-align:right}
+
+/* sponsors */
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:24px;max-width:1560px}
+.card{border:1px solid var(--rule);background:#fff;padding:24px 26px 26px;border-top:5px solid var(--ink)}
+.card:nth-child(1){border-top-color:var(--blue)}
+.card:nth-child(2){border-top-color:var(--green)}
+.card:nth-child(3){border-top-color:var(--amber)}
+.card:nth-child(4){border-top-color:var(--red)}
+.card h3{margin:0 0 10px;font:700 22px/1.2 var(--sans);letter-spacing:.1em;text-transform:uppercase}
+.card p{margin:0;font:400 24px/1.42 var(--sans);color:#394956}
+
+/* packet */
+.packet{display:grid;grid-template-columns:1fr 360px;gap:50px;margin-top:20px;align-items:start}
+.pitem{display:grid;grid-template-columns:60px 1fr;gap:16px;border-top:1px solid var(--rule);padding:16px 0}
+.pnum{font:400 36px/1 var(--display);color:var(--blue)}
+.ptitle{font:700 30px/1.2 var(--sans)}
+.pdesc{font:400 21px/1.4 var(--sans);color:var(--muted);margin-top:4px}
+.packet-score{border:1px solid var(--rule);background:#fff;padding:30px;text-align:center}
+.packet-score b{display:block;font:400 150px/0.95 var(--display);letter-spacing:-.05em;color:var(--green)}
+.packet-score span{font:700 19px/1.4 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.packet-score em{display:block;margin-top:18px;font:400 20px/1.4 var(--sans);color:var(--amber);font-style:normal}
+
+/* close */
+.close-sub{margin:26px 0 0;font:400 40px/1.3 var(--sans);color:#c7d2da;max-width:1350px}
+.sponsor-line{margin-top:44px;display:flex;gap:30px;font:600 16px/1.3 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:#8fa0ad}
+
+@media (max-width:900px){
+  html,body,#film{width:100vw;height:56.25vw}
+  .scene{padding:6.1vw 7.3vw 9.9vw}
+  h2.big{font-size:4.8vw}
+  .sub{font-size:2.2vw}
+  .note{font-size:1.3vw}
+}
+</style>
+</head>
+<body>
+<div id="film">
+  <div class="grid"></div>
+  <div id="spine"></div>
+  <div id="episode">OVERTURN · WORKFLOW DEMO</div>
+  <div id="case-tag">CASE CLM-2026-0915 · NORTHBRIDGE HEALTH</div>
+  <div id="scenes"></div>
+</div>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="demo-data.js"></script>
+<script>
+const S = window.STORY;
+const scenes = S.scenes;
+const $ = (s) => document.querySelector(s);
+const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const lines = (text) => String(text || '').split('\n').map(line =>
+  `<span class="line"><span class="inner">${esc(line)}</span></span>`).join('');
+
+const WASH = {paper:'#eef1f4', ink:'#10202b', red:'#b3261e', blue:'#1d4ed8', green:'#1b6b4a', amber:'#8a5a12'};
+
+function renderScene(scene){
+  const ink = scene.layout === 'close' ? ' ink' : '';
+  const wash = scene.layout === 'close' ? 'ink' : (scene.wash || 'paper');
+  const kicker = scene.kicker ? `<div class="kicker">${esc(scene.kicker)}</div>` : '';
+  let body = '';
+  switch(scene.layout){
+    case 'title':
+      body = `<h1 class="mark">${esc(scene.big)}</h1>
+        <p class="sub">${esc(scene.sub)}</p><div class="title-rule"></div>`;
+      break;
+    case 'case':
+      body = `<h1 class="name">${esc(scene.big)}</h1><p class="sub">${esc(scene.sub)}</p>
+        <div class="chips">${(scene.chips||[]).map((c,i)=>`<span class="chip${i>2?' hot':''}">${esc(c)}</span>`).join('')}</div>`;
+      break;
+    case 'sources':
+      body = `<h2 class="big small">${esc(scene.big)}</h2>
+        <div class="src-table">${(scene.rows||[]).map(r=>
+          `<div class="src-row"><div class="src-name">${esc(r[0])}</div><div class="src-count">${esc(r[1])}</div><div class="src-desc">${esc(r[2])}</div></div>`).join('')}</div>
+        <div class="source-badge">ZETARIS · run_sql only</div>
+        ${scene.note?`<p class="note">${esc(scene.note)}</p>`:''}`;
+      break;
+    case 'architecture':
+      body = `<h2 class="big">${esc(scene.big)}</h2>
+        <div class="agents">
+          <span class="ac" data-a="Planner">Planner</span><span class="ar">→</span>
+          <span class="ac" data-a="Reconciler">Reconciler</span><span class="ar">→</span>
+          <span class="ac" data-a="Critic">Critic</span><span class="ar">↔</span>
+          <span class="ac" data-a="Advocate">Advocate</span><span class="ar">→</span>
+          <span class="ac" data-a="Reporter">Reporter</span>
+          <span class="loopback">re-query ⟲</span>
+        </div>
+        <div class="under"><span>deterministic scorer</span><span>SHA-256 evidence chain</span><span>model logged per request</span></div>`;
+      break;
+    case 'terminal':
+      body = `<h2 class="big small">${esc(scene.big)}</h2>
+        <div class="terminal"><div class="term-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="term-title">overturn — python</span></div>
+        <div class="term-body">${(scene.lines||[]).map((l,i)=>{
+          const cls = i===0?'prompt':(l.includes('missing')?'warn':(l.includes('rebutted')?'ok':(l.startsWith('  wrote')||l.startsWith('  trace')?'dim':'')));
+          return `<div class="tline ${cls}">${esc(l)}</div>`;
+        }).join('')}</div></div>
+        ${scene.note?`<p class="note">${esc(scene.note)}</p>`:''}`;
+      break;
+    case 'reason':
+      body = `<h2 class="big small" style="margin-bottom:26px">${esc(scene.big)}</h2>
+        <div class="reason-grid">
+          <div class="claim-col"><div class="label">THE DENIAL SAYS</div>
+            <div class="claim-wrap"><div class="claim">${esc(scene.claim)}</div><span class="strike"></span></div>
+            <div class="stamp">${esc(scene.stamp)}</div>
+          </div>
+          <div class="seam"></div>
+          <div class="file-col"><div class="label">${esc(scene.rightLabel||'THE FILE')}</div>
+            <p class="evidence-text">${esc(scene.rightValue)}</p>
+            <div class="citation">${esc(scene.citation)}</div>
+          </div>
+        </div>`;
+      break;
+    case 'honesty':
+      body = `<h2 class="big small" style="margin-bottom:26px">${esc(scene.big)}</h2>
+        <div class="reason-grid">
+          <div class="claim-col"><div class="label">THE DOCUMENT</div>
+            <div class="claim-wrap"><div class="claim">DOC-003</div><span class="strike"></span></div>
+            <div class="stamp red">${esc(scene.stamp)}</div>
+          </div>
+          <div class="seam"></div>
+          <div class="file-col"><div class="label">${esc(scene.rightLabel||'THE FILE')}</div>
+            <p class="evidence-text">${esc(scene.rightValue)}</p>
+            <div class="citation">${esc(scene.citation)}</div>
+            <p class="note" style="max-width:700px">${esc(scene.note)}</p>
+          </div>
+        </div>`;
+      break;
+    case 'evidence':
+      body = `<h2 class="big small">${esc(scene.big)}</h2>
+        <div class="stats">${(scene.stats||[]).map(s=>
+          `<div class="stat"><b data-v="${esc(s[0])}">${esc(s[0])}</b><span>${esc(s[1])}</span></div>`).join('')}</div>
+        <div class="chain">${['L0001','L0002','L0003','…','L0047'].map((x,i)=>
+          (i?'<span class="hlink"></span>':'')+`<span class="hblock">${esc(x)}</span>`).join('')}</div>
+        <div class="hash">${esc(scene.hash)}</div>
+        ${scene.note?`<p class="note">${esc(scene.note)}</p>`:''}`;
+      break;
+    case 'counterfactual':
+      body = `<h2 class="big small">${esc(scene.big)}</h2>
+        <div class="cf-table">${(scene.rows||[]).map(r=>
+          `<div class="cf-row"><div class="cf-name">${esc(r[0])}</div><div class="cf-before">${esc(r[1])}</div>
+           <div class="cf-bar"><div class="cf-fill" data-w="${Number(r[2])/100}"></div></div>
+           <div class="cf-delta">${esc(r[3])}</div></div>`).join('')}</div>
+        ${scene.note?`<p class="note">${esc(scene.note)}</p>`:''}`;
+      break;
+    case 'sponsors':
+      body = `<h2 class="big small">${esc(scene.big)}</h2>
+        <div class="cards">${(scene.cards||[]).map(c=>
+          `<div class="card"><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p></div>`).join('')}</div>
+        ${scene.note?`<p class="note">${esc(scene.note)}</p>`:''}`;
+      break;
+    case 'packet':
+      body = `<h2 class="big small">${esc(scene.big)}</h2>
+        <div class="packet"><div>${(scene.items||[]).map((it,i)=>
+          `<div class="pitem"><div class="pnum">0${i+1}</div><div><div class="ptitle">${esc(it[0])}</div><div class="pdesc">${esc(it[1])}</div></div></div>`).join('')}</div>
+          <div class="packet-score"><b>84</b><span>solid · conditional</span><em>one action: obtain DOC-003</em></div></div>`;
+      break;
+    case 'close':
+      body = `<h1 class="mark">${esc(scene.big)}</h1><p class="close-sub">${esc(scene.sub)}</p>
+        <div class="sponsor-line"><span>Zetaris</span><span>Meterless H-MEM</span><span>Meterless World Model</span><span>Meterless Nightshift</span><span>NVIDIA Nemotron</span></div>`;
+      break;
+    default:
+      body = `<h2 class="big">${esc(scene.big)}</h2>`;
+  }
+  return `<section class="scene${ink}" id="scene-${scene.id}" data-wash="${wash}">
+    <div class="wash ${wash}"></div><div class="frame">${kicker}${body}</div></section>`;
+}
+
+$('#scenes').innerHTML = scenes.map(renderScene).join('');
+
+const tl = gsap.timeline({paused:true});
+window.__timelines = {'overturn-demo': tl};
+window.STORY_DURATION = S.total;
+
+tl.set('#spine',{scaleX:0},0);
+tl.to('#spine',{scaleX:1,duration:S.total-0.6,ease:'none'},0.3);
+
+scenes.forEach((scene,index)=>{
+  const el = document.getElementById('scene-'+scene.id);
+  const start = scene.start;
+  const voiceAt = scene.voice_start;
+  const color = scene.layout==='close' ? '#eef1f4' : (WASH[scene.wash]||'#c4cfd8');
+
+  if(index===0){
+    tl.set(el,{autoAlpha:1},0);
+    tl.fromTo(el.querySelector('.mark'),{scale:.97,autoAlpha:0},{scale:1,autoAlpha:1,duration:1.2,ease:'power3.out'},0.1);
+    tl.fromTo(el.querySelector('.sub'),{y:18,autoAlpha:0},{y:0,autoAlpha:1,duration:0.9,ease:'power2.out'},0.9);
+    tl.fromTo(el.querySelector('.title-rule'),{scaleX:0},{scaleX:1,duration:0.9,ease:'power2.out'},1.1);
+  } else {
+    const prev = document.getElementById('scene-'+scenes[index-1].id);
+    tl.to(prev,{autoAlpha:0,y:-14,duration:0.5,ease:'power2.in'},start-0.34);
+    tl.to(el,{autoAlpha:1,y:0,duration:0.6,ease:'power2.out'},start);
+  }
+
+  tl.to('#spine',{backgroundColor:color,duration:0.5},start);
+  tl.to('#case-tag',{autoAlpha:scene.layout==='close'?0:1,duration:0.4},start);
+  tl.to('#episode',{color:scene.layout==='close'?'#8fa0ad':'#5f6d79',duration:0.4},start);
+
+  const kicker = el.querySelector('.kicker');
+  if(kicker && index>0) tl.fromTo(kicker,{autoAlpha:0,y:12},{autoAlpha:1,y:0,duration:0.55,ease:'power2.out'},start+0.08);
+  const big = el.querySelector('h2.big, .name, .mark');
+  if(big && index>0) tl.fromTo(big,{autoAlpha:0,y:22},{autoAlpha:1,y:0,duration:0.75,ease:'power3.out'},start+0.2);
+  const sub = el.querySelector('.sub, .close-sub');
+  if(sub && index>0) tl.fromTo(sub,{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:0.7,ease:'power2.out'},start+0.45);
+  const note = el.querySelector('.note');
+  if(note) tl.fromTo(note,{autoAlpha:0,y:12},{autoAlpha:1,y:0,duration:0.6,ease:'power2.out'},start+0.9);
+
+  const chips = el.querySelectorAll('.chip');
+  if(chips.length) tl.fromTo(chips,{autoAlpha:0,y:10},{autoAlpha:1,y:0,duration:0.4,stagger:0.09,ease:'power2.out'},start+0.7);
+
+  if(scene.layout==='sources'){
+    tl.fromTo(el.querySelectorAll('.src-row'),{autoAlpha:0,x:-16},{autoAlpha:1,x:0,duration:0.4,stagger:0.11,ease:'power2.out'},start+0.55);
+    tl.fromTo(el.querySelector('.source-badge'),{autoAlpha:0,scale:.94},{autoAlpha:1,scale:1,duration:0.5,ease:'back.out(1.5)'},start+1.5);
+  }
+  if(scene.layout==='architecture'){
+    tl.fromTo(el.querySelectorAll('.ac'),{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:0.4,stagger:0.16,ease:'power2.out'},start+0.5);
+    tl.fromTo(el.querySelectorAll('.ar'),{autoAlpha:0},{autoAlpha:1,duration:0.25,stagger:0.16},start+0.62);
+    tl.fromTo(el.querySelector('.loopback'),{autoAlpha:0,x:-12},{autoAlpha:1,x:0,duration:0.45,ease:'power2.out'},start+1.5);
+    tl.fromTo(el.querySelectorAll('.under span'),{autoAlpha:0,y:10},{autoAlpha:1,y:0,duration:0.45,stagger:0.12},start+1.8);
+  }
+  if(scene.layout==='terminal'){
+    tl.fromTo(el.querySelectorAll('.tline'),{autoAlpha:0,x:-8},{autoAlpha:1,x:0,duration:0.22,stagger:0.34,ease:'none'},start+0.55);
+  }
+  if(scene.layout==='reason' || scene.layout==='honesty'){
+    tl.fromTo(el.querySelector('.file-col'),{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:0.7,ease:'power2.out'},start+0.7);
+    const stampAt = voiceAt + (scene.stampAt||3.0);
+    tl.to(el.querySelector('.strike'),{scaleX:1,duration:0.45,ease:'power2.inOut'},stampAt-0.2);
+    tl.fromTo(el.querySelector('.stamp'),{autoAlpha:0,scale:1.35,rotation:-9},{autoAlpha:1,scale:1,rotation:-2,duration:0.5,ease:'back.out(1.6)'},stampAt);
+  }
+  if(scene.layout==='evidence'){
+    tl.fromTo(el.querySelectorAll('.stat'),{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:0.5,stagger:0.12,ease:'power2.out'},start+0.5);
+    tl.fromTo(el.querySelectorAll('.hblock'),{autoAlpha:0,y:10},{autoAlpha:1,y:0,duration:0.3,stagger:0.12},start+1.0);
+    tl.fromTo(el.querySelectorAll('.hlink'),{scaleX:0},{scaleX:1,duration:0.25,stagger:0.12,transformOrigin:'0 50%'},start+1.1);
+    const hash = el.querySelector('.hash'); if(hash) tl.fromTo(hash,{autoAlpha:0},{autoAlpha:1,duration:0.6},start+1.8);
+  }
+  if(scene.layout==='counterfactual'){
+    tl.fromTo(el.querySelectorAll('.cf-row'),{autoAlpha:0,y:12},{autoAlpha:1,y:0,duration:0.4,stagger:0.14,ease:'power2.out'},start+0.5);
+    el.querySelectorAll('.cf-fill').forEach((fill,i)=>{
+      tl.to(fill,{scaleX:Number(fill.dataset.w),duration:0.8,ease:'power2.out'},start+0.7+i*0.14);
+    });
+  }
+  if(scene.layout==='sponsors'){
+    tl.fromTo(el.querySelectorAll('.card'),{autoAlpha:0,y:20},{autoAlpha:1,y:0,duration:0.55,stagger:0.16,ease:'power2.out'},start+0.5);
+  }
+  if(scene.layout==='packet'){
+    tl.fromTo(el.querySelectorAll('.pitem'),{autoAlpha:0,x:-14},{autoAlpha:1,x:0,duration:0.45,stagger:0.16,ease:'power2.out'},start+0.5);
+    tl.fromTo(el.querySelector('.packet-score'),{autoAlpha:0,scale:.95},{autoAlpha:1,scale:1,duration:0.6,ease:'back.out(1.4)'},start+1.1);
+  }
+  if(scene.layout==='close'){
+    tl.fromTo(el.querySelector('.mark'),{autoAlpha:0,scale:.97},{autoAlpha:1,scale:1,duration:1.2,ease:'power3.out'},start+0.05);
+    tl.fromTo(el.querySelector('.close-sub'),{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:0.8,ease:'power2.out'},start+0.7);
+    tl.fromTo(el.querySelectorAll('.sponsor-line span'),{autoAlpha:0},{autoAlpha:1,duration:0.5,stagger:0.1},start+1.2);
+  }
+});
+
+tl.to({},{duration:1.2},S.total-1.2);
+
+window.seek = (t)=>{
+  const at = clamp(t,0,S.total);
+  tl.seek(at,false);
+  scenes.forEach((sc,index)=>{
+    const el = document.getElementById('scene-'+sc.id);
+    if(!el) return;
+    const nextStart = index < scenes.length-1 ? scenes[index+1].start : S.total;
+    const on = at >= sc.start - 0.45 && at < nextStart + 0.25;
+    el.style.display = on ? 'flex' : 'none';
+  });
+};
+window.addEventListener('load',()=>{window.seek(0);window.__storyReady=true;});
+</script>
+</body>
+</html>
