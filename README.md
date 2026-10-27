@@ -104,7 +104,7 @@ python -m pip install -r requirements.txt
 python -m pytest -q
 ```
 
-**36 tests pass.** They include the live Zetaris REST contract against a local HTTP double, the Nightshift headers/model-discovery contract, the Meterless adapter paths, both loop caps, the four conflicts, the score, the hash chain and the offline end-to-end run.
+**37 tests pass.** They include the live Zetaris REST contract against a local HTTP double, the Nightshift headers/model-discovery contract, the Meterless adapter paths, the Zetaris USL and data-quality views, both loop caps, the four conflicts, the score, the hash chain and the offline end-to-end run.
 
 ---
 
@@ -187,13 +187,15 @@ Removing the EOB leaves the code/record argument intact, so the score does not m
 
 | Sponsor | Where it is load-bearing |
 |---|---|
-| **Zetaris** | The only data path. Policy clauses, denial reasons, clinical records, EOB, procedure codes, document checklist and ICD-10 descriptions are registered as tables/views; `run_sql` is the single data tool. `scripts/register_zetaris_sources.sql` has the registration, semantic view and smoke queries. |
+| **Zetaris** | The only data path. Seven sources, one `run_sql` tool, and a Unified Semantic Layer — `usl_claim_review`, `appeal_evidence`, `claim_facts` — with five data-quality rules in `dq_claim_integrity`. The DDL is in `scripts/register_zetaris_sources.sql`; `ZETARIS_USL.md` maps the evaluation criteria. |
 | **Meterless World Model** | Holds the shared case: evidence lines, denial reasons, missing documents and the packet. The Reconciler writes; the Critic reads; `tests/test_meterless_adapters.py` exercises the adapter. |
 | **Meterless H-MEM** | Remembers the claimant's appeal pattern and the insurer's denial pattern. Run two recalls run one (`tests/test_hmem.py`). |
 | **Meterless Nightshift** | The primary AI provider. `llm.py` implements the OpenAI-compatible contract with `meterless-app` and `meterless-scope` headers, `/v1/models` discovery and served-model logging. |
 | **NVIDIA Nemotron** | The Critic and Advocate share the pinned Nemotron lane. The Advocate's strongest move — re-checking a code/diagnosis mismatch against the ICD-10 table — is a Nemotron-class reasoning task, not a generic chat call. The trace shows the served model. |
 
 The two Meterless engines integrated here are **H-MEM** and the **World Model**. The router in `overturn/router.py` is deterministic local Python, not a Meterless Scout Intent adapter, and is not claimed as one. See `SPONSOR_TECH.md` for the exact code paths, tests and the verified/live split.
+
+The Zetaris layer is documented against the evaluation criteria in `ZETARIS_USL.md`; `tests/test_usl_views.py` runs the shipped view SQL against the SQLite mirror.
 
 The live contract tests use local HTTP doubles so they run with no credentials:
 
@@ -274,7 +276,7 @@ data/
   fixtures/         sample.db, ICD-10 cache, escalation answers
   README.md         source, licence, subset, row counts, registration
   CONFLICTS.md      the four planted conflicts and their terminal states
-tests/              36 tests
+tests/              37 tests
 input_examples/     ava_request.json
 output_examples/    a committed sample run
 video/
@@ -294,6 +296,7 @@ deck/
   index.html        the 15-slide submission deck
   OVERTURN-deck.pdf the exported deck
 APPEAL_SCORE.md     the deterministic score and counterfactual rules
+ZETARIS_USL.md      the USL, DDL map, DQ rules and per-source queries
 SPONSOR_TECH.md     required sponsor-technology explanation
 SUBMISSION_COPY.md  paste-ready version of the sponsor answer
 SUBMISSION.md       HackOS submission sheet and declarations

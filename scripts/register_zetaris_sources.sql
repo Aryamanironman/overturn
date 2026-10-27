@@ -171,7 +171,162 @@ SELECT
   (SELECT COUNT(*) FROM claim_documents WHERE status = 'missing') AS missing_documents;
 
 -- ---------------------------------------------------------------------
--- 5. Smoke queries
+-- 4b. The Unified Semantic Layer (USL)
+--
+-- The USL is the `overturn` schemastore container plus these three views.
+-- `usl_claim_review` is the business entity a judge can query: one row per
+-- denial reason, fully attributed to the policy clause, procedure code,
+-- diagnosis and claim facts. `appeal_evidence` is the evidence-level join;
+-- `claim_facts` is the claim-level measure set.
+-- ---------------------------------------------------------------------
+
+CREATE SCHEMASTORE VIEW usl_claim_review WITH CONTAINER overturn AS
+SELECT
+  d.reason_id,
+  d.reason_text,
+  d.denial_date,
+  d.appeal_deadline,
+  d.cited_clause,
+  p.title              AS clause_title,
+  p.text               AS clause_text,
+  p.applies_to,
+  d.cited_code,
+  c.description        AS code_description,
+  c.contrast,
+  c.prior_auth_required,
+  c.covered,
+  d.cited_diagnosis,
+  i.description        AS diagnosis_description,
+  f.max_weeks_of_therapy,
+  f.physiotherapy_sessions,
+  f.ordered_procedure_code,
+  f.recorded_diagnosis_code,
+  f.missing_documents,
+  (SELECT MIN(document_id) FROM claim_documents WHERE status = 'missing') AS first_missing_document
+FROM denial_reasons d
+LEFT JOIN policy_clauses p   ON p.clause_id = d.cited_clause
+LEFT JOIN procedure_codes c  ON c.code = d.cited_code
+LEFT JOIN icd10_codes i      ON i.code = d.cited_diagnosis
+CROSS JOIN claim_facts f;
+
+-- ---------------------------------------------------------------------
+-- 4c. Data quality rules
+--
+-- One view, five rules, one row per rule. `failures` is the number of rows
+-- that violate the rule; `status` is pass/fail. The expected result is 0
+-- failures on every rule for the Ava case.
+-- ---------------------------------------------------------------------
+
+CREATE SCHEMASTORE VIEW dq_claim_integrity WITH CONTAINER overturn AS
+SELECT 'DQ-01' AS rule_id,
+       'every denial reason cites a policy clause that exists' AS rule,
+       (SELECT COUNT(*) FROM denial_reasons d
+          LEFT JOIN policy_clauses p ON p.clause_id = d.cited_clause
+         WHERE p.clause_id IS NULL) AS failures,
+       CASE WHEN (SELECT COUNT(*) FROM denial_reasons d
+                    LEFT JOIN policy_clauses p ON p.clause_id = d.cited_clause
+                   WHERE p.clause_id IS NULL) = 0 THEN 'pass' ELSE 'fail' END AS status
+UNION ALL
+SELECT 'DQ-02',
+       'every cited procedure code exists in the code table',
+       (SELECT COUNT(*) FROM denial_reasons d
+          LEFT JOIN procedure_codes c ON c.code = d.cited_code
+         WHERE c.code IS NULL),
+       CASE WHEN (SELECT COUNT(*) FROM denial_reasons d
+                    LEFT JOIN procedure_codes c ON c.code = d.cited_code
+                   WHERE c.code IS NULL) = 0 THEN 'pass' ELSE 'fail' END
+UNION ALL
+SELECT 'DQ-03',
+       'every clinical record has a date and a provider',
+       (SELECT COUNT(*) FROM medical_records
+         WHERE record_date IS NULL OR provider IS NULL OR provider = ''),
+       CASE WHEN (SELECT COUNT(*) FROM medical_records
+                    WHERE record_date IS NULL OR provider IS NULL OR provider = '') = 0
+            THEN 'pass' ELSE 'fail' END
+UNION ALL
+SELECT 'DQ-04',
+       'a missing required document is flagged and has no fabricated date',
+       (SELECT COUNT(*) FROM claim_documents WHERE status = 'missing' AND document_date IS NOT NULL),
+       CASE WHEN (SELECT COUNT(*) FROM claim_documents WHERE status = 'missing' AND document_date IS NOT NULL) = 0
+            THEN 'pass' ELSE 'fail' END
+UNION ALL
+SELECT 'DQ-05',
+       'the missing-document count agrees across the fact view and the documents table',
+       (SELECT ABS((SELECT missing_documents FROM claim_facts)
+                 - (SELECT COUNT(*) FROM claim_documents WHERE status = 'missing'))),
+       CASE WHEN (SELECT missing_documents FROM claim_facts)
+               = (SELECT COUNT(*) FROM claim_documents WHERE status = 'missing')
+            THEN 'pass' ELSE 'fail' END;
+
+-- ---------------------------------------------------------------------
+-- 5. USL verification queries
+-- These are the "show the USL is active" queries a judge can run.
+-- ---------------------------------------------------------------------
+
+-- USL-1: one row per denial reason, fully attributed (expect 4).
+SELECT reason_id, cited_clause, clause_title, code_description,
+       diagnosis_description, missing_documents
+FROM usl_claim_review
+ORDER BY reason_id;
+
+-- USL-2: the code mismatch. DEN-02 cites MRI-LS-002; the order and record
+-- use MRI-LS-001.
+SELECT reason_id, cited_code, code_description,
+       ordered_procedure_code, recorded_diagnosis_code, cited_diagnosis
+FROM usl_claim_review
+WHERE reason_id = 'DEN-02';
+
+-- USL-3: the medical-necessity facts (expect 12 sessions and 12 weeks).
+SELECT reason_id, physiotherapy_sessions, max_weeks_of_therapy
+FROM usl_claim_review
+WHERE reason_id = 'DEN-03';
+
+-- USL-4: all five data quality rules should pass.
+SELECT rule_id, rule, failures, status
+FROM dq_claim_integrity
+ORDER BY rule_id;
+
+-- ---------------------------------------------------------------------
+-- 6. Source-by-source verification
+-- Two queries per source, as the Zetaris evaluation asks for.
+-- ---------------------------------------------------------------------
+
+-- policy_clauses (12 rows)
+SELECT COUNT(*) AS policy_clauses FROM policy_clauses;
+SELECT clause_id, section, title, applies_to FROM policy_clauses
+WHERE clause_id IN ('POL-4.1', 'POL-4.3', 'POL-5.1', 'POL-6.4')
+ORDER BY clause_id;
+
+-- denial_reasons (4 rows)
+SELECT COUNT(*) AS denial_reasons FROM denial_reasons;
+SELECT reason_id, denial_date, appeal_deadline, reviewer FROM denial_reasons
+ORDER BY reason_id;
+
+-- medical_records (20 rows)
+SELECT COUNT(*) AS medical_records FROM medical_records;
+SELECT record_type, COUNT(*) AS n, MAX(weeks_of_therapy) AS max_weeks
+FROM medical_records GROUP BY record_type ORDER BY record_type;
+
+-- eob (1 row)
+SELECT COUNT(*) AS eob FROM eob;
+SELECT eob_id, claim_id, service_date, procedure_code, billed_amount, paid_amount
+FROM eob;
+
+-- procedure_codes (6 rows)
+SELECT COUNT(*) AS procedure_codes FROM procedure_codes;
+SELECT code, description, contrast, prior_auth_required, covered
+FROM procedure_codes WHERE code IN ('MRI-LS-001', 'MRI-LS-002') ORDER BY code;
+
+-- claim_documents (5 rows)
+SELECT COUNT(*) AS claim_documents FROM claim_documents;
+SELECT status, COUNT(*) AS n FROM claim_documents GROUP BY status ORDER BY status;
+
+-- icd10_codes (3 rows)
+SELECT COUNT(*) AS icd10_codes FROM icd10_codes;
+SELECT code, description FROM icd10_codes ORDER BY code;
+
+-- ---------------------------------------------------------------------
+-- 7. Smoke queries
 -- ---------------------------------------------------------------------
 
 -- Row counts: expect 12, 4, 20, 1, 6, 5, 3

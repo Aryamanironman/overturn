@@ -87,7 +87,7 @@ No keys are committed. `.env` is gitignored; `.env.example` contains
 placeholders only.
 
 **Honest verification status**
-SAMPLE_MODE is fully verified: 36 tests pass, and `python -m overturn.run
+SAMPLE_MODE is fully verified: 37 tests pass, and `python -m overturn.run
 --case ava --out out/` produces the 84/conditional packet with no credentials.
 The live Zetaris, Meterless Nightshift, H-MEM, World Model and NVIDIA Nemotron
 paths are implemented and contract-tested against local HTTP doubles, but no

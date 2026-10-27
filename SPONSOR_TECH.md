@@ -8,7 +8,7 @@ This document explains the five required sponsor-technology points. It separates
 
 ### Verified in this repository
 
-- **36 tests pass.** Observed with `python -m pytest -q`: `36 passed` (36 collected). The suite includes the live REST contracts against local HTTP doubles, the Meterless adapter HTTP paths, both loop caps, the four planted conflicts, the score, the hash chain and the offline end-to-end run.
+- **37 tests pass.** Observed with `python -m pytest -q`: `37 passed` (37 collected). The suite includes the live REST contracts against local HTTP doubles, the Meterless adapter HTTP paths, the Zetaris USL/data-quality views, both loop caps, the four planted conflicts, the score, the hash chain and the offline end-to-end run.
 - **SAMPLE_MODE end to end.** `python -m overturn.run --case ava --out out/` builds `appeal_packet.json`, `appeal_packet.md`, `receipt.html` and `trace.jsonl` with no Zetaris, Nightshift or credentials. `tests/test_e2e_sample_mode.py::test_cli_runs_offline_and_writes_a_computed_packet` asserts the 84/conditional packet, four denial reasons, five re-queries and a valid hash chain.
 - **Read-only SQL enforcement and the SQLite mirror.** `tests/test_zetaris_client.py::test_live_sql_contract` and `tests/test_zetaris_client.py::test_extract_rows_shapes`.
 - **World Model and H-MEM feature behaviour.** `tests/test_world_model.py::test_critic_sees_reconciler_write`, `tests/test_hmem.py::test_second_run_recalls_first` and `tests/test_meterless_adapters.py::test_meterless_adapters_write_case_state_and_recall`.
@@ -75,6 +75,16 @@ The same script adds:
 - Smoke queries for the four planted conflicts and the row-count check (expected 12, 4, 20, 1, 6, 5, 3).
 
 The SQL comments are explicit that the table names, columns and view semantics are final, while the S3/MinIO `PATH` and connector option names must be confirmed against the deployed Zetaris version. The CSV files must be in storage Zetaris can reach; a laptop path is not visible to it. The two live REST tables use the literal header `user-agent "OVERTURN hackathon you@example.invalid"`; replace it with a real app name and contact before running them.
+
+### The Unified Semantic Layer
+
+The `overturn` schemastore container and three views form the USL:
+
+- `usl_claim_review` — one row per denial reason, attributed to the cited policy clause and its text, the procedure code with its contrast/prior-auth flags, the diagnosis description, and the claim facts.
+- `appeal_evidence` — the evidence-level join across denial, policy, procedure code and diagnosis.
+- `claim_facts` — the claim measures: physiotherapy sessions, weeks of therapy, ordered and recorded codes, missing-document count.
+
+`dq_claim_integrity` adds five data-quality rules (orphan clause, unknown code, undated record, fabricated missing document, disagreeing missing count), one row per rule with a failure count and a pass/fail status. Section 6 of the SQL file has two verification queries for each of the seven sources. `ZETARIS_USL.md` maps all five Zetaris evaluation criteria to these artefacts, and `tests/test_usl_views.py` runs the shipped `usl_claim_review` and `dq_claim_integrity` SQL against the SQLite mirror.
 
 ### Test showing it works
 
@@ -247,7 +257,7 @@ Supporting all five is a deterministic scorer (`overturn/scorer.py`) that no LLM
 ```bash
 python -m pip install -r requirements.txt
 python -m pytest -q
-# observed: 36 passed
+# observed: 37 passed
 
 python -m overturn.run --case ava --out out/
 # SAMPLE_MODE, no credentials
