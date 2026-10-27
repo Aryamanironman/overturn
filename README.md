@@ -271,11 +271,16 @@ tests/              36 tests
 input_examples/     ava_request.json
 output_examples/    a committed sample run
 video/
-  demo.html         the workflow-demo film (seek-driven GSAP)
-  demo.json         scene timings + narration
-  make_demo_voice.py / build_demo.py / render_demo.py
   out/overturn-demo.mp4   the 2 min 20 s submission demo
+  out/overturn-demo.gif   opening + end GIF
   out/overturn-film.mp4   the 76 s pitch film
+  make_demo_voice.py / build_demo.py / render_demo.py
+                          the earlier frame-render pipeline (kept for reference)
+demo-film/
+  index.html        the huashu-motion composition (the final film)
+  script.txt        narration script
+  materials.md      every piece and its source/licence
+  assets/           real receipt capture + fonts
 deck/
   index.html        the 15-slide submission deck
   OVERTURN-deck.pdf the exported deck
