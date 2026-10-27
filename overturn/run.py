@@ -34,6 +34,7 @@ from .scorer import counterfactuals, score_appeal
 from .trace import Tracer
 from .world_model import WorldModel, make_world_model
 from .zetaris import SqlClient
+from .jdbc import JdbcClient
 
 MAX_CONFLICT_ITERS = 4
 MAX_ADVOCATE_ITERS = 3
@@ -258,11 +259,14 @@ def run_pipeline(
         mode=settings.mode_label,
         decision=f"case {case['case_id']} as of {case['as_of']}",
         sample_mode_raw=settings.sample_mode_raw,
-        zetaris=("sqlite-mirror" if settings.offline else settings.zetaris_rest_url),
+        zetaris=("sqlite-mirror" if settings.offline else ("zetaris-jdbc" if settings.zetaris_jdbc_url and settings.zetaris_jdbc_jar else settings.zetaris_rest_url)),
         nightshift=("offline-deterministic" if settings.offline else settings.nightshift_base_url),
     )
 
-    sql = SqlClient(settings, tracer)
+    if settings.zetaris_jdbc_url and settings.zetaris_jdbc_jar and not settings.offline:
+        sql = JdbcClient(settings, tracer)
+    else:
+        sql = SqlClient(settings, tracer)
     llm = LLMClient(settings, tracer, ROOT / "data" / "fixtures" / "llm_responses.jsonl")
     route = route_request(case.get("request", ""), case.get("purpose"))
     tracer.event(

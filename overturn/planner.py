@@ -102,12 +102,10 @@ class Planner:
                     "sql": sql,
                     "why": str(query.get("why", "planner-selected")),
                 })
-            if cleaned:
-                existing = {query["id"] for query in cleaned}
-                for required in DEFAULT_QUERIES:
-                    if required["id"] not in existing:
-                        cleaned.append(dict(required))
-                plan["queries"] = cleaned
+            # Live planners can invent columns. The canonical queries are the
+            # schema-checked set the Reconciler executes; the model still owns
+            # the sources, steps and claim_to_test.
+            plan["queries"] = [dict(query) for query in DEFAULT_QUERIES]
         if isinstance(result.get("claim_to_test"), str) and result["claim_to_test"].strip():
             plan["claim_to_test"] = result["claim_to_test"].strip()
         if isinstance(result.get("steps"), list):

@@ -75,6 +75,8 @@ class Settings:
     zetaris_sql_path: str = "/api/proxy/sql-editor/sqls/run-query"
     zetaris_limit: int = 1000
     zetaris_timeout: float = 60.0
+    zetaris_jdbc_url: str = ""
+    zetaris_jdbc_jar: str = ""
 
     # Meterless Nightshift (OpenAI-compatible)
     nightshift_base_url: str = "http://127.0.0.1:8088/v1"
@@ -166,6 +168,8 @@ def load_settings(mode_override: str | None = None) -> Settings:
         zetaris_sql_path=_zetaris_sql_path(rest),
         zetaris_limit=int(os.getenv("ZETARIS_QUERY_LIMIT", "1000")),
         zetaris_timeout=float(os.getenv("ZETARIS_TIMEOUT_SECONDS", "60")),
+        zetaris_jdbc_url=os.getenv("ZETARIS_JDBC_URL", "").strip(),
+        zetaris_jdbc_jar=os.getenv("ZETARIS_JDBC_JAR", "").strip(),
         nightshift_base_url=base,
         nightshift_api_key=ns_key,
         nightshift_app=os.getenv("METERLESS_APP", "overturn").strip() or "overturn",

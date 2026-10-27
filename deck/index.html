@@ -653,7 +653,7 @@ h1.xl{font-size:112px}
       <div class="zet-right">
         <div class="panel">
           <div class="pt">The live contract</div>
-          <p><span class="mono" style="font-size:18px">POST /api/proxy/sql-editor/sqls/run-query</span><br>Bearer key · numeric org id · fresh UUID request id · one SQL statement.</p>
+          <p><span class="mono" style="font-size:18px">jdbc:zetaris:lightning@…:10000</span><br>The live run used the JDBC endpoint: 13 read-only calls, USL + five DQ rules pass. The REST proxy contract is also implemented and tested.</p>
         </div>
         <div class="code"><span class="c"># a real query from out/trace.jsonl</span>
 <span class="b">SELECT</span> * <span class="b">FROM</span> denial_reasons
@@ -810,7 +810,7 @@ h1.xl{font-size:112px}
       <div><span class="mono">test_router.py</span><em>intent routing</em></div>
       <div><span class="mono">test_data_integrity.py</span><em>source fixtures</em></div>
     </div>
-    <p class="ver-note"><b>Honest limit:</b> the live Zetaris + Nightshift run is pending the platform bundle and credentials. SAMPLE_MODE and both HTTP contracts are verified.</p>
+    <p class="ver-note"><b>Live run:</b> Zetaris JDBC (13 read-only queries, USL + five DQ rules) and Nightshift (11 agent calls, served by nvidia/nemotron-3-ultra-550b-a55b). H-MEM/World Model used local mirrors.</p>
   </div>
   <div class="foot"><span>OVERTURN — The denial, answered with evidence</span><span>One evidence file</span></div>
 </section>

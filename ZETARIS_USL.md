@@ -23,7 +23,7 @@ Clinical Tables API prove live source connectivity.
 
 ## 2. The USL and its DDL
 
-The USL is the `overturn` schemastore container plus three views. The DDL is
+The USL is the `overturn_db` schemastore container in database `OVERTURN_DB` plus three views. The DDL is
 section 4/4b of `scripts/register_zetaris_sources.sql`.
 
 - **`usl_claim_review`** — the business entity. One row per denial reason,
@@ -92,3 +92,7 @@ prior-auth flags, the 12/12 physiotherapy facts, the document status split).
 `dq_claim_integrity` bodies against the SQLite mirror. It fails if the views
 and the case facts drift: 4 reason rows, the DEN-02 code mismatch, 12/12
 physiotherapy, DOC-003 missing, and all five DQ rules passing.
+
+## Live verification (27–28 October 2026)
+
+The seven tables were created in `OVERTURN_DB` from the public `overtun` S3 bucket, the three views were created in `overturn_db`, thirteen read-only JDBC calls succeeded, and all five DQ rules returned `pass` with 0 failures. Evidence: `output_examples/live/trace.jsonl`.
