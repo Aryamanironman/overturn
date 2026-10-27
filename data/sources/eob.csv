@@ -1,0 +1,2 @@
+eob_id,claim_id,service_date,procedure_code,billed_amount,allowed_amount,paid_amount,patient_responsibility,denial_code,denial_date
+EOB-001,CLM-2026-0915,2026-09-15,MRI-LS-001,850.0,0.0,0.0,850.0,N-03,2026-10-01

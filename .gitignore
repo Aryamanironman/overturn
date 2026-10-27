@@ -1,0 +1,31 @@
+# secrets
+.env
+.env.local
+.env.*.local
+
+# runtime output
+out/*
+!out/.gitkeep
+.overturn/
+
+# python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# film render scratch (keep the encoded film and share assets)
+video/frames-film/
+video/film-stills/
+video/voice/
+video/assets/*.wav
+video/out/qa-film/
+video/out/test-*.mp4

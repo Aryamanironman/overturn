@@ -1,0 +1,20 @@
+[
+  {
+    "code": "M54.5",
+    "description": "Low back pain, unspecified",
+    "category": "M54",
+    "source": "ICD-10-CM (public)"
+  },
+  {
+    "code": "M51.1",
+    "description": "Lumbar and other intervertebral disc disorders with radiculopathy",
+    "category": "M51",
+    "source": "ICD-10-CM (public)"
+  },
+  {
+    "code": "M54.50",
+    "description": "Low back pain, unspecified, site unspecified",
+    "category": "M54",
+    "source": "ICD-10-CM (public)"
+  }
+]

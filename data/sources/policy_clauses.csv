@@ -1,0 +1,13 @@
+clause_id,section,title,text,effective_date,version,applies_to
+POL-4.1,4.1,Covered imaging,MRI lumbar spine without contrast (MRI-LS-001) is covered when the member has completed at least six weeks of conservative therapy.,2026-01-01,2026.1,MRI-LS-001
+POL-4.2,4.2,Prior authorisation,"MRI lumbar spine without contrast (MRI-LS-001) does not require prior authorisation. Contrast studies (MRI-LS-002, MRI-LS-003) require prior authorisation.",2026-01-01,2026.1,MRI-LS-001;MRI-LS-002;MRI-LS-003
+POL-4.3,4.3,Experimental or investigational,The experimental exclusion applies to spinal fusion (SPINE-FUSION-001) and disc replacement. It does not apply to diagnostic MRI of the lumbar spine.,2026-01-01,2026.1,SPINE-FUSION-001
+POL-5.1,5.1,Medical necessity,"Lumbar imaging is medically necessary when the clinical record documents failed conservative treatment for at least six weeks, including physiotherapy or analgesic medication.",2026-01-01,2026.1,MRI-LS-001
+POL-5.2,5.2,Conservative therapy,"Conservative therapy includes physiotherapy, a structured home exercise programme and analgesic medication.",2026-01-01,2026.1,all
+POL-6.4,6.4,Claim documentation,An imaging claim must include a specialist referral letter dated after the imaging order. Without it the claim is incomplete.,2026-01-01,2026.1,MRI-LS-001
+POL-7.2,7.2,Claim edits,Procedure code MRI-LS-002 (MRI with contrast) requires prior authorisation. MRI-LS-001 (without contrast) does not.,2026-01-01,2026.1,MRI-LS-002
+POL-8.1,8.1,Internal appeal,A member may request an internal appeal within 60 days of the denial date.,2026-01-01,2026.1,all
+POL-9.3,9.3,Policy version,Version 2026.1 is effective 1 January 2026 and supersedes version 2025.3.,2026-01-01,2026.1,all
+POL-10.1,10.1,Definitions,A specialist referral letter is a letter from the treating specialist that recommends the imaging and is dated after the imaging order.,2026-01-01,2026.1,all
+POL-12.4,12.4,Clinical records,Clinical records must be dated and attributable to a treating provider.,2026-01-01,2026.1,all
+POL-13.1,13.1,Response time,The insurer must respond to an internal appeal within 30 days of receiving it.,2026-01-01,2026.1,all
