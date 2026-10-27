@@ -66,7 +66,9 @@ decision. It gives a person the file they need to argue their own case.
 Paste the contents of `SUBMISSION_COPY.md` (four paragraphs, ~450 words).
 
 **GitHub repository**
-https://github.com/Aryamanironman/overturn
+`https://github.com/<your-account>/overturn` — replace `<your-account>` with the
+account or org the repository is published under. The owner is deliberately
+left blank here.
 
 **Demo video**
 `video/out/overturn-demo.mp4` — 2 min 20 s, 1920×1080, 30 fps, H.264/AAC.
