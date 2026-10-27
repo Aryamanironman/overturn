@@ -45,4 +45,11 @@ demo-film/index-*.png
 demo-film/shot-*.png
 demo-film/frame*.png
 demo-film/.om/
+
+# pitch-film scratch (the final film lives in video/out)
+pitch-film/out/
+pitch-film/assets/*.wav
+pitch-film/index-*.png
+pitch-film/tools/*.png
+pitch-film/.om/
 .claude/worktrees/

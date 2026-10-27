@@ -1,0 +1,32 @@
+Your insurer said no.
+Four reasons.
+Three of them are wrong.
+Most people can't prove what the file already says.
+OVERTURN can.
+It reads the denial, the policy, the clinical record, and the codes.
+It finds the contradiction.
+It re-queries the source.
+It shows its work.
+No dashboard.
+No score without a citation.
+Every claim resolves to a row.
+Seven sources, one data path: Zetaris.
+Five agents: plan, reconcile, attack, defend, report.
+A deterministic score.
+A tamper-evident ledger.
+A human reviews it.
+A human signs it.
+OVERTURN does the reading.
+And the one document that's missing?
+It won't invent it.
+It tells you to get it.
+Eighty-four out of one hundred.
+Solid.
+Conditional.
+Send the letter, and it's one hundred.
+One worker.
+One denial.
+One document a human can send.
+Built with Zetaris, Meterless, and NVIDIA Nemotron.
+OVERTURN.
+The denial, answered with evidence.

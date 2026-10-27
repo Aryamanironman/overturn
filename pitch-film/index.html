@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[
+  {"id":"title","type":"string","label":"Title","default":"OVERTURN"},
+  {"id":"subtitle","type":"string","label":"Subtitle","default":"The denial, answered with evidence."},
+  {"id":"score","type":"number","label":"Score","default":84,"min":0,"max":100,"step":1},
+  {"id":"ready","type":"number","label":"Ready score","default":100,"min":0,"max":100,"step":1},
+  {"id":"missingDoc","type":"string","label":"Missing document","default":"DOC-003"},
+  {"id":"paper","type":"color","label":"Paper","default":"#eef1f4"},
+  {"id":"ink","type":"color","label":"Ink","default":"#10202b"},
+  {"id":"green","type":"color","label":"Verified","default":"#1b6b4a"},
+  {"id":"red","type":"color","label":"Denied","default":"#b3261e"},
+  {"id":"blue","type":"color","label":"Citation","default":"#1d4ed8"},
+  {"id":"amber","type":"color","label":"Conditional","default":"#8a5a12"},
+  {"id":"endHold","type":"number","label":"End hold (s)","default":3.4,"min":0,"max":8,"step":0.1,"group":"Rhythm"}
+]'>
+<head>
+<meta charset="utf-8">
+<title>OVERTURN — the denial, answered</title>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/om.js"></script>
+<style>
+@font-face{font-family:"Archivo";src:url("assets/fonts/ArchivoBlack-400.woff") format("woff");font-weight:400;font-style:normal}
+@font-face{font-family:"Inter";src:url("assets/fonts/Inter-var.woff") format("woff");font-weight:100 900;font-style:normal}
+:root{
+  --paper:#eef1f4; --ink:#10202b; --muted:#5f6d79; --rule:#c4cfd8;
+  --blue:#1d4ed8; --green:#1b6b4a; --amber:#8a5a12; --red:#b3261e;
+  --sans:"Inter",ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --display:"Archivo",ui-sans-serif,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--paper)}
+#film{position:relative;width:100%;height:100%;overflow:hidden;color:var(--ink);font-family:var(--sans);background:var(--paper)}
+.grid{position:absolute;inset:-80px;background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);background-size:56px 56px;opacity:.22}
+.grid::after{content:"";position:absolute;inset:0;background:radial-gradient(1200px 700px at 18% 0%,#ffffffdd,transparent 62%),radial-gradient(900px 600px at 100% 100%,#dfe7ee99,transparent 60%)}
+#chrome{position:absolute;inset:0;z-index:6;pointer-events:none}
+#episode{position:absolute;top:48px;left:130px;font:600 13px/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+#case{position:absolute;top:48px;right:130px;font:600 13px/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+#scenes{position:absolute;inset:0;z-index:2}
+.scene{position:absolute;inset:0;padding:112px 130px 150px;display:none;flex-direction:column;justify-content:center}
+.scene.ink{color:var(--paper)}
+.scene .bg{position:absolute;inset:0;z-index:-1;background:var(--paper);opacity:0}
+.scene.ink .bg{background:var(--ink);opacity:1}
+.frame{position:relative;z-index:1;width:100%;max-width:1660px}
+.kicker{font:700 16px/1.4 var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
+.scene.ink .kicker{color:#93a5b2}
+.big{margin:0;font:700 104px/1.0 var(--sans);letter-spacing:-.05em}
+.big.sm{font-size:82px}
+.mega{margin:0;font:400 300px/0.86 var(--display);letter-spacing:-.045em}
+.mega.sm{font-size:210px}
+.sub{margin:20px 0 0;font:400 38px/1.28 var(--sans);color:#394956;max-width:1350px}
+.scene.ink .sub{color:#c7d2da}
+.note{margin:22px 0 0;font:400 24px/1.45 var(--sans);color:var(--muted);max-width:1300px}
+.mark{margin:0;font:400 250px/0.9 var(--display);letter-spacing:-.02em}
+.rule{height:8px;background:var(--green);width:100%;max-width:900px;margin-top:28px;transform-origin:0 50%}
+.label{font:700 15px/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+
+/* hook */
+.denied{display:inline-block;border:9px solid var(--red);color:var(--red);font:400 82px/0.95 var(--display);padding:4px 22px 10px;transform:rotate(-3deg);margin-top:24px}
+.reasons{display:flex;gap:16px;margin-top:46px;max-width:1300px;position:relative}
+.sweep{position:absolute;left:0;top:-14px;height:6px;width:100%;background:var(--green);transform:scaleX(0);transform-origin:0 50%}
+.rcard{flex:1;border:2px solid #334854;background:#152632;padding:18px 20px 20px;position:relative;overflow:hidden}
+.rcard .n{font:400 44px/1 var(--display);color:#8fa4b2}
+.rcard .t{font:600 17px/1.35 var(--sans);color:#c7d2da;margin-top:8px}
+.rcard .strike{position:absolute;left:-4%;right:-4%;top:68%;height:7px;background:var(--green);transform:scaleX(0);transform-origin:0 50%}
+.rcard .tag{position:absolute;right:12px;bottom:10px;font:700 14px/1 var(--sans);letter-spacing:.14em;color:#8fd7b0;opacity:0}
+.rcard.missing{border-color:var(--red)}
+.rcard.missing .tag{color:var(--red)}
+.hook-foot{margin-top:30px;font:700 54px/1.16 var(--sans);letter-spacing:-.03em;color:#eef1f4;max-width:1450px}
+.hook-foot .w{display:inline-block;transform:translateY(110%);opacity:0}
+.flash{position:absolute;inset:0;background:var(--red);opacity:0;z-index:7;pointer-events:none}
+.foot-rule{height:6px;background:var(--green);width:100%;max-width:1450px;transform-origin:0 50%;transform:scaleX(0);margin-top:18px}
+.band{position:absolute;top:0;bottom:0;left:0;width:22%;background:var(--red);z-index:5;transform:translateX(-140%);opacity:.92;pointer-events:none}
+
+/* cards */
+.cardgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px}
+.dcard{border:1px solid var(--rule);background:#fff;padding:20px 20px 18px;box-shadow:0 10px 26px #10202b0f;transform-origin:50% 60%}
+.dcard .name{font:500 19px/1.3 var(--mono);color:#23343f}
+.dcard .count{font:400 46px/1.0 var(--display);color:var(--blue);margin-top:12px}
+.dcard .what{font:400 15px/1.35 var(--sans);color:var(--muted);margin-top:6px}
+.badge{display:inline-block;margin-top:26px;border:2px solid var(--blue);color:var(--blue);font:700 15px/1 var(--sans);letter-spacing:.16em;padding:11px 15px;text-transform:uppercase}
+
+/* flip */
+.flipwrap{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center;margin-top:16px}
+.flip{position:relative;height:360px;perspective:1400px;transform-style:preserve-3d}
+.flip .face{position:absolute;inset:0;backface-visibility:hidden;border:2px solid var(--red);background:#fff;padding:28px;display:flex;flex-direction:column;justify-content:space-between}
+.flip .back{transform:rotateY(180deg);border-color:var(--green)}
+.flip .face .lbl{font:700 14px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.flip .face .q{font:700 40px/1.12 var(--sans);letter-spacing:-.03em}
+.flip .back .q{color:var(--green);font-size:34px}
+.flip .face .src{font:500 14px/1.4 var(--mono);color:var(--blue)}
+.rebuttal{display:flex;flex-direction:column;gap:16px}
+.rebuttal .sql{font:500 16px/1.55 var(--mono);color:#23343f;background:#fff;border:1px solid var(--rule);padding:14px 16px;white-space:pre-wrap}
+.rebuttal .row{font:500 15px/1.5 var(--mono);color:#23343f;border-left:4px solid var(--green);padding-left:12px;opacity:0}
+
+/* proof */
+.rows-bg{position:absolute;inset:0;z-index:0;overflow:hidden;opacity:.20}
+.rows-bg .track{display:flex;flex-direction:column;gap:8px;font:500 12px/1.2 var(--mono);color:#8fa4b2;white-space:nowrap}
+.proof-line{font:700 88px/1.06 var(--sans);letter-spacing:-.045em;margin:0;max-width:1500px}
+.proof-line .num{color:var(--red)}
+.proof-line.green .num{color:var(--green)}
+
+/* zetaris hub */
+.hub{position:relative;width:1180px;height:520px;margin:10px auto 0}
+.hub svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.hub .center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:3px solid var(--blue);background:#fff;color:var(--blue);padding:22px 30px;font:700 22px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;box-shadow:0 18px 40px #1d4ed81f}
+.hnode{position:absolute;font:500 15px/1.2 var(--mono);color:#23343f;background:#fff;border:1px solid var(--rule);padding:9px 12px;transform:translate(-50%,-50%)}
+
+/* agents */
+.track{position:relative;display:flex;align-items:center;justify-content:space-between;margin-top:46px;padding:0 10px}
+.track:before{content:"";position:absolute;left:2%;right:2%;top:50%;height:2px;background:var(--rule)}
+.agent{position:relative;z-index:2;background:#fff;border:2px solid var(--rule);padding:18px 22px;font:700 22px/1 var(--sans);color:#344551;transform:translateY(0)}
+.agent[data-a="Reconciler"]{border-color:var(--blue);color:var(--blue)}
+.agent[data-a="Critic"]{border-color:var(--amber);color:var(--amber)}
+.agent[data-a="Advocate"]{border-color:var(--red);color:var(--red)}
+.agent[data-a="Reporter"]{border-color:var(--green);color:var(--green)}
+.dot{position:absolute;left:0;top:50%;width:18px;height:18px;border-radius:50%;background:var(--blue);transform:translate(-50%,-50%);z-index:3}
+.looparc{position:absolute;left:38%;right:22%;top:-42px;height:70px;border:3px dashed var(--amber);border-bottom:none;border-radius:120px 120px 0 0;opacity:0}
+
+/* stats */
+.statgrid{display:grid;grid-template-columns:480px 1fr;gap:70px;align-items:center;margin-top:6px}
+.ringwrap{position:relative;width:440px;height:440px;display:flex;align-items:center;justify-content:center}
+.ringwrap svg{position:absolute;inset:0;width:440px;height:440px;transform:rotate(-90deg)}
+.ringnum{position:relative;font:400 190px/0.9 var(--display);letter-spacing:-.06em;display:flex;flex-direction:column;align-items:center}
+.ringnum small{font-size:46px;color:var(--muted);letter-spacing:0;line-height:1;margin-top:2px}
+.chain{display:flex;flex-wrap:wrap;gap:7px;max-width:900px}
+.hb{font:500 13px/1 var(--mono);color:#344551;background:#fff;border:1px solid var(--rule);padding:10px 8px}
+.hhead{margin-top:20px;font:500 15px/1.5 var(--mono);color:var(--green)}
+.humanstamp{display:inline-block;border:5px solid var(--amber);color:var(--amber);padding:2px 14px 6px;font:400 44px/0.95 var(--display);transform:rotate(-2deg);opacity:0;margin-top:20px}
+.reading{margin-top:26px;font:700 46px/1.1 var(--sans);letter-spacing:-.03em;opacity:0}
+
+/* missing */
+.missgrid{display:grid;grid-template-columns:520px 1fr;gap:60px;align-items:center}
+.doc{border:2px solid var(--red);background:#fff;padding:28px;position:relative;min-height:330px;display:flex;flex-direction:column;justify-content:space-between}
+.doc .lbl{font:700 14px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--red)}
+.doc .id{font:400 74px/1.05 var(--display);letter-spacing:-.03em;margin-top:18px}
+.doc .lines{margin-top:22px}
+.doc .lines i{display:block;height:10px;background:var(--rule);margin-bottom:12px}
+.doc .lines i:nth-child(2){width:86%}.doc .lines i:nth-child(3){width:64%}.doc .lines i:nth-child(4){width:72%}
+.bigstamp{position:absolute;right:-18px;bottom:26px;border:8px solid var(--red);color:var(--red);padding:4px 20px 10px;font:400 62px/0.95 var(--display);transform:rotate(-7deg);opacity:0}
+.action{display:inline-block;margin-top:18px;background:var(--green);color:#fff;font:700 20px/1 var(--sans);letter-spacing:.06em;padding:16px 20px;opacity:0}
+
+/* result */
+.resultgrid{display:flex;align-items:center;gap:60px}
+.resultnum{font:400 300px/0.9 var(--display);letter-spacing:-.06em;color:var(--amber)}
+.resultnum.ready{color:var(--green)}
+.resultmeta .t{font:700 30px/1.2 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.resultmeta .d{margin-top:14px;font:400 32px/1.3 var(--sans);color:#394956;max-width:620px}
+
+/* packet */
+.packetgrid{display:grid;grid-template-columns:1fr 900px;gap:50px;align-items:center}
+.receipt{border:1px solid var(--rule);background:#fff;padding:12px;box-shadow:0 30px 70px #10202b24;transform:rotate(-1.2deg)}
+.receipt img{display:block;width:100%;height:520px;object-fit:cover;object-position:top left}
+.receipt .cap{display:flex;justify-content:space-between;padding:10px 4px 2px;font:500 13px/1.3 var(--mono);color:var(--muted)}
+.receipt .cap b{color:var(--green)}
+.packet-lines .pl{font:700 48px/1.12 var(--sans);letter-spacing:-.03em;margin:0 0 14px}
+.packet-lines .pl span{color:var(--green)}
+
+/* close */
+.closegrid{display:flex;flex-direction:column;justify-content:center;height:100%}
+.sponsors{display:flex;gap:26px;flex-wrap:wrap;margin-top:36px;font:600 15px/1.3 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:#8fa0ad}
+
+/* wipe */
+#wipe{position:absolute;inset:0;z-index:8;background:var(--ink);transform:scaleX(0);transform-origin:0 50%;pointer-events:none}
+#poster{position:absolute;inset:0;padding:112px 130px 150px;display:flex;flex-direction:column;justify-content:center;z-index:3;background:var(--ink);color:var(--paper)}
+#poster .kicker{color:#a9b7c2}
+#poster .sub{color:#c7d2da}
+</style>
+</head>
+<body>
+<div id="film" data-composition-id="pitch-film" data-width="1920" data-height="1080">
+  <audio id="om-sound" src="assets/sound.wav" data-start="0" data-duration="60.265" data-track-index="8" data-volume="1"></audio>
+  <div class="grid" data-om-id="grid"></div>
+  <div id="chrome">
+    <div id="episode" data-om-id="episode">OVERTURN · PITCH</div>
+    <div id="case" data-om-id="case">CLM-2026-0915 · NORTHBRIDGE HEALTH</div>
+  </div>
+  <div id="scenes"></div>
+  <div id="wipe" data-om-id="wipe"></div>
+  <div id="poster" data-om-id="poster" data-layout-allow-overlap>
+    <div class="kicker">Open Agent Hackathon 2026 · Track 2</div>
+    <h1 class="mark">OVERTURN</h1>
+    <p class="sub">The denial, answered with evidence.</p>
+  </div>
+</div>
+
+<script type="application/json" id="om-cues">{"source":"tts:kokoro:af_heart","precision":"tts","offset":0,"duration":56.864,"words":[
+{"word":"Your","start":0,"end":0.207},
+{"word":"insurer","start":0.207,"end":0.827},
+{"word":"said","start":0.827,"end":1.034},
+{"word":"no","start":1.034,"end":1.241},
+{"word":"Four","start":1.491,"end":1.767},
+{"word":"reasons","start":1.767,"end":2.321},
+{"word":"Three","start":2.57,"end":2.759},
+{"word":"of","start":2.759,"end":2.948},
+{"word":"them","start":2.948,"end":3.137},
+{"word":"are","start":3.137,"end":3.514},
+{"word":"wrong","start":3.514,"end":3.703},
+{"word":"Most","start":3.953,"end":4.127},
+{"word":"people","start":4.127,"end":4.474},
+{"word":"can't","start":4.474,"end":4.821},
+{"word":"prove","start":4.821,"end":5.168},
+{"word":"what","start":5.168,"end":5.342},
+{"word":"the","start":5.342,"end":5.515},
+{"word":"file","start":5.515,"end":5.863},
+{"word":"already","start":5.863,"end":6.383},
+{"word":"says","start":6.383,"end":6.557},
+{"word":"OVERTURN","start":6.807,"end":7.514},
+{"word":"can","start":7.514,"end":7.75},
+{"word":"It","start":8,"end":8.176},
+{"word":"reads","start":8.176,"end":8.351},
+{"word":"the","start":8.351,"end":8.527},
+{"word":"denial","start":8.527,"end":8.879},
+{"word":"the","start":8.879,"end":9.261},
+{"word":"policy","start":9.261,"end":9.791},
+{"word":"the","start":9.791,"end":10.194},
+{"word":"clinical","start":10.194,"end":10.72},
+{"word":"record","start":10.72,"end":11.07},
+{"word":"and","start":11.07,"end":11.247},
+{"word":"the","start":11.247,"end":11.423},
+{"word":"codes","start":11.423,"end":11.777},
+{"word":"It","start":12.027,"end":12.226},
+{"word":"finds","start":12.226,"end":12.426},
+{"word":"the","start":12.426,"end":12.625},
+{"word":"contradiction","start":12.625,"end":13.423},
+{"word":"It","start":13.672,"end":13.85},
+{"word":"re-queries","start":13.85,"end":14.384},
+{"word":"the","start":14.384,"end":14.562},
+{"word":"source","start":14.562,"end":14.918},
+{"word":"It","start":15.168,"end":15.422},
+{"word":"shows","start":15.422,"end":15.675},
+{"word":"its","start":15.675,"end":15.929},
+{"word":"work","start":15.929,"end":16.182},
+{"word":"No","start":16.432,"end":16.743},
+{"word":"dashboard","start":16.743,"end":17.366},
+{"word":"No","start":17.616,"end":17.804},
+{"word":"score","start":17.804,"end":18.18},
+{"word":"without","start":18.18,"end":18.557},
+{"word":"a","start":18.557,"end":18.745},
+{"word":"citation","start":18.745,"end":19.309},
+{"word":"Every","start":19.559,"end":20.056},
+{"word":"claim","start":20.056,"end":20.221},
+{"word":"resolves","start":20.221,"end":20.718},
+{"word":"to","start":20.718,"end":20.884},
+{"word":"a","start":20.884,"end":21.05},
+{"word":"row","start":21.05,"end":21.216},
+{"word":"Seven","start":21.466,"end":21.865},
+{"word":"sources","start":21.865,"end":22.264},
+{"word":"one","start":22.264,"end":22.661},
+{"word":"data","start":22.661,"end":23.058},
+{"word":"path","start":23.058,"end":23.627},
+{"word":"Zetaris","start":23.627,"end":24.231},
+{"word":"Five","start":24.481,"end":24.912},
+{"word":"agents","start":24.912,"end":25.61},
+{"word":"plan","start":25.61,"end":25.841},
+{"word":"reconcile","start":25.841,"end":26.703},
+{"word":"attack","start":26.703,"end":27.144},
+{"word":"defend","start":27.144,"end":27.585},
+{"word":"report","start":27.585,"end":28.026},
+{"word":"A","start":28.276,"end":28.437},
+{"word":"deterministic","start":28.437,"end":29.239},
+{"word":"score","start":29.239,"end":29.56},
+{"word":"A","start":29.81,"end":29.985},
+{"word":"tamper-evident","start":29.985,"end":30.86},
+{"word":"ledger","start":30.86,"end":31.21},
+{"word":"A","start":31.459,"end":31.657},
+{"word":"human","start":31.657,"end":32.051},
+{"word":"reviews","start":32.051,"end":32.446},
+{"word":"it","start":32.446,"end":32.643},
+{"word":"A","start":32.894,"end":33.116},
+{"word":"human","start":33.116,"end":33.56},
+{"word":"signs","start":33.56,"end":33.782},
+{"word":"it","start":33.782,"end":34.004},
+{"word":"OVERTURN","start":34.253,"end":34.835},
+{"word":"does","start":34.835,"end":35.029},
+{"word":"the","start":35.029,"end":35.222},
+{"word":"reading","start":35.222,"end":35.61},
+{"word":"And","start":35.86,"end":36.015},
+{"word":"the","start":36.015,"end":36.171},
+{"word":"one","start":36.171,"end":36.482},
+{"word":"document","start":36.482,"end":36.949},
+{"word":"that's","start":36.949,"end":37.261},
+{"word":"missing","start":37.261,"end":37.572},
+{"word":"It","start":37.822,"end":37.99},
+{"word":"won't","start":37.99,"end":38.326},
+{"word":"invent","start":38.326,"end":38.662},
+{"word":"it","start":38.662,"end":38.83},
+{"word":"It","start":39.081,"end":39.275},
+{"word":"tells","start":39.275,"end":39.469},
+{"word":"you","start":39.469,"end":39.663},
+{"word":"to","start":39.663,"end":39.857},
+{"word":"get","start":39.857,"end":40.051},
+{"word":"it","start":40.051,"end":40.246},
+{"word":"Eighty-four","start":40.496,"end":40.997},
+{"word":"out","start":40.997,"end":41.163},
+{"word":"of","start":41.163,"end":41.33},
+{"word":"one","start":41.33,"end":41.664},
+{"word":"hundred","start":41.664,"end":41.998},
+{"word":"Solid","start":42.248,"end":42.833},
+{"word":"Conditional","start":43.083,"end":43.827},
+{"word":"Send","start":44.077,"end":44.253},
+{"word":"the","start":44.253,"end":44.429},
+{"word":"letter","start":44.429,"end":44.781},
+{"word":"and","start":44.964,"end":45.09},
+{"word":"it's","start":45.09,"end":45.343},
+{"word":"one","start":45.343,"end":45.595},
+{"word":"hundred","start":45.595,"end":45.848},
+{"word":"One","start":46.098,"end":46.498},
+{"word":"worker","start":46.498,"end":46.899},
+{"word":"One","start":47.149,"end":47.554},
+{"word":"denial","start":47.554,"end":47.959},
+{"word":"One","start":48.209,"end":48.59},
+{"word":"document","start":48.59,"end":49.332},
+{"word":"a","start":49.332,"end":49.522},
+{"word":"human","start":49.522,"end":49.903},
+{"word":"can","start":49.903,"end":50.094},
+{"word":"send","start":50.094,"end":50.284},
+{"word":"Built","start":50.534,"end":50.742},
+{"word":"with","start":50.742,"end":50.949},
+{"word":"Zetaris","start":50.949,"end":51.572},
+{"word":"Meterless","start":51.572,"end":52.421},
+{"word":"and","start":52.421,"end":52.628},
+{"word":"NVIDIA","start":52.628,"end":53.042},
+{"word":"Nemotron","start":53.042,"end":53.662},
+{"word":"OVERTURN","start":53.912,"end":54.655},
+{"word":"The","start":54.905,"end":55.113},
+{"word":"denial","start":55.113,"end":55.528},
+{"word":"answered","start":55.732,"end":56.157},
+{"word":"with","start":56.157,"end":56.298},
+{"word":"evidence","start":56.298,"end":56.865}
+]}</script>
+<audio id="om-voice" src="assets/voice.wav" data-start="0" data-duration="56.864" data-track-index="9" data-volume="1"></audio>
+<script>
+const V = OM.vars();
+const root = document.documentElement.style;
+for (const k of ['paper','ink','green','red','blue','amber']) root.setProperty('--'+k, V[k]);
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const C = (w, n=1) => OM.cue(w, n);
+const END = OM.words().at(-1).end;
+const SCORE = Number(V.score) || 84;
+const READY = Number(V.ready) || 100;
+const HOLD = Number(V.endHold) || 3.4;
+
+const T = {
+  reveal: C('overturn',1),
+  reads: C('reads'),
+  flip: C('finds'),
+  requery: C('queries'),
+  proof: C('dashboard'),
+  zetaris: C('seven'),
+  agents: C('five'),
+  score: C('deterministic'),
+  ledger: C('tamper'),
+  human: C('human',1),
+  reading: C('reading'),
+  missing: C('missing'),
+  invent: C('invent'),
+  get: C('get'),
+  result: C('eighty'),
+  send: C('send'),
+  packet: C('worker'),
+  close: C('built'),
+  brand: C('overturn',2)
+};
+
+const SOURCES = [
+  ['policy_clauses','12','the policy it cites'],
+  ['denial_reasons','4','what the insurer said'],
+  ['medical_records','20','what the clinician recorded'],
+  ['eob','1','what was billed'],
+  ['procedure_codes','6','what the codes mean'],
+  ['claim_documents','5','what is in the file'],
+  ['icd10_codes','3','what the diagnosis means']
+];
+
+function scene(id, ink, kicker, body){
+  return `<section class="scene${ink?' ink':''}" id="s-${id}" data-om-id="scene-${id}">
+    <div class="bg"></div><div class="frame" data-om-id="frame-${id}">
+    ${kicker?`<div class="kicker" data-om-id="${id}-kicker">${kicker}</div>`:''}${body}</div></section>`;
+}
+
+const HTML = [
+  scene('hook', true, 'The problem', `
+    <h1 class="big" data-om-id="hook-title">Your insurer<br>said no.</h1>
+    <div class="denied" data-om-id="denied">DENIED</div>
+    <div class="reasons" data-om-id="reasons">
+      ${[1,2,3,4].map((n,i)=>`<div class="rcard${i===3?' missing':''}" data-om-id="rcard-${n}">
+        <div class="n">0${n}</div><div class="t">${['Experimental.','Wrong code.','No treatment.','Missing letter.'][i]}</div>
+        <span class="strike"></span><span class="tag">${i===3?'STILL MISSING':'WRONG'}</span></div>`).join('')}
+      <span class="sweep" data-om-id="sweep"></span>
+    </div>
+    <p class="hook-foot" data-om-id="hook-foot">Most people can't prove what the file already says.</p>
+    <div class="foot-rule" data-om-id="foot-rule"></div>
+    <div class="band" data-om-id="band"></div>
+    <div class="flash" data-om-id="flash"></div>`),
+
+  scene('reveal', false, '', `
+    <h1 class="mark" data-om-id="mark" data-var-text="title">${esc(V.title || 'OVERTURN')}</h1>
+    <div class="rule" data-om-id="rule"></div>
+    <p class="sub" data-om-id="reveal-sub" data-var-text="subtitle">${esc(V.subtitle || 'The denial, answered with evidence.')}</p>`),
+
+  scene('reads', false, 'One data path', `
+    <h2 class="big sm" data-om-id="reads-title">It reads everything.</h2>
+    <div class="cardgrid" data-om-id="cardgrid">
+      ${SOURCES.map((s,i)=>`<div class="dcard" data-om-id="dcard-${i}">
+        <div class="name">${s[0]}</div><div class="count">${s[1]}</div><div class="what">${s[2]}</div></div>`).join('')}
+    </div>
+    <div class="badge" data-om-id="zetaris-badge">Zetaris · run_sql only</div>`),
+
+  scene('flip', false, 'The contradiction', `
+    <div class="flipwrap">
+      <div>
+        <h2 class="big sm" data-om-id="flip-title">It finds<br>the contradiction.</h2>
+        <p class="note" data-om-id="flip-note">One clause, one code, one record. Every reason answers to a row.</p>
+      </div>
+      <div class="flip" data-om-id="flip" data-layout-allow-overlap>
+        <div class="face front"><div class="lbl">The denial says</div><div class="q">The service is experimental.</div><div class="src">DEN-01 · POL-4.3</div></div>
+        <div class="face back"><div class="lbl">The policy says</div><div class="q">POL-4.3 excludes spinal fusion — not diagnostic MRI. POL-4.1 covers this scan.</div><div class="src">policy_clauses · line L0006</div></div>
+      </div>
+    </div>
+    <div class="rebuttal">
+      <div class="sql" data-om-id="sql">SELECT text FROM policy_clauses WHERE clause_id = 'POL-4.3'</div>
+      <div class="row" data-om-id="row">L0006 · policy_clauses · verified · hash 6f6d2325…</div>
+    </div>
+    <div class="denied" data-om-id="rebutted" style="border-color:var(--green);color:var(--green);font-size:54px;margin-top:18px">REBUTTED</div>`),
+
+  scene('proof', true, 'Proof, not a dashboard', `
+    <div class="rows-bg" data-om-id="rows-bg" data-layout-allow-occlusion><div class="track" id="rowtrack"></div></div>
+    <div class="frame">
+      <p class="proof-line" data-om-id="proof-1">No <span class="num">dashboard</span>.</p>
+      <p class="proof-line green" data-om-id="proof-2">No score without a <span class="num">citation</span>.</p>
+      <p class="proof-line" data-om-id="proof-3">Every claim resolves to a <span class="num">row</span>.</p>
+    </div>`),
+
+  scene('zetaris', false, 'Seven sources · one path', `
+    <h2 class="big sm" data-om-id="zet-title">Seven sources. One data path.</h2>
+    <div class="hub" data-om-id="hub">
+      <svg viewBox="0 0 1180 520" aria-hidden="true" id="hublines"></svg>
+      <div class="center" data-om-id="hub-center">Zetaris</div>
+      ${SOURCES.map((s,i)=>`<div class="hnode" data-om-id="hnode-${i}">${s[0]}</div>`).join('')}
+    </div>`),
+
+  scene('agents', false, 'Five agents · one ledger', `
+    <h2 class="big sm" data-om-id="agents-title">Plan. Reconcile.<br>Attack. Defend. Report.</h2>
+    <div class="track" data-om-id="track">
+      <div class="looparc" data-om-id="looparc"></div>
+      <div class="dot" data-om-id="dot"></div>
+      ${['Planner','Reconciler','Critic','Advocate','Reporter'].map(a=>`<div class="agent" data-a="${a}" data-om-id="agent-${a}">${a}</div>`).join('')}
+    </div>
+    <p class="note" data-om-id="agents-note">A re-query is a first-class outcome, not an error. Both loops are capped.</p>`),
+
+  scene('stats', false, 'Deterministic · traceable', `
+    <div class="statgrid">
+      <div>
+        <div class="ringwrap" data-om-id="ringwrap">
+          <svg viewBox="0 0 440 440" aria-hidden="true">
+            <circle cx="220" cy="220" r="196" fill="none" stroke="#c4cfd8" stroke-width="12"/>
+            <circle id="ring" cx="220" cy="220" r="196" fill="none" stroke="#1b6b4a" stroke-width="12" stroke-linecap="round" stroke-dasharray="1231.5" stroke-dashoffset="1231.5"/>
+          </svg>
+          <div class="ringnum" data-om-id="ringnum"><span id="scorenum">0</span><small>/100</small></div>
+        </div>
+        <div class="label" style="text-align:center;margin-top:8px">Appeal strength</div>
+      </div>
+      <div>
+        <div class="chain" id="chain" data-om-id="chain"></div>
+        <div class="hhead" data-om-id="hhead">head · 387f5f91b90accb1… · 47 lines</div>
+        <div class="humanstamp" data-om-id="humanstamp">HUMAN REVIEW</div>
+        <div class="reading" data-om-id="reading">OVERTURN does the reading.<br>A human signs it.</div>
+      </div>
+    </div>`),
+
+  scene('missing', false, 'The honest limit', `
+    <div class="missgrid">
+      <div class="doc" data-om-id="doc">
+        <div><div class="lbl">Required · not received</div><div class="id" data-om-id="doc-id">${esc(V.missingDoc || 'DOC-003')}</div></div>
+        <div class="lines"><i></i><i></i><i></i><i></i></div>
+        <div class="bigstamp" data-om-id="unverified">UNVERIFIED</div>
+      </div>
+      <div>
+        <h2 class="big sm" data-om-id="missing-title">It won't<br>invent it.</h2>
+        <p class="note" data-om-id="missing-note">The specialist referral letter is genuinely missing. The packet names the document, marks it unverified, and tells the human exactly what to obtain.</p>
+        <div class="action" data-om-id="action">Obtain DOC-003 →</div>
+      </div>
+    </div>`),
+
+  scene('result', false, 'The next action', `
+    <div class="resultgrid">
+      <div class="resultnum" id="resultnum" data-om-id="resultnum">84</div>
+      <div class="resultmeta">
+        <div class="t" id="resultlabel" data-om-id="resultlabel">Solid · conditional</div>
+        <div class="d" data-om-id="resultdesc">Send the letter. The packet becomes 100 — ready.</div>
+      </div>
+    </div>`),
+
+  scene('packet', false, 'The output', `
+    <div class="packetgrid">
+      <div class="packet-lines">
+        <p class="pl" data-om-id="pl1">One worker.</p>
+        <p class="pl" data-om-id="pl2">One denial.</p>
+        <p class="pl" data-om-id="pl3">One document a human can <span>send</span>.</p>
+      </div>
+      <div class="receipt" data-om-id="receipt"><img src="assets/receipt.png" alt="The generated evidence map">
+        <div class="cap"><span>out/receipt.html · real output</span><b>47 lines · hash-chained</b></div></div>
+    </div>`),
+
+  scene('close', true, '', `
+    <div class="closegrid">
+      <h1 class="mark" data-om-id="close-mark">OVERTURN</h1>
+      <p class="sub" data-om-id="close-sub">The denial, answered with evidence.</p>
+      <div class="sponsors" data-om-id="sponsors"><span>Zetaris</span><span>Meterless H-MEM</span><span>Meterless World Model</span><span>Meterless Nightshift</span><span>NVIDIA Nemotron</span></div>
+    </div>`)
+].join('');
+
+$('#scenes').innerHTML = HTML;
+
+// the band and flash are full-frame, so they live on the section, not the content frame
+document.querySelectorAll('#s-hook .band, #s-hook .flash').forEach(n=>{
+  const sec = document.getElementById('s-hook');
+  if(sec) sec.appendChild(n);
+});
+
+// split the hook line into words for a kinetic reveal
+const foot = document.querySelector('#s-hook .hook-foot');
+if(foot) foot.innerHTML = foot.textContent.trim().split(/\s+/).map(w=>`<span class="w">${esc(w)}</span>`).join(' ');
+
+// ledgers: the proof background and the hash chain
+const rowtrack = document.getElementById('rowtrack');
+if(rowtrack){
+  let rows='';
+  for(let i=0;i<34;i++) rows += `<div>L${String(i+1).padStart(4,'0')} · ${['policy_clauses','medical_records','procedure_codes','icd10_codes','claim_documents'][i%5]} · verified · ${(i*2654435761>>>0).toString(16).padStart(8,'0')}…</div>`;
+  rowtrack.innerHTML = rows;
+}
+const chain = document.getElementById('chain');
+if(chain){
+  let blocks='';
+  for(let i=0;i<47;i++) blocks += `<span class="hb">L${String(i+1).padStart(4,'0')}</span>`;
+  chain.innerHTML = blocks;
+}
+
+const tl = gsap.timeline({paused:true});
+window.__timelines = window.__timelines || {};
+window.__timelines['pitch-film'] = tl;
+const TOTAL = END;
+
+// Only the scenes near the playhead are mounted; the setter runs on every render, including silent seeks.
+function mount(t){
+  const at = Math.max(0, Math.min(TOTAL, t));
+  const starts = [0, T.reveal, T.reads, T.flip, T.proof, T.zetaris, T.agents, T.score, T.missing, T.result, T.packet, T.close];
+  const ids = ['hook','reveal','reads','flip','proof','zetaris','agents','stats','missing','result','packet','close'];
+  ids.forEach((id,i)=>{
+    const el = document.getElementById('s-'+id);
+    if(!el) return;
+    const next = i < starts.length-1 ? starts[i+1] : TOTAL;
+    const on = (i===ids.length-1) || (at >= starts[i]-0.35 && at < next+0.15);
+    el.style.display = on ? 'flex' : 'none';
+  });
+}
+const mp = {t:0};
+Object.defineProperty(mp,'t',{set:(v)=>mount(v)});
+tl.fromTo(mp,{t:0},{t:TOTAL,duration:TOTAL,ease:'none',immediateRender:false},0);
+mount(0);
+['reveal','reads','flip','proof','zetaris','agents','stats','missing','result','packet','close']
+  .forEach(id=>tl.set('#s-'+id,{autoAlpha:0},0));
+
+// scene labels
+[['hook',0],['reveal',T.reveal],['reads',T.reads],['flip',T.flip],['proof',T.proof],['zetaris',T.zetaris],['agents',T.agents],['stats',T.score],['missing',T.missing],['result',T.result],['packet',T.packet],['close',T.close]]
+  .forEach(([id,t])=>tl.addLabel('scene:'+id,t));
+
+const el = (id)=>document.getElementById('s-'+id);
+const q = (id,sel)=>el(id)?.querySelector(sel);
+const qa = (id,sel)=>el(id)?.querySelectorAll(sel)||[];
+
+// cut helper: hard cut at t
+const IDS = ['hook','reveal','reads','flip','proof','zetaris','agents','stats','missing','result','packet','close'];
+function cut(id, at){
+  IDS.forEach(other=>{ if(other!==id) tl.set('#s-'+other,{autoAlpha:0},at); });
+  tl.set(el(id),{autoAlpha:1},at);
+}
+
+// 1 hook
+tl.set('#poster',{autoAlpha:1},0);
+tl.set('#chrome',{autoAlpha:0},0);
+tl.to('#chrome',{autoAlpha:1,duration:0.3},0.9);
+tl.set('#episode, #case',{color:'#a9b7c2'},0.9);
+tl.to('#episode, #case',{color:'#5f6d79'},T.reveal);
+tl.to('#episode, #case',{color:'#a9b7c2'},T.proof);
+tl.to('#episode, #case',{color:'#5f6d79'},T.zetaris);
+tl.to('#episode, #case',{color:'#a9b7c2'},T.close);
+tl.to('#poster',{autoAlpha:0,duration:0.35,ease:'power1.in'},0.55);
+tl.fromTo(q('hook','.big'),{autoAlpha:0,y:40},{autoAlpha:1,y:0,duration:0.55,ease:'expo.out'},0.05);
+tl.fromTo(q('hook','.denied'),{autoAlpha:0,scale:1.5,rotation:-9},{autoAlpha:1,scale:1,rotation:-3,duration:0.4,ease:'back.out(1.7)'},0.9);
+tl.fromTo(qa('hook','.rcard'),{autoAlpha:0,y:28,rotation:1.5},{autoAlpha:1,y:0,rotation:0,duration:0.4,stagger:0.1,ease:'power3.out'},1.55);
+qa('hook','.rcard').forEach((card,i)=>{
+  if(i<3){
+    tl.to(card.querySelector('.strike'),{scaleX:1,duration:0.28,ease:'power2.inOut'},C('three')+0.15+i*0.12);
+    tl.to(card.querySelector('.tag'),{autoAlpha:1,duration:0.2},C('three')+0.3+i*0.12);
+  } else {
+    tl.to(card.querySelector('.tag'),{autoAlpha:1,duration:0.2},C('three')+0.5);
+  }
+});
+tl.fromTo(q('hook','.sweep'),{scaleX:0},{scaleX:1,duration:0.8,ease:'power2.inOut'},C('three')-0.15);
+tl.to(q('hook','.sweep'),{autoAlpha:0,duration:0.3},C('three')+0.8);
+tl.fromTo(q('hook','.band'),{xPercent:-140},{xPercent:480,duration:0.38,ease:'power2.inOut'},C('three')-0.1);
+tl.fromTo(q('hook','.flash'),{opacity:0},{opacity:0.45,duration:0.1,ease:'none'},C('three')-0.04);
+tl.to(q('hook','.flash'),{opacity:0,duration:0.3,ease:'none'},C('three')+0.06);
+tl.to(qa('hook','.hook-foot .w'),{y:0,opacity:1,duration:0.35,stagger:0.16,ease:'expo.out'},C('most')+0.12);
+tl.fromTo(q('hook','.hook-foot'),{scale:1},{scale:1.035,duration:2.0,ease:'none'},4.7);
+tl.fromTo(q('hook','.foot-rule'),{scaleX:0},{scaleX:1,duration:0.7,ease:'power2.inOut'},4.45);
+tl.to(q('hook','.foot-rule'),{autoAlpha:0,duration:0.25},6.4);
+tl.to([q('hook','.big'),q('hook','.denied'),q('hook','.reasons')],{autoAlpha:0,y:-26,duration:0.28,ease:'power2.in'},C('most'));
+tl.fromTo(q('hook','.frame'),{scale:1.32},{scale:1.0,duration:0.45,ease:'expo.out'},0.9);
+tl.fromTo(q('hook','.frame'),{x:0},{x:-170,duration:0.18,ease:'power2.in'},C('most'));
+tl.fromTo(q('hook','.frame'),{x:150},{x:0,duration:0.34,ease:'power2.out'},C('most')+0.18);
+
+// 2 reveal
+cut('reveal',T.reveal);
+tl.fromTo(q('reveal','.mark'),{autoAlpha:0,scale:1.12},{autoAlpha:1,scale:1,duration:0.6,ease:'expo.out'},T.reveal);
+tl.fromTo(q('reveal','.rule'),{scaleX:0},{scaleX:1,duration:0.55,ease:'expo.inOut'},T.reveal+0.15);
+tl.fromTo(q('reveal','.sub'),{autoAlpha:0,y:16},{autoAlpha:1,y:0,duration:0.45,ease:'power2.out'},T.reveal+0.35);
+
+// 3 reads
+cut('reads',T.reads);
+tl.fromTo(q('reads','h2'),{autoAlpha:0,y:24},{autoAlpha:1,y:0,duration:0.5,ease:'expo.out'},T.reads);
+qa('reads','.dcard').forEach((card,i)=>{
+  tl.fromTo(card,{autoAlpha:0,y:34,rotation:2.5,scale:.96},{autoAlpha:1,y:0,rotation:0,scale:1,duration:0.45,ease:'power3.out'},T.reads+0.25+i*0.14);
+  tl.fromTo(card.querySelector('.count'),{autoAlpha:0,scale:.6},{autoAlpha:1,scale:1,duration:0.3,ease:'back.out(2)'},T.reads+0.32+i*0.14);
+});
+tl.fromTo(q('reads','.badge'),{autoAlpha:0,scale:.9},{autoAlpha:1,scale:1,duration:0.35,ease:'back.out(1.6)'},T.reads+1.35);
+
+// 4 flip
+cut('flip',T.flip);
+tl.fromTo(q('flip','h2'),{autoAlpha:0,y:24},{autoAlpha:1,y:0,duration:0.45,ease:'expo.out'},T.flip);
+tl.fromTo(q('flip','.flip'),{autoAlpha:0,y:26,rotationX:-8},{autoAlpha:1,y:0,rotationX:0,duration:0.5,ease:'expo.out'},T.flip+0.1);
+tl.to(q('flip','.flip'),{rotationY:180,duration:0.7,ease:'power2.inOut'},T.flip+0.75);
+const reb = document.querySelector('#s-flip [data-om-id="rebutted"]');
+if(reb){ tl.fromTo(reb,{autoAlpha:0,scale:1.5,rotation:-8},{autoAlpha:1,scale:1,rotation:-2,duration:0.4,ease:'back.out(1.7)'},T.flip+1.35); }
+tl.fromTo(q('flip','.sql'),{autoAlpha:0,y:12},{autoAlpha:1,y:0,duration:0.35},T.requery);
+tl.fromTo(q('flip','.row'),{autoAlpha:0,x:-12},{autoAlpha:1,x:0,duration:0.4},C('shows')-0.2);
+tl.fromTo(q('flip','.note'),{autoAlpha:0},{autoAlpha:1,duration:0.4},T.flip+0.4);
+
+// 5 proof
+cut('proof',T.proof);
+tl.fromTo(qa('proof','.proof-line'),{autoAlpha:0,y:52,skewY:2},{autoAlpha:1,y:0,skewY:0,duration:0.5,stagger:0.45,ease:'expo.out'},T.proof);
+tl.fromTo(q('proof','.rows-bg'),{autoAlpha:0},{autoAlpha:1,duration:0.6},T.proof);
+tl.fromTo(q('proof','.rows-bg .track'),{y:0},{y:'-38%',duration:T.zetaris-T.proof,ease:'none'},T.proof);
+
+// 6 zetaris hub
+cut('zetaris',T.zetaris);
+tl.fromTo(q('zetaris','h2'),{autoAlpha:0,y:24},{autoAlpha:1,y:0,duration:0.45,ease:'expo.out'},T.zetaris);
+const hub = q('zetaris','.hub');
+if(hub){
+  const W=1180,H=520,cx=W/2,cy=H/2,names=[...qa('zetaris','.hnode')];
+  const pos=names.map((n,i)=>{const a=-Math.PI/2 + i*2*Math.PI/names.length;return [cx+Math.cos(a)*420, cy+Math.sin(a)*185];});
+  names.forEach((n,i)=>{n.style.left=(pos[i][0]/W*100)+'%';n.style.top=(pos[i][1]/H*100)+'%';});
+  const svg=document.getElementById('hublines');
+  svg.innerHTML = pos.map(([x,y])=>`<line x1="${x}" y1="${y}" x2="${cx}" y2="${cy}" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="600" stroke-dashoffset="600" opacity=".55"/>`).join('');
+  tl.to(svg.querySelectorAll('line'),{attr:{'stroke-dashoffset':0},duration:0.55,stagger:0.06,ease:'power2.out'},T.zetaris+0.2);
+  tl.fromTo(names,{autoAlpha:0,scale:.85},{autoAlpha:1,scale:1,duration:0.32,stagger:0.07,ease:'back.out(1.6)'},T.zetaris+0.28);
+  tl.fromTo(q('zetaris','.center'),{autoAlpha:0,scale:.8},{autoAlpha:1,scale:1,duration:0.45,ease:'back.out(1.8)'},T.zetaris+0.65);
+  tl.fromTo(q('zetaris','.center'),{scale:1},{scale:1.045,duration:1.2,ease:'sine.inOut',yoyo:true,repeat:1},T.zetaris+0.9);
+}
+
+// 7 agents
+cut('agents',T.agents);
+tl.fromTo(q('agents','h2'),{autoAlpha:0,y:24},{autoAlpha:1,y:0,duration:0.45,ease:'expo.out'},T.agents);
+qa('agents','.agent').forEach((a,i)=>{
+  tl.fromTo(a,{autoAlpha:0,y:24,scale:.94},{autoAlpha:1,y:0,scale:1,duration:0.35,ease:'back.out(1.5)'},T.agents+0.2+i*0.11);
+});
+const dot=q('agents','.dot');
+if(dot){
+  const w=1380;
+  tl.fromTo(dot,{x:0,autoAlpha:0},{x:w*0.9,autoAlpha:1,duration:T.score-T.agents-0.2,ease:'power1.inOut'},T.agents+0.3);
+}
+tl.fromTo(q('agents','.looparc'),{autoAlpha:0},{autoAlpha:1,duration:0.35},C('attack')-0.1);
+tl.fromTo(q('agents','.note'),{autoAlpha:0},{autoAlpha:1,duration:0.4},T.agents+1.1);
+
+// 8 stats
+cut('stats',T.score);
+tl.fromTo(q('stats','.ringwrap'),{autoAlpha:0,scale:.94},{autoAlpha:1,scale:1,duration:0.4,ease:'expo.out'},T.score);
+tl.to('#ring',{attr:{'stroke-dashoffset':1231.5*0.16},duration:1.1,ease:'power2.out'},T.score+0.15);
+const counter={v:0};
+Object.defineProperty(counter,'v',{set:(v)=>{const n=document.getElementById('scorenum'); if(n) n.textContent=String(Math.round(v));}});
+tl.fromTo(counter,{v:0},{v:SCORE,duration:1.0,ease:'power2.out',immediateRender:false},T.score+0.15);
+tl.fromTo(qa('stats','.hb'),{autoAlpha:0,y:8,scale:.9},{autoAlpha:1,y:0,scale:1,duration:0.14,stagger:0.012,ease:'none'},T.ledger);
+tl.fromTo(q('stats','.hhead'),{autoAlpha:0},{autoAlpha:1,duration:0.4},T.ledger+0.35);
+tl.fromTo(q('stats','.humanstamp'),{autoAlpha:0,scale:1.4,rotation:-7},{autoAlpha:1,scale:1,rotation:-2,duration:0.35,ease:'back.out(1.7)'},T.human);
+tl.fromTo(q('stats','.reading'),{autoAlpha:0,y:14},{autoAlpha:1,y:0,duration:0.45,ease:'power2.out'},T.reading);
+
+// 9 missing
+cut('missing',T.missing);
+tl.fromTo(q('missing','.doc'),{autoAlpha:0,y:30,rotation:-1.5},{autoAlpha:1,y:0,rotation:0,duration:0.5,ease:'expo.out'},T.missing);
+tl.fromTo(q('missing','h2'),{autoAlpha:0,y:26},{autoAlpha:1,y:0,duration:0.45,ease:'expo.out'},T.missing+0.15);
+tl.fromTo(q('missing','.bigstamp'),{autoAlpha:0,scale:1.5,rotation:-10},{autoAlpha:1,scale:1,rotation:-7,duration:0.4,ease:'back.out(1.7)'},T.invent+0.05);
+tl.fromTo(q('missing','.note'),{autoAlpha:0},{autoAlpha:1,duration:0.4},T.invent+0.2);
+tl.fromTo(q('missing','.action'),{autoAlpha:0,y:12},{autoAlpha:1,y:0,duration:0.4,ease:'back.out(1.5)'},T.get);
+
+// 10 result 84 -> 100
+cut('result',T.result);
+const rnum=document.getElementById('resultnum');
+tl.fromTo(q('result','.resultnum'),{autoAlpha:0,scale:.9},{autoAlpha:1,scale:1,duration:0.5,ease:'expo.out'},T.result);
+const rc={v:0};
+Object.defineProperty(rc,'v',{set:(v)=>{if(rnum) rnum.textContent=String(Math.round(v));}});
+tl.fromTo(rc,{v:0},{v:SCORE,duration:0.9,ease:'power2.out',immediateRender:false},T.result);
+tl.fromTo(q('result','.resultmeta'),{autoAlpha:0,y:20},{autoAlpha:1,y:0,duration:0.45,ease:'power2.out'},T.result+0.25);
+tl.to(q('result','.resultnum'),{color:'#1b6b4a',duration:0.2},T.send-0.15);
+const rc2={v:SCORE};
+Object.defineProperty(rc2,'v',{set:(v)=>{if(rnum) rnum.textContent=String(Math.round(v));}});
+tl.fromTo(rc2,{v:SCORE},{v:READY,duration:0.8,ease:'expo.out',immediateRender:false},T.send);
+tl.fromTo(q('result','.resultnum'),{scale:1},{scale:1.06,duration:0.25,yoyo:true,repeat:1,ease:'power2.inOut'},T.send);
+const rl=document.getElementById('resultlabel');
+if(rl){ tl.to(rl,{autoAlpha:0,duration:0.15},T.send-0.1); tl.set(rl,{textContent:'Ready · 100'},T.send+0.05); tl.to(rl,{autoAlpha:1,duration:0.2},T.send+0.1); }
+
+// 11 packet
+cut('packet',T.packet);
+tl.fromTo(q('packet','.receipt'),{autoAlpha:0,y:40,rotation:-4,scale:.94},{autoAlpha:1,y:0,rotation:-1.2,scale:1,duration:0.7,ease:'expo.out'},T.packet);
+tl.fromTo(qa('packet','.pl'),{autoAlpha:0,x:-24},{autoAlpha:1,x:0,duration:0.4,stagger:0.35,ease:'power3.out'},T.packet+0.1);
+
+// 12 close
+cut('close',T.close);
+tl.fromTo(q('close','.mark'),{autoAlpha:0,scale:1.08},{autoAlpha:1,scale:1,duration:0.8,ease:'expo.out'},T.close);
+tl.fromTo(q('close','.mark'),{scale:1.03},{scale:1,duration:0.35,ease:'power2.out'},T.brand);
+tl.fromTo(q('close','.sub'),{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:0.5,ease:'power2.out'},T.close+0.5);
+tl.fromTo(qa('close','.sponsors span'),{autoAlpha:0,y:8},{autoAlpha:1,y:0,duration:0.3,stagger:0.08},T.close+0.8);
+tl.to({},{duration:Math.max(HOLD,0.1)},TOTAL);
+
+// one wipe on the biggest turn: proof -> zetaris
+tl.set('#wipe',{scaleX:0,transformOrigin:'0 50%'},0);
+tl.to('#wipe',{scaleX:1,duration:0.22,ease:'power2.in'},T.zetaris-0.24);
+tl.to('#wipe',{scaleX:0,transformOrigin:'100% 50%',duration:0.24,ease:'power2.out'},T.zetaris+0.01);
+
+// sound
+OM.sfx('impact',0,{gain:0.9});
+OM.sfx('stamp',0.9,{gain:0.8});
+OM.sfx('whoosh',T.reveal,{gain:0.45});
+OM.sfx('pop',T.reads+0.25,{gain:0.4});
+OM.sfx('stamp',T.flip+1.35,{gain:0.75});
+OM.sfx('thud',T.proof,{gain:0.6});
+OM.sfx('thud',T.proof+0.45,{gain:0.5});
+OM.sfx('thud',T.proof+0.9,{gain:0.5});
+OM.sfx('riser',T.zetaris,{gain:0.5});
+OM.sfx('pop',T.agents+0.2,{gain:0.4});
+OM.sfx('count',T.score+0.2,{gain:0.45});
+OM.sfx('stamp',T.invent,{gain:0.8});
+OM.sfx('chime',T.get,{gain:0.5});
+OM.sfx('impact',T.send,{gain:0.7});
+OM.sfx('paper',T.packet,{gain:0.5});
+OM.sfx('chime',T.close,{gain:0.6});
+
+OM.music({
+  product:'explainer', drop:'zetaris', ending:'button', bpm:104,
+  energy:{hook:0.35,reveal:0.3,reads:0.55,flip:0.7,proof:0.65,zetaris:1.0,agents:0.8,stats:0.85,missing:0.4,result:0.95,packet:0.5,close:0.85}
+});
+
+tl.seek(0,false);
+mount(0);
+</script>
+
+</body>
+</html>
