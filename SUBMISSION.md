@@ -86,13 +86,14 @@ The third-party libraries and fonts are listed in `THIRD_PARTY.md`.
 No keys are committed. `.env` is gitignored; `.env.example` contains
 placeholders only.
 
-**Honest verification status**
-SAMPLE_MODE is fully verified: 37 tests pass, and `python -m overturn.run
---case ava --out out/` produces the 84/conditional packet with no credentials.
-The live Zetaris, Meterless Nightshift, H-MEM, World Model and NVIDIA Nemotron
-paths are implemented and contract-tested against local HTTP doubles, but no
-live run was made because this machine has no sponsor credentials. The
-submission states this plainly rather than implying a live run.
+**Verification status**
+37 tests pass. SAMPLE_MODE produces the 84/conditional packet with no credentials.
+The live run on 27–28 October 2026 used the live Zetaris cluster over JDBC (database
+`OVERTURN_DB`, seven tables, 13 read-only SQL calls, USL + five DQ rules) and
+the local Meterless Nightshift runtime (103 models, 11 agent calls, all served
+by `nvidia/nemotron-3-ultra-550b-a55b`). H-MEM and World Model ran on their local
+mirrors; their adapters are implemented and contract-tested. The live packet
+and trace are in `output_examples/live/`.
 
 ## Before you press submit
 

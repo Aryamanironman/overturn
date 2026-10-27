@@ -2,7 +2,7 @@
 
 OVERTURN reads a health-insurance denial, re-queries the policy, clinical record, EOB, procedure-code table, document checklist and ICD-10 descriptions, and drafts an evidence-backed internal appeal packet. The case in this repository is Ava, 34, Sydney, claim **CLM-2026-0915**, procedure **MRI-LS-001**. The packet scores **84/100 — solid — conditional**: three denial reasons are rebutted, and the fourth is a specialist referral letter (DOC-003) that is genuinely missing and is never fabricated.
 
-This document explains the five required sponsor-technology points. It separates what is **verified in this repository** from what is **wired for live use but requires live credentials**. The repository contains no `.env` and no live credentials, and no live Zetaris, Nightshift, Meterless-engine or NVIDIA-Nemotron run has been performed here.
+This document explains the five required sponsor-technology points. It separates what is **verified in this repository** from what was **verified against the live Zetaris cluster and the local Meterless Nightshift runtime on 27–28 October 2026**. The live run used Zetaris over JDBC and Nightshift on 127.0.0.1:8088; no credentials are committed.
 
 ## Verification status
 
@@ -15,14 +15,14 @@ This document explains the five required sponsor-technology points. It separates
 - **Nightshift contract and served-model logging.** `tests/test_nightshift_client.py::test_nightshift_headers_discovery_and_served_model`.
 - **The committed `out/` artifacts are SAMPLE_MODE outputs.** `out/appeal_packet.json` has `model_routing` set to `offline-deterministic` for all five agents; `out/trace.jsonl` records 14 SQL events with `engine: "sqlite-mirror"` and 9 `agent_call` events with `mode: "offline"`.
 
-### Requires live credentials (written but not run here)
+### Verified live on 27–28 October 2026
 
-- A deployed **Zetaris** instance, an org id and an API key (or username/password), and the source CSVs in an S3/MinIO bucket reachable by Zetaris.
-- A **Meterless Nightshift** base URL and Runtime token, plus a real model id from the Nightshift model picker.
-- A real **H-MEM** and/or **World Model** engine URL and key, if those adapters are used instead of their local mirrors.
-- An actual **NVIDIA Nemotron** model served through Nightshift. The repository has no NVIDIA SDK, CUDA, NIM or GPU code; NVIDIA enters only as the model lane behind Nightshift.
+- **Zetaris live:** cluster `b0a53338-…`, database `OVERTURN_DB` (container `overturn_db`), seven S3 tables, **13 read-only SQL calls** over JDBC, the USL and all five DQ rules pass.
+- **Nightshift live:** 103 models on `127.0.0.1:8088`, **11 agent calls**, every one served by `nvidia/nemotron-3-ultra-550b-a55b`.
+- **Packet:** 84/100 solid conditional, 3 rebutted, 1 missing, 47-line chain (`51442a3a…`). Two model-proposed re-queries were rejected by the schema guard and logged.
+- Evidence: `output_examples/live/appeal_packet.json`, `trace.jsonl`, `receipt.html`.
 
-The live adapters are written to the contracts in the Zetaris getting-started repository and the participant setup guide. The tests that exercise them use local HTTP doubles, not the real services.
+**Still on local mirrors in this run:** the H-MEM and World Model engines (their adapters are implemented and contract-tested; the live run used the local mirrors), and the Zetaris REST UI proxy (the live run used the supported JDBC endpoint instead).
 
 ---
 
@@ -216,9 +216,9 @@ NVIDIA contributes through the **Nemotron model lane on Nightshift**, used for t
 
 **Why those two agents.** These are the only two places where model judgment can change the outcome. The Planner's output is normalised against a default plan; the Reconciler executes validated read-only SQL and builds the ledger; the Reporter's prose is checked for unsupported numbers and quotes and falls back to the computed annex if it fails. The Critic and Advocate, by contrast, must generate and evaluate arguments: does the cited clause actually apply, is the code/diagnosis mismatch real, does the record prove conservative treatment, can the missing letter be turned into a reason to reject the appeal? That is the reasoning-heavy part of the workflow, so it is the part routed to a Nemotron-class model.
 
-**What is not in the repository.** There is no NVIDIA SDK import, no CUDA, no TensorRT, no NIM deployment and no GPU code. The only NVIDIA-specific artifacts are the `NEMOTRON_MODEL` setting and the routing logic. The repository also contains no measured Nemotron output: the committed sample run uses the offline deterministic functions, and the Nightshift contract test uses a local double with the synthetic id `nvidia/nemotron-test`, not the `.env.example` id.
+**What is not in the repository.** There is no NVIDIA SDK import, no CUDA, no TensorRT, no NIM deployment and no GPU code. The only NVIDIA-specific artifacts are the `NEMOTRON_MODEL` setting and the routing logic. The live Nightshift run produced measured Nemotron output: 11 agent calls were served by `nvidia/nemotron-3-ultra-550b-a55b`, including the Critic and Advocate; see `output_examples/live/trace.jsonl`.
 
-**Verified here:** the pinning and routing logic, and served-model logging through the Nightshift double. **Requires live credentials:** an actual NVIDIA Nemotron model served by Nightshift; no live Nemotron call was made.
+**Verified live:** the Critic and Advocate calls through Nightshift were served by `nvidia/nemotron-3-ultra-550b-a55b`. **Requires live credentials:** nothing further for the NVIDIA lane; the model id is the one the runtime's picker exposed.
 
 ---
 
@@ -263,7 +263,7 @@ python -m overturn.run --case ava --out out/
 # SAMPLE_MODE, no credentials
 ```
 
-The live command is available but was not run here:
+The live command was run here:
 
 ```bash
 cp .env.example .env
@@ -280,5 +280,5 @@ These are recorded so the submission does not overclaim:
 - **"Meterless Scout Intent" is not an engine adapter in this repository.** `overturn/router.py` is deterministic local Python. The README's sponsor table uses the Meterless name, but there is no Scout Intent HTTP client, URL setting or test. The two Meterless engines implemented as adapters are H-MEM and the World Model.
 - **The fifth re-query is not against the public ICD-10 REST endpoint.** The README calls it a "live ICD-10 re-check"; the actual SQL is `SELECT * FROM icd10_codes WHERE code IN ('M51.1', 'M54.5')`, and `icd10_codes` is the cached CSV table registered in `scripts/register_zetaris_sources.sql`. The live REST tables `icd10_m545` and `icd10_m511` are registered for connectivity but are not queried by the pipeline. The trace label says "live ICD-10 descriptions verified", which describes the intent, not the table actually read.
 - **The packet's `model_routing` records configured routes, not necessarily the served model.** `LLMClient.routing_table()` returns `model_for(agent)`; `resolve_model()` and the response `model` field determine what actually served the request. The trace's `agent_call` events are the authoritative record of the served model.
-- **The committed `out/` run is SAMPLE_MODE.** Its `model_routing` is entirely `offline-deterministic` and its SQL engine is `sqlite-mirror`. No live Zetaris, Nightshift, H-MEM, World Model or Nemotron call is represented in the committed artifacts.
+- **The committed `output_examples/live/` run is live.** It used Zetaris JDBC and Nightshift/Nemotron; the earlier `out/` sample artifacts are SAMPLE_MODE.
 - **The five-requery count and the 84 score are SAMPLE_MODE values.** `tests/test_conflicts.py::test_trace_shows_real_requeries` asserts five re-queries for the deterministic run. The deterministic scorer will produce the same score from the same conflict states, but live Critic/Advocate model output could change how many adversarial re-queries are issued (the four conflict-loop re-queries are driven by the deterministic detectors).

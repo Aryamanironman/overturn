@@ -19,13 +19,13 @@ DB = ROOT / "data" / "fixtures" / "sample.db"
 def _view_sql(name: str) -> str:
     text = SCRIPT.read_text(encoding="utf-8")
     match = re.search(
-        rf"CREATE SCHEMASTORE VIEW {name} WITH CONTAINER overturn AS(.*?);",
+        rf"CREATE SCHEMASTORE VIEW {name} WITH CONTAINER overturn(?:_db)? AS(.*?);",
         text,
         re.DOTALL,
     )
     if not match:
         raise AssertionError(f"view {name} not found in {SCRIPT.name}")
-    return match.group(1)
+    return re.sub(r"OVERTURN_DB\.", "", match.group(1))
 
 
 def _connect() -> sqlite3.Connection:

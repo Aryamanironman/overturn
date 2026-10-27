@@ -23,10 +23,10 @@
 -- 1. Logical database and container
 -- ---------------------------------------------------------------------
 
-CREATE LIGHTNING DATABASE OVERTURN
-DESCRIBE BY "OVERTURN — denial appeal evidence: policy, denial, clinical record, EOB, codes, documents";
+CREATE LIGHTNING DATABASE OVERTURN_DB
+DESCRIBE BY "OVERTURN denial appeal evidence, policy denial clinical record EOB codes documents";
 
-CREATE SCHEMASTORE CONTAINER overturn;
+CREATE SCHEMASTORE CONTAINER overturn_db;
 
 -- ---------------------------------------------------------------------
 -- 2. File-backed sources (CSV in an S3/MinIO bucket)
@@ -41,7 +41,7 @@ CREATE SCHEMASTORE CONTAINER overturn;
 -- this file and not in the repository.
 -- ---------------------------------------------------------------------
 
-CREATE LIGHTNING FILESTORE TABLE policy_clauses FROM OVERTURN FORMAT CSV OPTIONS (
+CREATE LIGHTNING FILESTORE TABLE policy_clauses FROM OVERTURN_DB FORMAT CSV OPTIONS (
   PATH "s3a://overturn/policy_clauses.csv",
   inferSchema "true",
   header "true",
@@ -49,7 +49,7 @@ CREATE LIGHTNING FILESTORE TABLE policy_clauses FROM OVERTURN FORMAT CSV OPTIONS
   s3Endpoint "http://localhost:9000"
 );
 
-CREATE LIGHTNING FILESTORE TABLE denial_reasons FROM OVERTURN FORMAT CSV OPTIONS (
+CREATE LIGHTNING FILESTORE TABLE denial_reasons FROM OVERTURN_DB FORMAT CSV OPTIONS (
   PATH "s3a://overturn/denial_reasons.csv",
   inferSchema "true",
   header "true",
@@ -57,7 +57,7 @@ CREATE LIGHTNING FILESTORE TABLE denial_reasons FROM OVERTURN FORMAT CSV OPTIONS
   s3Endpoint "http://localhost:9000"
 );
 
-CREATE LIGHTNING FILESTORE TABLE medical_records FROM OVERTURN FORMAT CSV OPTIONS (
+CREATE LIGHTNING FILESTORE TABLE medical_records FROM OVERTURN_DB FORMAT CSV OPTIONS (
   PATH "s3a://overturn/medical_records.csv",
   inferSchema "true",
   header "true",
@@ -65,7 +65,7 @@ CREATE LIGHTNING FILESTORE TABLE medical_records FROM OVERTURN FORMAT CSV OPTION
   s3Endpoint "http://localhost:9000"
 );
 
-CREATE LIGHTNING FILESTORE TABLE eob FROM OVERTURN FORMAT CSV OPTIONS (
+CREATE LIGHTNING FILESTORE TABLE eob FROM OVERTURN_DB FORMAT CSV OPTIONS (
   PATH "s3a://overturn/eob.csv",
   inferSchema "true",
   header "true",
@@ -73,7 +73,7 @@ CREATE LIGHTNING FILESTORE TABLE eob FROM OVERTURN FORMAT CSV OPTIONS (
   s3Endpoint "http://localhost:9000"
 );
 
-CREATE LIGHTNING FILESTORE TABLE procedure_codes FROM OVERTURN FORMAT CSV OPTIONS (
+CREATE LIGHTNING FILESTORE TABLE procedure_codes FROM OVERTURN_DB FORMAT CSV OPTIONS (
   PATH "s3a://overturn/procedure_codes.csv",
   inferSchema "true",
   header "true",
@@ -81,7 +81,7 @@ CREATE LIGHTNING FILESTORE TABLE procedure_codes FROM OVERTURN FORMAT CSV OPTION
   s3Endpoint "http://localhost:9000"
 );
 
-CREATE LIGHTNING FILESTORE TABLE claim_documents FROM OVERTURN FORMAT CSV OPTIONS (
+CREATE LIGHTNING FILESTORE TABLE claim_documents FROM OVERTURN_DB FORMAT CSV OPTIONS (
   PATH "s3a://overturn/claim_documents.csv",
   inferSchema "true",
   header "true",
@@ -91,7 +91,7 @@ CREATE LIGHTNING FILESTORE TABLE claim_documents FROM OVERTURN FORMAT CSV OPTION
 
 -- Cached public ICD-10-CM descriptions, so SAMPLE_MODE and live mode can
 -- answer the same diagnosis-code question deterministically.
-CREATE LIGHTNING FILESTORE TABLE icd10_codes FROM OVERTURN FORMAT CSV OPTIONS (
+CREATE LIGHTNING FILESTORE TABLE icd10_codes FROM OVERTURN_DB FORMAT CSV OPTIONS (
   PATH "s3a://overturn/icd10_codes.csv",
   inferSchema "true",
   header "true",
@@ -111,7 +111,7 @@ CREATE LIGHTNING FILESTORE TABLE icd10_codes FROM OVERTURN FORMAT CSV OPTIONS (
 -- running these statements.
 -- ---------------------------------------------------------------------
 
-CREATE LIGHTNING REST TABLE icd10_m545 FROM OVERTURN REQUEST (
+CREATE LIGHTNING REST TABLE icd10_m545 FROM OVERTURN_DB REQUEST (
   endpoint "https://clinicaltables.nlm.nih.gov/api/icd10cm/v3/search?terms=M54.5",
   method "get",
   response_type "json",
@@ -120,7 +120,7 @@ CREATE LIGHTNING REST TABLE icd10_m545 FROM OVERTURN REQUEST (
   user-agent "OVERTURN hackathon you@example.invalid"
 ) BODY ();
 
-CREATE LIGHTNING REST TABLE icd10_m511 FROM OVERTURN REQUEST (
+CREATE LIGHTNING REST TABLE icd10_m511 FROM OVERTURN_DB REQUEST (
   endpoint "https://clinicaltables.nlm.nih.gov/api/icd10cm/v3/search?terms=M51.1",
   method "get",
   response_type "json",
@@ -136,7 +136,7 @@ CACHE TABLE OVERTURN.icd10_m511;
 -- 4. Semantic views
 -- ---------------------------------------------------------------------
 
-CREATE SCHEMASTORE VIEW appeal_evidence WITH CONTAINER overturn AS
+CREATE SCHEMASTORE VIEW appeal_evidence WITH CONTAINER overturn_db AS
 SELECT
   d.reason_id,
   d.reason_text,
@@ -158,7 +158,7 @@ LEFT JOIN policy_clauses p   ON p.clause_id = d.cited_clause
 LEFT JOIN procedure_codes c  ON c.code = d.cited_code
 LEFT JOIN icd10_codes i      ON i.code = d.cited_diagnosis;
 
-CREATE SCHEMASTORE VIEW claim_facts WITH CONTAINER overturn AS
+CREATE SCHEMASTORE VIEW claim_facts WITH CONTAINER overturn_db AS
 SELECT
   (SELECT MAX(weeks_of_therapy) FROM medical_records) AS max_weeks_of_therapy,
   (SELECT COUNT(*) FROM medical_records WHERE record_type = 'Physiotherapy') AS physiotherapy_sessions,
@@ -180,7 +180,7 @@ SELECT
 -- `claim_facts` is the claim-level measure set.
 -- ---------------------------------------------------------------------
 
-CREATE SCHEMASTORE VIEW usl_claim_review WITH CONTAINER overturn AS
+CREATE SCHEMASTORE VIEW usl_claim_review WITH CONTAINER overturn_db AS
 SELECT
   d.reason_id,
   d.reason_text,
@@ -217,7 +217,7 @@ CROSS JOIN claim_facts f;
 -- failures on every rule for the Ava case.
 -- ---------------------------------------------------------------------
 
-CREATE SCHEMASTORE VIEW dq_claim_integrity WITH CONTAINER overturn AS
+CREATE SCHEMASTORE VIEW dq_claim_integrity WITH CONTAINER overturn_db AS
 SELECT 'DQ-01' AS rule_id,
        'every denial reason cites a policy clause that exists' AS rule,
        (SELECT COUNT(*) FROM denial_reasons d

@@ -366,7 +366,18 @@ class Reconciler:
         why = instruction.get("why", "critic re-query")
         if not sql:
             raise ValueError("re-query instruction missing SQL")
-        rows = self.sql.run_sql(sql, agent="reconciler")
+        try:
+            rows = self.sql.run_sql(sql, agent="reconciler")
+        except Exception as exc:
+            self.tracer.event(
+                "requery_error",
+                agent="reconciler",
+                decision=str(exc),
+                conflict_id=conflict_id,
+                sql=sql[:400],
+                why=why,
+            )
+            return {"action": None, "why": why, "rows": 0, "error": str(exc)}
         kind = action.get("type")
         detail: dict[str, Any] = {"action": kind, "why": why, "rows": len(rows)}
 

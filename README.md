@@ -203,7 +203,7 @@ The live contract tests use local HTTP doubles so they run with no credentials:
 - `tests/test_nightshift_client.py` asserts `meterless-app`, `meterless-scope`, model discovery, the selected Nemotron model and the served model in the trace.
 - `tests/test_meterless_adapters.py` asserts the World Model and H-MEM HTTP calls.
 
-**Live verification is pending the Zetaris platform bundle and Nightshift credentials.** SAMPLE_MODE is fully verified. The live adapters are written to the current contracts from the Zetaris getting-started repository and the participant setup guide.
+**Live verification completed 27–28 October 2026.** The seven tables were registered in Zetaris (database `OVERTURN_DB`, container `overturn_db`) and queried over the cluster's JDBC endpoint; the USL and five DQ rules pass. Nightshift ran on `127.0.0.1:8088` with 103 models; all 11 agent calls were served by `nvidia/nemotron-3-ultra-550b-a55b`. The live packet is `output_examples/live/appeal_packet.json`; the trace is `output_examples/live/trace.jsonl`.
 
 ---
 
@@ -314,7 +314,7 @@ SUBMISSION.md       HackOS submission sheet and declarations
 - [x] Zetaris and Nightshift contract tests.
 - [x] Meterless World Model + H-MEM feature tests.
 - [x] No secrets; `.env.example` placeholders only.
-- [ ] Live Zetaris + Nightshift run (pending the platform bundle and credentials).
+- [x] Live Zetaris (JDBC) + Nightshift/Nemotron run — 11 live agent calls, 13 SQL queries, 84/conditional.
 - [x] 1–4 minute demo video (`video/out/overturn-demo.mp4`) and 15-page deck (`deck/OVERTURN-deck.pdf`).
-- [ ] Public GitHub repository (push pending; the local repo is committed).
+- [x] Public GitHub repository: https://github.com/Aryamanironman/overturn
 - [ ] The missing specialist letter is supplied for a 100/ready packet. This is deliberately left as an action for the human: the product's point is that it will not invent it.

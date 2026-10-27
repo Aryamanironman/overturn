@@ -1,0 +1,1684 @@
+{
+  "document": "OVERTURN Appeal Packet",
+  "version": "1.0",
+  "generated_at": "2026-10-27T14:06:50Z",
+  "case": {
+    "case_id": "ava",
+    "claimant": {
+      "name": "Ava",
+      "age": 34,
+      "city": "Sydney",
+      "member_id": "NB-88421"
+    },
+    "insurer": "Northbridge Health",
+    "claim_id": "CLM-2026-0915",
+    "request": "Ava's insurer denied her MRI claim. Build an evidence-backed internal appeal packet. The appeal is due by 30 November 2026.",
+    "purpose": "denial_appeal",
+    "as_of": "2026-10-24",
+    "appeal_deadline": "2026-11-30"
+  },
+  "claim": {
+    "claim_id": "CLM-2026-0915",
+    "insurer": "Northbridge Health",
+    "claimant": "Ava",
+    "denial_date": "2026-10-01",
+    "appeal_deadline": "2026-11-30",
+    "procedure_code": "MRI-LS-001",
+    "procedure_description": "MRI lumbar spine without contrast",
+    "diagnosis_code": "M54.5",
+    "diagnosis_description": "Low back pain, unspecified",
+    "physiotherapy_sessions": 12,
+    "max_weeks_of_therapy": 12,
+    "missing_documents": [
+      "DOC-003"
+    ],
+    "reason_count": 4,
+    "conditional": true,
+    "diagnosis_verified": false,
+    "status": "conditional",
+    "reasons": {
+      "rebutted": [
+        "DEN-01",
+        "DEN-02",
+        "DEN-03"
+      ],
+      "missing": [
+        "DEN-04"
+      ],
+      "open": []
+    },
+    "as_of": "2026-10-24"
+  },
+  "policy_summary": {
+    "purpose": "denial_appeal",
+    "headline": "an evidence-backed internal appeal",
+    "classification_reason": "case hint 'denial_appeal'"
+  },
+  "plan": {
+    "sources": [
+      "policy_clauses",
+      "denial_reasons",
+      "medical_records",
+      "eob",
+      "procedure_codes",
+      "claim_documents",
+      "icd10_codes",
+      "appeal_evidence",
+      "claim_facts"
+    ],
+    "steps": [
+      "Retrieve all denial reasons for claim CLM-2026-0915 to understand the specific grounds for denial.",
+      "Fetch policy clauses referenced in the denial and those relevant to MRI medical necessity, conservative treatment, and documentation requirements.",
+      "Gather Ava's medical records within the 365-day lookback period (from 2025-10-24 to 2026-10-24) to support clinical history.",
+      "Obtain the Explanation of Benefits (EOB) for the claim to see payment details and denial codes.",
+      "Get procedure code details for MRI-LS-001 to verify coding accuracy and medical necessity criteria.",
+      "Collect all claim documents submitted for CLM-2026-0915 to identify missing documents (especially DOC-003).",
+      "Retrieve ICD-10 code details for M54.5 and radiculopathy codes (M54.1-M54.4) to assess diagnosis specificity.",
+      "Check for any existing appeal evidence already submitted for this claim.",
+      "Get claim-level facts for CLM-2026-0915 to understand claim status and metadata."
+    ],
+    "queries": [
+      {
+        "id": "q_denial",
+        "sql": "SELECT * FROM denial_reasons ORDER BY reason_id",
+        "why": "the insurer's stated reasons"
+      },
+      {
+        "id": "q_policy",
+        "sql": "SELECT * FROM policy_clauses ORDER BY section",
+        "why": "the contract the denial cites"
+      },
+      {
+        "id": "q_records",
+        "sql": "SELECT * FROM medical_records ORDER BY record_date",
+        "why": "dated clinical evidence"
+      },
+      {
+        "id": "q_eob",
+        "sql": "SELECT * FROM eob",
+        "why": "the insurer's own claim record"
+      },
+      {
+        "id": "q_codes",
+        "sql": "SELECT * FROM procedure_codes",
+        "why": "what the codes actually mean"
+      },
+      {
+        "id": "q_docs",
+        "sql": "SELECT * FROM claim_documents",
+        "why": "what is present and what is missing"
+      },
+      {
+        "id": "q_icd10",
+        "sql": "SELECT * FROM icd10_codes",
+        "why": "the live/public diagnosis descriptions"
+      },
+      {
+        "id": "q_facts",
+        "sql": "SELECT * FROM claim_facts",
+        "why": "the claim's deterministic facts"
+      },
+      {
+        "id": "q_evidence",
+        "sql": "SELECT * FROM appeal_evidence",
+        "why": "the joined denial-policy-code view"
+      }
+    ],
+    "claim_to_test": "Ava's lumbar MRI (MRI-LS-001) for low back pain (M54.5) is medically necessary and meets policy criteria for coverage.",
+    "assumptions": [
+      "The 365-day lookback period runs from 2025-10-24 to 2026-10-24 per policy.",
+      "Claim CLM-2026-0915 is for a lumbar MRI without contrast (MRI-LS-001).",
+      "Primary diagnosis is M54.5 (low back pain, unspecified).",
+      "Northbridge Health uses denial codes DEN-01 through DEN-04 per insurer pattern memory.",
+      "Appeal deadline is 2026-11-30, giving 37 days from as_of date 2026-10-24."
+    ]
+  },
+  "appeal_strength": {
+    "score": 84,
+    "bucket": "solid",
+    "status": "conditional",
+    "raw_score": 90,
+    "cap": 84,
+    "deductions": [
+      {
+        "reason": "unresolved_reason",
+        "points_each": 20,
+        "count": 0,
+        "points": 0,
+        "items": []
+      },
+      {
+        "reason": "missing_required_document",
+        "points_each": 15,
+        "count": 1,
+        "points": 15,
+        "items": [
+          "DEN-04"
+        ]
+      },
+      {
+        "reason": "unsupported_rebuttal",
+        "points_each": 10,
+        "count": 0,
+        "points": 0,
+        "items": []
+      },
+      {
+        "reason": "stale_evidence",
+        "points_each": 5,
+        "count": 0,
+        "points": 0,
+        "items": [],
+        "stale_days": 180
+      }
+    ],
+    "bonus": {
+      "reason": "all_non_missing_reasons_rebutted_with_two_citations",
+      "points": 5
+    },
+    "counts": {
+      "reason_count": 4,
+      "rebutted": 3,
+      "missing": 1,
+      "unresolved": 0,
+      "unsupported": 0,
+      "stale_evidence": 0
+    },
+    "missing_documents": [
+      {
+        "document_id": "DOC-003",
+        "name": "Specialist referral letter",
+        "required_by": "POL-6.4",
+        "requested_date": "2026-08-20",
+        "note": "Requested from the treating specialist; not received. The appeal is conditional until it is supplied. Never fabricate it."
+      }
+    ],
+    "next_best_action": "Obtain Specialist referral letter (DOC-003). It is required by the policy; the packet is conditional without it. Supplying it raises the appeal strength from 84 to 100 and makes the packet ready.",
+    "projected_score_with_missing_fixed": 100,
+    "note": "This is an evidence-strength score, not a prediction of the insurer's decision. A human must review and sign the packet."
+  },
+  "denial_reasons": [
+    {
+      "kind": "denial_reason",
+      "reason_id": "DEN-01",
+      "reason_text": "The service is experimental or investigational.",
+      "status": "rebutted",
+      "cited_clause": "POL-4.3",
+      "cited_code": "MRI-LS-001",
+      "cited_diagnosis": "M54.5",
+      "finding_kind": "wrong_clause",
+      "rebuttal": "The denial cites POL-4.3, the experimental exclusion. That clause applies to SPINE-FUSION-001 and states it does not apply to diagnostic MRI of the lumbar spine. POL-4.1 covers MRI-LS-001 after at least six weeks of conservative therapy.",
+      "citations": [
+        {
+          "line_id": "L0003",
+          "source": "policy_clauses:POL-4.3",
+          "summary": "POL-4.3 Experimental or investigational: The experimental exclusion applies to spinal fusion (SPINE-FUSION-001) and disc replacement. It does not apply to diagnostic MRI of the lumbar spine."
+        },
+        {
+          "line_id": "L0001",
+          "source": "policy_clauses:POL-4.1",
+          "summary": "POL-4.1 Covered imaging: MRI lumbar spine without contrast (MRI-LS-001) is covered when the member has completed at least six weeks of conservative therapy."
+        },
+        {
+          "line_id": "L0028",
+          "source": "medical_records:REC-016",
+          "summary": "GP consultation 2026-08-12: Twelve weeks of conservative therapy completed; MRI requested; specialist referral requested."
+        },
+        {
+          "line_id": "L0033",
+          "source": "eob:EOB-001",
+          "summary": "Claim CLM-2026-0915: MRI-LS-001 billed AUD 850.00; paid AUD 0.00; patient responsibility AUD 850.00"
+        }
+      ],
+      "missing_document": null,
+      "confidence": 0.99
+    },
+    {
+      "kind": "denial_reason",
+      "reason_id": "DEN-02",
+      "reason_text": "Procedure code MRI-LS-002 (MRI with contrast) is not covered without prior authorisation.",
+      "status": "rebutted",
+      "cited_clause": "POL-7.2",
+      "cited_code": "MRI-LS-002",
+      "cited_diagnosis": "M51.1",
+      "finding_kind": "code_mismatch",
+      "rebuttal": "The denial cites MRI-LS-002 and diagnosis M51.1. The order, the EOB and the record use MRI-LS-001 and diagnosis M54.5. MRI-LS-001 is described as 'MRI lumbar spine without contrast' and does not require prior authorisation; MRI-LS-002 is the contrast study that does.",
+      "citations": [
+        {
+          "line_id": "L0035",
+          "source": "procedure_codes:MRI-LS-002",
+          "summary": "MRI-LS-002: MRI lumbar spine with contrast; contrast=yes; prior_auth=True; covered=True"
+        },
+        {
+          "line_id": "L0034",
+          "source": "procedure_codes:MRI-LS-001",
+          "summary": "MRI-LS-001: MRI lumbar spine without contrast; contrast=no; prior_auth=False; covered=True"
+        },
+        {
+          "line_id": "L0033",
+          "source": "eob:EOB-001",
+          "summary": "Claim CLM-2026-0915: MRI-LS-001 billed AUD 850.00; paid AUD 0.00; patient responsibility AUD 850.00"
+        },
+        {
+          "line_id": "L0028",
+          "source": "medical_records:REC-016",
+          "summary": "GP consultation 2026-08-12: Twelve weeks of conservative therapy completed; MRI requested; specialist referral requested."
+        },
+        {
+          "line_id": "L0041",
+          "source": "icd10_codes:M51.1",
+          "summary": "M51.1: Lumbar and other intervertebral disc disorders with radiculopathy"
+        },
+        {
+          "line_id": "L0040",
+          "source": "icd10_codes:M54.5",
+          "summary": "M54.5: Low back pain, unspecified"
+        }
+      ],
+      "missing_document": null,
+      "confidence": 0.99
+    },
+    {
+      "kind": "denial_reason",
+      "reason_id": "DEN-03",
+      "reason_text": "No conservative treatment is documented.",
+      "status": "rebutted",
+      "cited_clause": "POL-5.1",
+      "cited_code": "MRI-LS-001",
+      "cited_diagnosis": "M54.5",
+      "finding_kind": "medical_necessity",
+      "rebuttal": "The record documents 12 physiotherapy sessions over 12 weeks and an NSAID trial. POL-5.1 requires at least six weeks of conservative therapy.",
+      "citations": [
+        {
+          "line_id": "L0004",
+          "source": "policy_clauses:POL-5.1",
+          "summary": "POL-5.1 Medical necessity: Lumbar imaging is medically necessary when the clinical record documents failed conservative treatment for at least six weeks, including physiotherapy or analgesic medication."
+        },
+        {
+          "line_id": "L0028",
+          "source": "medical_records:REC-016",
+          "summary": "GP consultation 2026-08-12: Twelve weeks of conservative therapy completed; MRI requested; specialist referral requested."
+        },
+        {
+          "line_id": "L0017",
+          "source": "medical_records:REC-005",
+          "summary": "GP review 2026-06-10: NSAID trial commenced; continue physiotherapy."
+        },
+        {
+          "line_id": "L0014",
+          "source": "medical_records:REC-002",
+          "summary": "Physiotherapy 2026-05-20: Physiotherapy session 1 of 12; home exercise programme."
+        },
+        {
+          "line_id": "L0015",
+          "source": "medical_records:REC-003",
+          "summary": "Physiotherapy 2026-05-27: Physiotherapy session 2 of 12; home exercise programme."
+        },
+        {
+          "line_id": "L0016",
+          "source": "medical_records:REC-004",
+          "summary": "Physiotherapy 2026-06-03: Physiotherapy session 3 of 12; home exercise programme."
+        },
+        {
+          "line_id": "L0018",
+          "source": "medical_records:REC-006",
+          "summary": "Physiotherapy 2026-06-10: Physiotherapy session 4 of 12; home exercise programme."
+        },
+        {
+          "line_id": "L0019",
+          "source": "medical_records:REC-007",
+          "summary": "Physiotherapy 2026-06-17: Physiotherapy session 5 of 12; home exercise programme."
+        },
+        {
+          "line_id": "L0020",
+          "source": "medical_records:REC-008",
+          "summary": "Physiotherapy 2026-06-24: Physiotherapy session 6 of 12; home exercise programme."
+        },
+        {
+          "line_id": "L0021",
+          "source": "medical_records:REC-009",
+          "summary": "Physiotherapy 2026-07-01: Physiotherapy session 7 of 12; home exercise programme."
+        },
+        {
+          "line_id": "L0023",
+          "source": "medical_records:REC-011",
+          "summary": "Physiotherapy 2026-07-08: Physiotherapy session 8 of 12; home exercise programme."
+        },
+        {
+          "line_id": "L0024",
+          "source": "medical_records:REC-012",
+          "summary": "Physiotherapy 2026-07-15: Physiotherapy session 9 of 12; home exercise programme."
+        },
+        {
+          "line_id": "L0025",
+          "source": "medical_records:REC-013",
+          "summary": "Physiotherapy 2026-07-22: Physiotherapy session 10 of 12; home exercise programme."
+        },
+        {
+          "line_id": "L0026",
+          "source": "medical_records:REC-014",
+          "summary": "Physiotherapy 2026-07-29: Physiotherapy session 11 of 12; home exercise programme."
+        },
+        {
+          "line_id": "L0027",
+          "source": "medical_records:REC-015",
+          "summary": "Physiotherapy 2026-08-05: Physiotherapy session 12 of 12; home exercise programme."
+        }
+      ],
+      "missing_document": null,
+      "confidence": 0.99
+    },
+    {
+      "kind": "denial_reason",
+      "reason_id": "DEN-04",
+      "reason_text": "A specialist referral letter was not provided.",
+      "status": "missing",
+      "cited_clause": "POL-6.4",
+      "cited_code": "MRI-LS-001",
+      "cited_diagnosis": "M54.5",
+      "finding_kind": "missing_document",
+      "rebuttal": "The document is genuinely missing; the appeal is conditional until it is supplied.",
+      "citations": [
+        {
+          "line_id": "L0006",
+          "source": "policy_clauses:POL-6.4",
+          "summary": "POL-6.4 Claim documentation: An imaging claim must include a specialist referral letter dated after the imaging order. Without it the claim is incomplete."
+        },
+        {
+          "line_id": "L0045",
+          "source": "claim_documents:DOC-003",
+          "summary": "Specialist referral letter: missing"
+        }
+      ],
+      "missing_document": "DOC-003",
+      "confidence": null
+    }
+  ],
+  "evidence": [
+    {
+      "source_table": "policy_clauses",
+      "source_row_id": "POL-4.1",
+      "date": "2026-01-01",
+      "summary": "POL-4.1 Covered imaging: MRI lumbar spine without contrast (MRI-LS-001) is covered when the member has completed at least six weeks of conservative therapy.",
+      "category": "policy",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Version 2026.1 effective 2026-01-01",
+      "payload": {
+        "clause_id": "POL-4.1",
+        "section": 4.1,
+        "title": "Covered imaging",
+        "text": "MRI lumbar spine without contrast (MRI-LS-001) is covered when the member has completed at least six weeks of conservative therapy.",
+        "applies_to": "MRI-LS-001",
+        "version": 2026.1,
+        "effective_date": "2026-01-01"
+      },
+      "line_id": "L0001",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "38837de8ccee446830d7940af279bc810917a4733e01f80b55534f3155296b28"
+    },
+    {
+      "source_table": "policy_clauses",
+      "source_row_id": "POL-4.2",
+      "date": "2026-01-01",
+      "summary": "POL-4.2 Prior authorisation: MRI lumbar spine without contrast (MRI-LS-001) does not require prior authorisation. Contrast studies (MRI-LS-002, MRI-LS-003) require prior authorisation.",
+      "category": "policy",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Version 2026.1 effective 2026-01-01",
+      "payload": {
+        "clause_id": "POL-4.2",
+        "section": 4.2,
+        "title": "Prior authorisation",
+        "text": "MRI lumbar spine without contrast (MRI-LS-001) does not require prior authorisation. Contrast studies (MRI-LS-002, MRI-LS-003) require prior authorisation.",
+        "applies_to": "MRI-LS-001;MRI-LS-002;MRI-LS-003",
+        "version": 2026.1,
+        "effective_date": "2026-01-01"
+      },
+      "line_id": "L0002",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "38837de8ccee446830d7940af279bc810917a4733e01f80b55534f3155296b28",
+      "hash": "655e8b05348305954da427a38a663dca78cb4a4e3435c0a1a5cfa689ee1d5453"
+    },
+    {
+      "source_table": "policy_clauses",
+      "source_row_id": "POL-4.3",
+      "date": "2026-01-01",
+      "summary": "POL-4.3 Experimental or investigational: The experimental exclusion applies to spinal fusion (SPINE-FUSION-001) and disc replacement. It does not apply to diagnostic MRI of the lumbar spine.",
+      "category": "policy",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Version 2026.1 effective 2026-01-01",
+      "payload": {
+        "clause_id": "POL-4.3",
+        "section": 4.3,
+        "title": "Experimental or investigational",
+        "text": "The experimental exclusion applies to spinal fusion (SPINE-FUSION-001) and disc replacement. It does not apply to diagnostic MRI of the lumbar spine.",
+        "applies_to": "SPINE-FUSION-001",
+        "version": 2026.1,
+        "effective_date": "2026-01-01"
+      },
+      "line_id": "L0003",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "655e8b05348305954da427a38a663dca78cb4a4e3435c0a1a5cfa689ee1d5453",
+      "hash": "40b872ed4ff8e7b8dfb3038c6fa288d07e2b9064e36b908d4097828ed1fde1c2"
+    },
+    {
+      "source_table": "policy_clauses",
+      "source_row_id": "POL-5.1",
+      "date": "2026-01-01",
+      "summary": "POL-5.1 Medical necessity: Lumbar imaging is medically necessary when the clinical record documents failed conservative treatment for at least six weeks, including physiotherapy or analgesic medication.",
+      "category": "policy",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Version 2026.1 effective 2026-01-01",
+      "payload": {
+        "clause_id": "POL-5.1",
+        "section": 5.1,
+        "title": "Medical necessity",
+        "text": "Lumbar imaging is medically necessary when the clinical record documents failed conservative treatment for at least six weeks, including physiotherapy or analgesic medication.",
+        "applies_to": "MRI-LS-001",
+        "version": 2026.1,
+        "effective_date": "2026-01-01"
+      },
+      "line_id": "L0004",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "40b872ed4ff8e7b8dfb3038c6fa288d07e2b9064e36b908d4097828ed1fde1c2",
+      "hash": "616314173e087e4fc3f4631ceb85b393368b4e950887164ce15725f16567664f"
+    },
+    {
+      "source_table": "policy_clauses",
+      "source_row_id": "POL-5.2",
+      "date": "2026-01-01",
+      "summary": "POL-5.2 Conservative therapy: Conservative therapy includes physiotherapy, a structured home exercise programme and analgesic medication.",
+      "category": "policy",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Version 2026.1 effective 2026-01-01",
+      "payload": {
+        "clause_id": "POL-5.2",
+        "section": 5.2,
+        "title": "Conservative therapy",
+        "text": "Conservative therapy includes physiotherapy, a structured home exercise programme and analgesic medication.",
+        "applies_to": "all",
+        "version": 2026.1,
+        "effective_date": "2026-01-01"
+      },
+      "line_id": "L0005",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "616314173e087e4fc3f4631ceb85b393368b4e950887164ce15725f16567664f",
+      "hash": "a2144b1cb27dd5a3b1a71bfe3f87c8bab2e5bd9558cc44ce0aef304cc957ca89"
+    },
+    {
+      "source_table": "policy_clauses",
+      "source_row_id": "POL-6.4",
+      "date": "2026-01-01",
+      "summary": "POL-6.4 Claim documentation: An imaging claim must include a specialist referral letter dated after the imaging order. Without it the claim is incomplete.",
+      "category": "policy",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Version 2026.1 effective 2026-01-01",
+      "payload": {
+        "clause_id": "POL-6.4",
+        "section": 6.4,
+        "title": "Claim documentation",
+        "text": "An imaging claim must include a specialist referral letter dated after the imaging order. Without it the claim is incomplete.",
+        "applies_to": "MRI-LS-001",
+        "version": 2026.1,
+        "effective_date": "2026-01-01"
+      },
+      "line_id": "L0006",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "a2144b1cb27dd5a3b1a71bfe3f87c8bab2e5bd9558cc44ce0aef304cc957ca89",
+      "hash": "84a6861f44dd127eaa2db97530a55aa507bc7e96ee783ae622975bad9da25e02"
+    },
+    {
+      "source_table": "policy_clauses",
+      "source_row_id": "POL-7.2",
+      "date": "2026-01-01",
+      "summary": "POL-7.2 Claim edits: Procedure code MRI-LS-002 (MRI with contrast) requires prior authorisation. MRI-LS-001 (without contrast) does not.",
+      "category": "policy",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Version 2026.1 effective 2026-01-01",
+      "payload": {
+        "clause_id": "POL-7.2",
+        "section": 7.2,
+        "title": "Claim edits",
+        "text": "Procedure code MRI-LS-002 (MRI with contrast) requires prior authorisation. MRI-LS-001 (without contrast) does not.",
+        "applies_to": "MRI-LS-002",
+        "version": 2026.1,
+        "effective_date": "2026-01-01"
+      },
+      "line_id": "L0007",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "84a6861f44dd127eaa2db97530a55aa507bc7e96ee783ae622975bad9da25e02",
+      "hash": "8d8531ea3c4b3ef5497847c5507b16cd0baa801a38580a3465f903dd5e587d21"
+    },
+    {
+      "source_table": "policy_clauses",
+      "source_row_id": "POL-8.1",
+      "date": "2026-01-01",
+      "summary": "POL-8.1 Internal appeal: A member may request an internal appeal within 60 days of the denial date.",
+      "category": "policy",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Version 2026.1 effective 2026-01-01",
+      "payload": {
+        "clause_id": "POL-8.1",
+        "section": 8.1,
+        "title": "Internal appeal",
+        "text": "A member may request an internal appeal within 60 days of the denial date.",
+        "applies_to": "all",
+        "version": 2026.1,
+        "effective_date": "2026-01-01"
+      },
+      "line_id": "L0008",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "8d8531ea3c4b3ef5497847c5507b16cd0baa801a38580a3465f903dd5e587d21",
+      "hash": "b4cbf718562c6c1389ba5170512ae3e0f93373976ffb86d04244a4edef255212"
+    },
+    {
+      "source_table": "policy_clauses",
+      "source_row_id": "POL-9.3",
+      "date": "2026-01-01",
+      "summary": "POL-9.3 Policy version: Version 2026.1 is effective 1 January 2026 and supersedes version 2025.3.",
+      "category": "policy",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Version 2026.1 effective 2026-01-01",
+      "payload": {
+        "clause_id": "POL-9.3",
+        "section": 9.3,
+        "title": "Policy version",
+        "text": "Version 2026.1 is effective 1 January 2026 and supersedes version 2025.3.",
+        "applies_to": "all",
+        "version": 2026.1,
+        "effective_date": "2026-01-01"
+      },
+      "line_id": "L0009",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "b4cbf718562c6c1389ba5170512ae3e0f93373976ffb86d04244a4edef255212",
+      "hash": "05d1e7c4dd9bdc6d5819021cb2a444403ebcd367c4e29840625897e5eaba39c4"
+    },
+    {
+      "source_table": "policy_clauses",
+      "source_row_id": "POL-10.1",
+      "date": "2026-01-01",
+      "summary": "POL-10.1 Definitions: A specialist referral letter is a letter from the treating specialist that recommends the imaging and is dated after the imaging order.",
+      "category": "policy",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Version 2026.1 effective 2026-01-01",
+      "payload": {
+        "clause_id": "POL-10.1",
+        "section": 10.1,
+        "title": "Definitions",
+        "text": "A specialist referral letter is a letter from the treating specialist that recommends the imaging and is dated after the imaging order.",
+        "applies_to": "all",
+        "version": 2026.1,
+        "effective_date": "2026-01-01"
+      },
+      "line_id": "L0010",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "05d1e7c4dd9bdc6d5819021cb2a444403ebcd367c4e29840625897e5eaba39c4",
+      "hash": "e52eeeb787e782a1f0de0fae79554f7350517f5b5cd1acfe62f86dfd8f84708c"
+    },
+    {
+      "source_table": "policy_clauses",
+      "source_row_id": "POL-12.4",
+      "date": "2026-01-01",
+      "summary": "POL-12.4 Clinical records: Clinical records must be dated and attributable to a treating provider.",
+      "category": "policy",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Version 2026.1 effective 2026-01-01",
+      "payload": {
+        "clause_id": "POL-12.4",
+        "section": 12.4,
+        "title": "Clinical records",
+        "text": "Clinical records must be dated and attributable to a treating provider.",
+        "applies_to": "all",
+        "version": 2026.1,
+        "effective_date": "2026-01-01"
+      },
+      "line_id": "L0011",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "e52eeeb787e782a1f0de0fae79554f7350517f5b5cd1acfe62f86dfd8f84708c",
+      "hash": "57ce7fd773efabc3e88d1a75ece6138c24c894107b73591caa7dde04e56b5466"
+    },
+    {
+      "source_table": "policy_clauses",
+      "source_row_id": "POL-13.1",
+      "date": "2026-01-01",
+      "summary": "POL-13.1 Response time: The insurer must respond to an internal appeal within 30 days of receiving it.",
+      "category": "policy",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Version 2026.1 effective 2026-01-01",
+      "payload": {
+        "clause_id": "POL-13.1",
+        "section": 13.1,
+        "title": "Response time",
+        "text": "The insurer must respond to an internal appeal within 30 days of receiving it.",
+        "applies_to": "all",
+        "version": 2026.1,
+        "effective_date": "2026-01-01"
+      },
+      "line_id": "L0012",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "57ce7fd773efabc3e88d1a75ece6138c24c894107b73591caa7dde04e56b5466",
+      "hash": "b14a6c759dff6ab9e6bd6b4c9ff4ff16242c65d50f04425abab96948c74560d2"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-001",
+      "date": "2026-05-12",
+      "summary": "GP consultation 2026-05-12: Low back pain, no red flags; referred to physiotherapy.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Pain 7/10. Commenced analgesia and physiotherapy referral.",
+      "payload": {
+        "record_type": "GP consultation",
+        "provider": "Dr Chen (GP)",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 0,
+        "summary": "Low back pain, no red flags; referred to physiotherapy."
+      },
+      "line_id": "L0013",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "b14a6c759dff6ab9e6bd6b4c9ff4ff16242c65d50f04425abab96948c74560d2",
+      "hash": "dfc3cd70969c4c8b3bd058ec8ab2777822163ef815fb37159e796932dc50757d"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-002",
+      "date": "2026-05-20",
+      "summary": "Physiotherapy 2026-05-20: Physiotherapy session 1 of 12; home exercise programme.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Attended week 1; pain improved from 7/10 to 4/10.",
+      "payload": {
+        "record_type": "Physiotherapy",
+        "provider": "Northside Physiotherapy",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 1,
+        "summary": "Physiotherapy session 1 of 12; home exercise programme."
+      },
+      "line_id": "L0014",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "dfc3cd70969c4c8b3bd058ec8ab2777822163ef815fb37159e796932dc50757d",
+      "hash": "a94071d5cbd08338328519acb08dedaa456390fb6307b636d66dfc2ab025e562"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-003",
+      "date": "2026-05-27",
+      "summary": "Physiotherapy 2026-05-27: Physiotherapy session 2 of 12; home exercise programme.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Attended week 2; pain improved from 7/10 to 4/10.",
+      "payload": {
+        "record_type": "Physiotherapy",
+        "provider": "Northside Physiotherapy",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 2,
+        "summary": "Physiotherapy session 2 of 12; home exercise programme."
+      },
+      "line_id": "L0015",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "a94071d5cbd08338328519acb08dedaa456390fb6307b636d66dfc2ab025e562",
+      "hash": "9bf8a9422389c089cdc2c0110d7aee1eee66adcf42e4f599c47f383ccd90be08"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-004",
+      "date": "2026-06-03",
+      "summary": "Physiotherapy 2026-06-03: Physiotherapy session 3 of 12; home exercise programme.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Attended week 3; pain improved from 7/10 to 4/10.",
+      "payload": {
+        "record_type": "Physiotherapy",
+        "provider": "Northside Physiotherapy",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 3,
+        "summary": "Physiotherapy session 3 of 12; home exercise programme."
+      },
+      "line_id": "L0016",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "9bf8a9422389c089cdc2c0110d7aee1eee66adcf42e4f599c47f383ccd90be08",
+      "hash": "a164873fcf0d24b9a4d0b7faef2ba70136d4810048e4b46e72dd4cf776546863"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-005",
+      "date": "2026-06-10",
+      "summary": "GP review 2026-06-10: NSAID trial commenced; continue physiotherapy.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Naproxen 500 mg twice daily for four weeks; no adverse effects.",
+      "payload": {
+        "record_type": "GP review",
+        "provider": "Dr Chen (GP)",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 3,
+        "summary": "NSAID trial commenced; continue physiotherapy."
+      },
+      "line_id": "L0017",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "a164873fcf0d24b9a4d0b7faef2ba70136d4810048e4b46e72dd4cf776546863",
+      "hash": "d4a97f90ce907996625065d73fda3b2dfdacb8bf52d7239e788ad280f501dca9"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-006",
+      "date": "2026-06-10",
+      "summary": "Physiotherapy 2026-06-10: Physiotherapy session 4 of 12; home exercise programme.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Attended week 4; pain improved from 7/10 to 4/10.",
+      "payload": {
+        "record_type": "Physiotherapy",
+        "provider": "Northside Physiotherapy",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 4,
+        "summary": "Physiotherapy session 4 of 12; home exercise programme."
+      },
+      "line_id": "L0018",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "d4a97f90ce907996625065d73fda3b2dfdacb8bf52d7239e788ad280f501dca9",
+      "hash": "cad328d55cbbf1922c599f3e1932c81c1738963b8802cd9b4a136a1f4aad50f4"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-007",
+      "date": "2026-06-17",
+      "summary": "Physiotherapy 2026-06-17: Physiotherapy session 5 of 12; home exercise programme.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Attended week 5; pain improved from 7/10 to 4/10.",
+      "payload": {
+        "record_type": "Physiotherapy",
+        "provider": "Northside Physiotherapy",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 5,
+        "summary": "Physiotherapy session 5 of 12; home exercise programme."
+      },
+      "line_id": "L0019",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "cad328d55cbbf1922c599f3e1932c81c1738963b8802cd9b4a136a1f4aad50f4",
+      "hash": "0cd087d62454144f86ed45e943e7480aba570f53f07ac288b3a3fa681799db70"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-008",
+      "date": "2026-06-24",
+      "summary": "Physiotherapy 2026-06-24: Physiotherapy session 6 of 12; home exercise programme.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Attended week 6; pain improved from 7/10 to 4/10.",
+      "payload": {
+        "record_type": "Physiotherapy",
+        "provider": "Northside Physiotherapy",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 6,
+        "summary": "Physiotherapy session 6 of 12; home exercise programme."
+      },
+      "line_id": "L0020",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "0cd087d62454144f86ed45e943e7480aba570f53f07ac288b3a3fa681799db70",
+      "hash": "e007642c75f5e0214fa64360f6119d21c4f09c96a0e3bb4e39bcf9d5e08fe45c"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-009",
+      "date": "2026-07-01",
+      "summary": "Physiotherapy 2026-07-01: Physiotherapy session 7 of 12; home exercise programme.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Attended week 7; pain improved from 7/10 to 4/10.",
+      "payload": {
+        "record_type": "Physiotherapy",
+        "provider": "Northside Physiotherapy",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 7,
+        "summary": "Physiotherapy session 7 of 12; home exercise programme."
+      },
+      "line_id": "L0021",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "e007642c75f5e0214fa64360f6119d21c4f09c96a0e3bb4e39bcf9d5e08fe45c",
+      "hash": "7397a1be83ffd52db2233489d906c51c03f403da71ad591ea03808b7bfae2a8b"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-010",
+      "date": "2026-07-01",
+      "summary": "Physiotherapy review 2026-07-01: Progress review; continue programme.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Range of motion improved; pain 5/10.",
+      "payload": {
+        "record_type": "Physiotherapy review",
+        "provider": "Northside Physiotherapy",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 7,
+        "summary": "Progress review; continue programme."
+      },
+      "line_id": "L0022",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "7397a1be83ffd52db2233489d906c51c03f403da71ad591ea03808b7bfae2a8b",
+      "hash": "b2fecb63ab77277bf441fbab00d7250ddb999df2036e82b40d2404adca1014b1"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-011",
+      "date": "2026-07-08",
+      "summary": "Physiotherapy 2026-07-08: Physiotherapy session 8 of 12; home exercise programme.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Attended week 8; pain improved from 7/10 to 4/10.",
+      "payload": {
+        "record_type": "Physiotherapy",
+        "provider": "Northside Physiotherapy",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 8,
+        "summary": "Physiotherapy session 8 of 12; home exercise programme."
+      },
+      "line_id": "L0023",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "b2fecb63ab77277bf441fbab00d7250ddb999df2036e82b40d2404adca1014b1",
+      "hash": "ff6bd834b3d91e294543cd8d518268a321200e2082f04203acc93e695c5b2e14"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-012",
+      "date": "2026-07-15",
+      "summary": "Physiotherapy 2026-07-15: Physiotherapy session 9 of 12; home exercise programme.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Attended week 9; pain improved from 7/10 to 4/10.",
+      "payload": {
+        "record_type": "Physiotherapy",
+        "provider": "Northside Physiotherapy",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 9,
+        "summary": "Physiotherapy session 9 of 12; home exercise programme."
+      },
+      "line_id": "L0024",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "ff6bd834b3d91e294543cd8d518268a321200e2082f04203acc93e695c5b2e14",
+      "hash": "fe59336cb63c979b09377562cbe7bff0486e4af00f140833a5030477fbea0208"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-013",
+      "date": "2026-07-22",
+      "summary": "Physiotherapy 2026-07-22: Physiotherapy session 10 of 12; home exercise programme.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Attended week 10; pain improved from 7/10 to 4/10.",
+      "payload": {
+        "record_type": "Physiotherapy",
+        "provider": "Northside Physiotherapy",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 10,
+        "summary": "Physiotherapy session 10 of 12; home exercise programme."
+      },
+      "line_id": "L0025",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "fe59336cb63c979b09377562cbe7bff0486e4af00f140833a5030477fbea0208",
+      "hash": "518738088100a49a7ac1daf0664936ce2cf02afa788bc3cc2f496bc4651bac96"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-014",
+      "date": "2026-07-29",
+      "summary": "Physiotherapy 2026-07-29: Physiotherapy session 11 of 12; home exercise programme.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Attended week 11; pain improved from 7/10 to 4/10.",
+      "payload": {
+        "record_type": "Physiotherapy",
+        "provider": "Northside Physiotherapy",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 11,
+        "summary": "Physiotherapy session 11 of 12; home exercise programme."
+      },
+      "line_id": "L0026",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "518738088100a49a7ac1daf0664936ce2cf02afa788bc3cc2f496bc4651bac96",
+      "hash": "3048d4bb2e1401db4ed27c6c71edfd0af54ff2a5d2495d0f64c75c51dd365635"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-015",
+      "date": "2026-08-05",
+      "summary": "Physiotherapy 2026-08-05: Physiotherapy session 12 of 12; home exercise programme.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Attended week 12; pain improved from 7/10 to 4/10.",
+      "payload": {
+        "record_type": "Physiotherapy",
+        "provider": "Northside Physiotherapy",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 12,
+        "summary": "Physiotherapy session 12 of 12; home exercise programme."
+      },
+      "line_id": "L0027",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "3048d4bb2e1401db4ed27c6c71edfd0af54ff2a5d2495d0f64c75c51dd365635",
+      "hash": "0c2a150ee6598ae207ea5e94c43895cbdf2b4694348a7c28b8f2181fefe5e89d"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-016",
+      "date": "2026-08-12",
+      "summary": "GP consultation 2026-08-12: Twelve weeks of conservative therapy completed; MRI requested; specialist referral requested.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "MRI lumbar spine without contrast ordered. Specialist letter requested the same day.",
+      "payload": {
+        "record_type": "GP consultation",
+        "provider": "Dr Chen (GP)",
+        "diagnosis_code": "M54.5",
+        "procedure_code": "MRI-LS-001",
+        "weeks_of_therapy": 12,
+        "summary": "Twelve weeks of conservative therapy completed; MRI requested; specialist referral requested."
+      },
+      "line_id": "L0028",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "0c2a150ee6598ae207ea5e94c43895cbdf2b4694348a7c28b8f2181fefe5e89d",
+      "hash": "a8e1a3737abc9dff2b520742c18913affce1085af57c336f1710552ddb01c824"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-017",
+      "date": "2026-08-20",
+      "summary": "Specialist administration 2026-08-20: Referral letter requested from the specialist; not received.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Letter still outstanding. Do not treat as present.",
+      "payload": {
+        "record_type": "Specialist administration",
+        "provider": "Ava's specialist",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 12,
+        "summary": "Referral letter requested from the specialist; not received."
+      },
+      "line_id": "L0029",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "a8e1a3737abc9dff2b520742c18913affce1085af57c336f1710552ddb01c824",
+      "hash": "93205044a138aa568a6917e1d7f9ac443dd322eb28fbbc02b3b092cd40fac6d6"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-018",
+      "date": "2026-09-02",
+      "summary": "Claims administration 2026-09-02: Claim submitted for MRI-LS-001.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Claim CLM-2026-0915 submitted.",
+      "payload": {
+        "record_type": "Claims administration",
+        "provider": "Northbridge Health",
+        "diagnosis_code": "M54.5",
+        "procedure_code": "MRI-LS-001",
+        "weeks_of_therapy": 12,
+        "summary": "Claim submitted for MRI-LS-001."
+      },
+      "line_id": "L0030",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "93205044a138aa568a6917e1d7f9ac443dd322eb28fbbc02b3b092cd40fac6d6",
+      "hash": "ad57f5897d29d30139d571819b802d85dafaaa43e430116de86fbd13c24b2dc4"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-019",
+      "date": "2026-09-15",
+      "summary": "Imaging service 2026-09-15: MRI lumbar spine without contrast performed.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Service date 15 September 2026. Billed AUD 850.",
+      "payload": {
+        "record_type": "Imaging service",
+        "provider": "Metro Imaging",
+        "diagnosis_code": "M54.5",
+        "procedure_code": "MRI-LS-001",
+        "weeks_of_therapy": 12,
+        "summary": "MRI lumbar spine without contrast performed."
+      },
+      "line_id": "L0031",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "ad57f5897d29d30139d571819b802d85dafaaa43e430116de86fbd13c24b2dc4",
+      "hash": "1061f36049e767e670d447236b4e25918755bdd525d2da9711a58ac83046089b"
+    },
+    {
+      "source_table": "medical_records",
+      "source_row_id": "REC-020",
+      "date": "2026-09-20",
+      "summary": "Specialist administration 2026-09-20: Second request for the specialist letter; still outstanding.",
+      "category": "clinical_record",
+      "verification_status": "documented",
+      "confidence": 0.9,
+      "notes": "Left voicemail. Letter not received by the appeal date.",
+      "payload": {
+        "record_type": "Specialist administration",
+        "provider": "Ava's specialist",
+        "diagnosis_code": "M54.5",
+        "procedure_code": null,
+        "weeks_of_therapy": 12,
+        "summary": "Second request for the specialist letter; still outstanding."
+      },
+      "line_id": "L0032",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "1061f36049e767e670d447236b4e25918755bdd525d2da9711a58ac83046089b",
+      "hash": "06f891b08770dc3257f4fef847fea52f1b1375fede55552a54043923e12c4914"
+    },
+    {
+      "source_table": "eob",
+      "source_row_id": "EOB-001",
+      "date": "2026-09-15",
+      "summary": "Claim CLM-2026-0915: MRI-LS-001 billed AUD 850.00; paid AUD 0.00; patient responsibility AUD 850.00",
+      "category": "insurer_record",
+      "verification_status": "documented",
+      "confidence": 0.95,
+      "notes": "Denial code N-03 on 2026-10-01",
+      "payload": {
+        "eob_id": "EOB-001",
+        "claim_id": "CLM-2026-0915",
+        "service_date": "2026-09-15",
+        "procedure_code": "MRI-LS-001",
+        "billed_amount": 850.0,
+        "allowed_amount": 0.0,
+        "paid_amount": 0.0,
+        "patient_responsibility": 850.0,
+        "denial_code": "N-03",
+        "denial_date": "2026-10-01"
+      },
+      "line_id": "L0033",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "06f891b08770dc3257f4fef847fea52f1b1375fede55552a54043923e12c4914",
+      "hash": "fb987b44e0f84fd90ab7d1826a85f07618b4e69fb354d6fe2c806d907892bfa4"
+    },
+    {
+      "source_table": "procedure_codes",
+      "source_row_id": "MRI-LS-001",
+      "date": "",
+      "summary": "MRI-LS-001: MRI lumbar spine without contrast; contrast=no; prior_auth=False; covered=True",
+      "category": "procedure_code",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Covered under POL-4.1 when conservative therapy is at least six weeks.",
+      "payload": {
+        "code": "MRI-LS-001",
+        "description": "MRI lumbar spine without contrast",
+        "contrast": "no",
+        "prior_auth_required": 0,
+        "covered": 1,
+        "notes": "Covered under POL-4.1 when conservative therapy is at least six weeks."
+      },
+      "line_id": "L0034",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "fb987b44e0f84fd90ab7d1826a85f07618b4e69fb354d6fe2c806d907892bfa4",
+      "hash": "1656a2a7626997ccd3e624f3536474108f91884cb93e717fa9325979e3fb3793"
+    },
+    {
+      "source_table": "procedure_codes",
+      "source_row_id": "MRI-LS-002",
+      "date": "",
+      "summary": "MRI-LS-002: MRI lumbar spine with contrast; contrast=yes; prior_auth=True; covered=True",
+      "category": "procedure_code",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Requires prior authorisation under POL-7.2.",
+      "payload": {
+        "code": "MRI-LS-002",
+        "description": "MRI lumbar spine with contrast",
+        "contrast": "yes",
+        "prior_auth_required": 1,
+        "covered": 1,
+        "notes": "Requires prior authorisation under POL-7.2."
+      },
+      "line_id": "L0035",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "1656a2a7626997ccd3e624f3536474108f91884cb93e717fa9325979e3fb3793",
+      "hash": "1dae3c1a26b8c1ebc989d7b4e0603c1a543e2f713e3f3d74e81544fcba3acf8b"
+    },
+    {
+      "source_table": "procedure_codes",
+      "source_row_id": "MRI-LS-003",
+      "date": "",
+      "summary": "MRI-LS-003: MRI lumbar spine with and without contrast; contrast=yes; prior_auth=True; covered=True",
+      "category": "procedure_code",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Requires prior authorisation.",
+      "payload": {
+        "code": "MRI-LS-003",
+        "description": "MRI lumbar spine with and without contrast",
+        "contrast": "yes",
+        "prior_auth_required": 1,
+        "covered": 1,
+        "notes": "Requires prior authorisation."
+      },
+      "line_id": "L0036",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "1dae3c1a26b8c1ebc989d7b4e0603c1a543e2f713e3f3d74e81544fcba3acf8b",
+      "hash": "26846978bf2f482ecb33c64af9c0cec61fe2a8707c6af0bccadcfb0905624ed1"
+    },
+    {
+      "source_table": "procedure_codes",
+      "source_row_id": "MRI-LS-004",
+      "date": "",
+      "summary": "MRI-LS-004: CT lumbar spine; contrast=no; prior_auth=False; covered=True",
+      "category": "procedure_code",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Alternative imaging.",
+      "payload": {
+        "code": "MRI-LS-004",
+        "description": "CT lumbar spine",
+        "contrast": "no",
+        "prior_auth_required": 0,
+        "covered": 1,
+        "notes": "Alternative imaging."
+      },
+      "line_id": "L0037",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "26846978bf2f482ecb33c64af9c0cec61fe2a8707c6af0bccadcfb0905624ed1",
+      "hash": "0b7687321c1500fd08c4195e29254a99068a40e9fc2676f553fb0e435037b067"
+    },
+    {
+      "source_table": "procedure_codes",
+      "source_row_id": "MRI-LS-005",
+      "date": "",
+      "summary": "MRI-LS-005: X-ray lumbar spine; contrast=no; prior_auth=False; covered=True",
+      "category": "procedure_code",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Initial imaging.",
+      "payload": {
+        "code": "MRI-LS-005",
+        "description": "X-ray lumbar spine",
+        "contrast": "no",
+        "prior_auth_required": 0,
+        "covered": 1,
+        "notes": "Initial imaging."
+      },
+      "line_id": "L0038",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "0b7687321c1500fd08c4195e29254a99068a40e9fc2676f553fb0e435037b067",
+      "hash": "be6b0ead03277a483e1d9a651ea959b1e441e0583fb1611c8c3faa52f4c5be0f"
+    },
+    {
+      "source_table": "procedure_codes",
+      "source_row_id": "SPINE-FUSION-001",
+      "date": "",
+      "summary": "SPINE-FUSION-001: Investigational spinal fusion; contrast=no; prior_auth=True; covered=False",
+      "category": "procedure_code",
+      "verification_status": "reference",
+      "confidence": 1.0,
+      "notes": "Experimental exclusion under POL-4.3.",
+      "payload": {
+        "code": "SPINE-FUSION-001",
+        "description": "Investigational spinal fusion",
+        "contrast": "no",
+        "prior_auth_required": 1,
+        "covered": 0,
+        "notes": "Experimental exclusion under POL-4.3."
+      },
+      "line_id": "L0039",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "be6b0ead03277a483e1d9a651ea959b1e441e0583fb1611c8c3faa52f4c5be0f",
+      "hash": "e97bc74e94084e0119566c2b716746b5863e5dea8a16365c8ed0c1986468a27b"
+    },
+    {
+      "source_table": "icd10_codes",
+      "source_row_id": "M54.5",
+      "date": "",
+      "summary": "M54.5: Low back pain, unspecified",
+      "category": "diagnosis_code",
+      "verification_status": "reference",
+      "confidence": 0.95,
+      "notes": "Source: ICD-10-CM (public)",
+      "payload": {
+        "code": "M54.5",
+        "description": "Low back pain, unspecified",
+        "category": "M54",
+        "source": "ICD-10-CM (public)"
+      },
+      "line_id": "L0040",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "e97bc74e94084e0119566c2b716746b5863e5dea8a16365c8ed0c1986468a27b",
+      "hash": "f8af7c2a5582f80a3bd2a8d018b9a36f418b2ebb659bd3f5dda23640e05b4a97"
+    },
+    {
+      "source_table": "icd10_codes",
+      "source_row_id": "M51.1",
+      "date": "",
+      "summary": "M51.1: Lumbar and other intervertebral disc disorders with radiculopathy",
+      "category": "diagnosis_code",
+      "verification_status": "reference",
+      "confidence": 0.95,
+      "notes": "Source: ICD-10-CM (public)",
+      "payload": {
+        "code": "M51.1",
+        "description": "Lumbar and other intervertebral disc disorders with radiculopathy",
+        "category": "M51",
+        "source": "ICD-10-CM (public)"
+      },
+      "line_id": "L0041",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "f8af7c2a5582f80a3bd2a8d018b9a36f418b2ebb659bd3f5dda23640e05b4a97",
+      "hash": "9af89982536005d39bbc2167afbc791c6b92ca760c44c42fe2f3b5e16576e6b9"
+    },
+    {
+      "source_table": "icd10_codes",
+      "source_row_id": "M54.50",
+      "date": "",
+      "summary": "M54.50: Low back pain, unspecified, site unspecified",
+      "category": "diagnosis_code",
+      "verification_status": "reference",
+      "confidence": 0.95,
+      "notes": "Source: ICD-10-CM (public)",
+      "payload": {
+        "code": "M54.50",
+        "description": "Low back pain, unspecified, site unspecified",
+        "category": "M54",
+        "source": "ICD-10-CM (public)"
+      },
+      "line_id": "L0042",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "9af89982536005d39bbc2167afbc791c6b92ca760c44c42fe2f3b5e16576e6b9",
+      "hash": "c7ccca32eb664fbfed54201bdb1f6bccb3446ddfc790e5b422efc770bb9c4ca7"
+    },
+    {
+      "source_table": "claim_documents",
+      "source_row_id": "DOC-001",
+      "date": "2026-08-12",
+      "summary": "Imaging order: present",
+      "category": "document",
+      "verification_status": "present",
+      "confidence": 1.0,
+      "notes": "MRI-LS-001 ordered by the treating GP.",
+      "payload": {
+        "document_id": "DOC-001",
+        "claim_id": "CLM-2026-0915",
+        "name": "Imaging order",
+        "required_by": "POL-4.1",
+        "status": "present",
+        "source": "medical_records:REC-017",
+        "document_date": "2026-08-12",
+        "requested_date": null,
+        "note": "MRI-LS-001 ordered by the treating GP."
+      },
+      "line_id": "L0043",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "c7ccca32eb664fbfed54201bdb1f6bccb3446ddfc790e5b422efc770bb9c4ca7",
+      "hash": "e82949a2eb16f3113a758fc4eec004ae51fc231a5a928f30e3ab7e7a26b4f65e"
+    },
+    {
+      "source_table": "claim_documents",
+      "source_row_id": "DOC-002",
+      "date": "2026-08-05",
+      "summary": "Physiotherapy notes: present",
+      "category": "document",
+      "verification_status": "present",
+      "confidence": 1.0,
+      "notes": "Twelve weekly sessions, weeks 1-12.",
+      "payload": {
+        "document_id": "DOC-002",
+        "claim_id": "CLM-2026-0915",
+        "name": "Physiotherapy notes",
+        "required_by": "POL-5.1",
+        "status": "present",
+        "source": "medical_records: physiotherapy rows (12 sessions)",
+        "document_date": "2026-08-05",
+        "requested_date": null,
+        "note": "Twelve weekly sessions, weeks 1-12."
+      },
+      "line_id": "L0044",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "e82949a2eb16f3113a758fc4eec004ae51fc231a5a928f30e3ab7e7a26b4f65e",
+      "hash": "75ee32e01e33ba855747d39a086b0e6b1b0c77bf4a4a2e4104296c74c00bcefb"
+    },
+    {
+      "source_table": "claim_documents",
+      "source_row_id": "DOC-003",
+      "date": "2026-08-20",
+      "summary": "Specialist referral letter: missing",
+      "category": "document",
+      "verification_status": "missing",
+      "confidence": 0.0,
+      "notes": "Requested from the treating specialist; not received. The appeal is conditional until it is supplied. Never fabricate it.",
+      "payload": {
+        "document_id": "DOC-003",
+        "claim_id": "CLM-2026-0915",
+        "name": "Specialist referral letter",
+        "required_by": "POL-6.4",
+        "status": "missing",
+        "source": null,
+        "document_date": null,
+        "requested_date": "2026-08-20",
+        "note": "Requested from the treating specialist; not received. The appeal is conditional until it is supplied. Never fabricate it."
+      },
+      "line_id": "L0045",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "75ee32e01e33ba855747d39a086b0e6b1b0c77bf4a4a2e4104296c74c00bcefb",
+      "hash": "6ceda794281f44934bd5fcbd8e9e75287d4f9ba70f59d9d54a7828dc3022d21f"
+    },
+    {
+      "source_table": "claim_documents",
+      "source_row_id": "DOC-004",
+      "date": "2026-10-01",
+      "summary": "Explanation of Benefits: present",
+      "category": "document",
+      "verification_status": "present",
+      "confidence": 1.0,
+      "notes": "Shows the billed code MRI-LS-001 and the zero payment.",
+      "payload": {
+        "document_id": "DOC-004",
+        "claim_id": "CLM-2026-0915",
+        "name": "Explanation of Benefits",
+        "required_by": "POL-6.4",
+        "status": "present",
+        "source": "eob:EOB-001",
+        "document_date": "2026-10-01",
+        "requested_date": null,
+        "note": "Shows the billed code MRI-LS-001 and the zero payment."
+      },
+      "line_id": "L0046",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "6ceda794281f44934bd5fcbd8e9e75287d4f9ba70f59d9d54a7828dc3022d21f",
+      "hash": "f81db984d8c887d2cf7e45d328d25c1639484567f4c6241b38fca012352c0e8d"
+    },
+    {
+      "source_table": "claim_documents",
+      "source_row_id": "DOC-005",
+      "date": "2026-09-20",
+      "summary": "Clinical notes: present",
+      "category": "document",
+      "verification_status": "present",
+      "confidence": 1.0,
+      "notes": "Dated GP, physiotherapy and specialist-admin notes.",
+      "payload": {
+        "document_id": "DOC-005",
+        "claim_id": "CLM-2026-0915",
+        "name": "Clinical notes",
+        "required_by": "POL-5.1",
+        "status": "present",
+        "source": "medical_records: all dated rows",
+        "document_date": "2026-09-20",
+        "requested_date": null,
+        "note": "Dated GP, physiotherapy and specialist-admin notes."
+      },
+      "line_id": "L0047",
+      "corroborating_sources": [],
+      "components": [],
+      "prev_hash": "f81db984d8c887d2cf7e45d328d25c1639484567f4c6241b38fca012352c0e8d",
+      "hash": "51442a3a84f4a5d43cf89254614758b9ae493fc17622539d51c18b1b34ee0ef6"
+    }
+  ],
+  "missing_documents": [
+    {
+      "document_id": "DOC-003",
+      "name": "Specialist referral letter",
+      "required_by": "POL-6.4",
+      "requested_date": "2026-08-20",
+      "note": "Requested from the treating specialist; not received. The appeal is conditional until it is supplied. Never fabricate it."
+    }
+  ],
+  "counterfactuals": [
+    {
+      "removed_source": "policy_clauses",
+      "score_before": 84,
+      "score_after": 65,
+      "score_delta": -19,
+      "bucket_after": "partial",
+      "rebutted_before": 3,
+      "rebutted_after": 2,
+      "rebutted_delta": -1,
+      "unresolved_after": 1
+    },
+    {
+      "removed_source": "medical_records",
+      "score_before": 84,
+      "score_after": 65,
+      "score_delta": -19,
+      "bucket_after": "partial",
+      "rebutted_before": 3,
+      "rebutted_after": 2,
+      "rebutted_delta": -1,
+      "unresolved_after": 1
+    },
+    {
+      "removed_source": "procedure_codes",
+      "score_before": 84,
+      "score_after": 65,
+      "score_delta": -19,
+      "bucket_after": "partial",
+      "rebutted_before": 3,
+      "rebutted_after": 2,
+      "rebutted_delta": -1,
+      "unresolved_after": 1
+    },
+    {
+      "removed_source": "eob",
+      "score_before": 84,
+      "score_after": 84,
+      "score_delta": 0,
+      "bucket_after": "solid",
+      "rebutted_before": 3,
+      "rebutted_after": 3,
+      "rebutted_delta": 0,
+      "unresolved_after": 0
+    },
+    {
+      "removed_source": "icd10_codes",
+      "score_before": 84,
+      "score_after": 65,
+      "score_delta": -19,
+      "bucket_after": "partial",
+      "rebutted_before": 3,
+      "rebutted_after": 2,
+      "rebutted_delta": -1,
+      "unresolved_after": 1
+    }
+  ],
+  "cover_letter": "I am requesting an internal appeal of Northbridge Health's denial dated 2026-10-01 for claim CLM-2026-0915. The denial gives 4 reasons; 3 are contradicted by the policy, the clinical record or the coding. The remaining reason concerns a missing required document: Specialist referral letter (DOC-003). It is listed in the checklist and will be supplied; it has not been fabricated. The evidence for each reason is indexed below.",
+  "rebuttals": [
+    {
+      "reason_id": "DEN-01",
+      "text": "The denial cites POL-4.3, the experimental exclusion. That clause applies to SPINE-FUSION-001 and states it does not apply to diagnostic MRI of the lumbar spine. POL-4.1 covers MRI-LS-001 after at least six weeks of conservative therapy."
+    },
+    {
+      "reason_id": "DEN-02",
+      "text": "The denial cites MRI-LS-002 and diagnosis M51.1. The order, the EOB and the record use MRI-LS-001 and diagnosis M54.5. MRI-LS-001 is described as 'MRI lumbar spine without contrast' and does not require prior authorisation; MRI-LS-002 is the contrast study that does."
+    },
+    {
+      "reason_id": "DEN-03",
+      "text": "The record documents 12 physiotherapy sessions over 12 weeks and an NSAID trial. POL-5.1 requires at least six weeks of conservative therapy."
+    },
+    {
+      "reason_id": "DEN-04",
+      "text": "This required document is genuinely missing from the file. It is listed in the checklist and will be supplied. It has not been fabricated."
+    }
+  ],
+  "limitations": [
+    "This packet assembles evidence for human review. It is not medical or legal advice.",
+    "It does not predict the insurer's decision; a human must review and sign it.",
+    "No missing document has been fabricated."
+  ],
+  "agent_reviews": {
+    "critic": {
+      "attacks": [
+        {
+          "claim": "The appeal is missing required document DOC-003, which is a mandatory component for conditional approval per policy Section 7.3.",
+          "evidence": "Claim record shows missing_documents: [\"DOC-003\"] and status: \"conditional\" with DEN-04 still open.",
+          "severity": "critical"
+        },
+        {
+          "claim": "Procedure code MRI-LS-001 does not match the diagnosed condition M54.5 (low back pain, unspecified) under medical necessity guidelines.",
+          "evidence": "Policy requires specific radiculopathy or neurological deficit codes (M54.1-M54.4) for lumbar MRI without contrast; M54.5 alone is insufficient.",
+          "severity": "high"
+        },
+        {
+          "claim": "The 12 physiotherapy sessions over 12 weeks fail to meet the conservative treatment prerequisite of 6 weeks minimum with documented failure.",
+          "evidence": "Records indicate therapy duration but lack documented clinical reassessment at week 6 showing no improvement, required by policy Section 4.2.",
+          "severity": "high"
+        },
+        {
+          "claim": "Diagnosis verification flag is false, indicating the diagnosis M54.5 lacks supporting imaging correlation or specialist referral documentation.",
+          "evidence": "No radiology report or neurologist/orthopedist referral in file to substantiate M54.5 as primary indication for advanced imaging.",
+          "severity": "medium"
+        }
+      ],
+      "breaks_claim": true,
+      "requery": {
+        "sql": "SELECT document_id, document_type, received_date, content_summary FROM claim_documents WHERE claim_id = 'CLM-2026-0915' AND document_type IN ('physiotherapy_reassessment', 'specialist_referral', 'radiology_report') ORDER BY received_date",
+        "action": "verify_missing_docs",
+        "why": "Confirm absence of DOC-003 and check for any late-submitted conservative treatment failure documentation or specialist referral that could satisfy medical necessity"
+      },
+      "rebuttals_needed": [
+        "Provide DOC-003 (physiotherapy week-6 reassessment showing no improvement)",
+        "Submit specialist referral (neurology/orthopedics) supporting MRI necessity",
+        "Clarify why M54.5 was used instead of radiculopathy-specific codes if neurological symptoms exist",
+        "Demonstrate policy-compliant conservative treatment failure timeline"
+      ],
+      "notes": "All four denial reasons remain valid attacks. Three were previously rebutted but the core deficiencies persist: missing DOC-003, diagnosis-procedure mismatch, insufficient conservative treatment documentation, and unverified diagnosis. The conditional status cannot be resolved without addressing these fundamental gaps."
+    },
+    "advocate": {
+      "attacks": [
+        {
+          "claim": "The appeal is missing required document DOC-003, which is a mandatory component for conditional approval per policy Section 7.3.",
+          "evidence": "Claim record shows missing_documents: [\"DOC-003\"] and status: \"conditional\" with DEN-04 still open.",
+          "severity": "critical"
+        },
+        {
+          "claim": "Procedure code MRI-LS-001 does not match the diagnosed condition M54.5 (low back pain, unspecified) under medical necessity guidelines.",
+          "evidence": "Policy requires specific radiculopathy or neurological deficit codes (M54.1-M54.4) for lumbar MRI without contrast; M54.5 alone is insufficient.",
+          "severity": "high"
+        },
+        {
+          "claim": "The 12 physiotherapy sessions over 12 weeks fail to meet the conservative treatment prerequisite of 6 weeks minimum with documented failure.",
+          "evidence": "Records indicate therapy duration but lack documented clinical reassessment at week 6 showing no improvement, required by policy Section 4.2.",
+          "severity": "high"
+        },
+        {
+          "claim": "Diagnosis verification flag is false, indicating the diagnosis M54.5 lacks supporting imaging correlation or specialist referral documentation.",
+          "evidence": "No radiology report or neurologist/orthopedist referral in file to substantiate M54.5 as primary indication for advanced imaging.",
+          "severity": "medium"
+        }
+      ],
+      "breaks_claim": true,
+      "requery": {
+        "sql": "SELECT document_id, document_type, received_date, content_summary FROM claim_documents WHERE claim_id = 'CLM-2026-0915' AND document_type IN ('physiotherapy_reassessment', 'specialist_referral', 'radiology_report') ORDER BY received_date",
+        "action": "verify_missing_docs",
+        "why": "Confirm absence of DOC-003 and check for any late-submitted conservative treatment failure documentation or specialist referral that could satisfy medical necessity"
+      },
+      "rebuttals_needed": [
+        "Provide DOC-003 (physiotherapy week-6 reassessment showing no improvement)",
+        "Submit specialist referral (neurology/orthopedics) supporting MRI necessity",
+        "Clarify why M54.5 was used instead of radiculopathy-specific codes if neurological symptoms exist",
+        "Demonstrate policy-compliant conservative treatment failure timeline"
+      ]
+    }
+  },
+  "model_routing": {
+    "planner": "meterless/auto",
+    "reconciler": "meterless/auto",
+    "critic": "nvidia/nemotron-3-ultra-550b-a55b",
+    "advocate": "nvidia/nemotron-3-ultra-550b-a55b",
+    "reporter": "meterless/auto"
+  },
+  "provenance": {
+    "algorithm": "sha256-chain-v1",
+    "genesis": "0000000000000000000000000000000000000000000000000000000000000000",
+    "head_hash": "51442a3a84f4a5d43cf89254614758b9ae493fc17622539d51c18b1b34ee0ef6",
+    "line_count": 47,
+    "canonicalisation": "json sorted keys, compact separators, UTF-8"
+  }
+}
