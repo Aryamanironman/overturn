@@ -1,0 +1,885 @@
+{
+ "source": "tts:kokoro:af_heart",
+ "precision": "tts",
+ "offset": 0,
+ "duration": 56.864,
+ "sentences": [
+  {
+   "text": "Your insurer said no.",
+   "start": 0,
+   "end": 1.241
+  },
+  {
+   "text": "Four reasons.",
+   "start": 1.491,
+   "end": 2.321
+  },
+  {
+   "text": "Three of them are wrong.",
+   "start": 2.57,
+   "end": 3.703
+  },
+  {
+   "text": "Most people can't prove what the file already says.",
+   "start": 3.953,
+   "end": 6.557
+  },
+  {
+   "text": "OVERTURN can.",
+   "start": 6.807,
+   "end": 7.75
+  },
+  {
+   "text": "It reads the denial, the policy, the clinical record, and the codes.",
+   "start": 8,
+   "end": 11.777
+  },
+  {
+   "text": "It finds the contradiction.",
+   "start": 12.027,
+   "end": 13.423
+  },
+  {
+   "text": "It re-queries the source.",
+   "start": 13.672,
+   "end": 14.918
+  },
+  {
+   "text": "It shows its work.",
+   "start": 15.168,
+   "end": 16.182
+  },
+  {
+   "text": "No dashboard.",
+   "start": 16.432,
+   "end": 17.366
+  },
+  {
+   "text": "No score without a citation.",
+   "start": 17.616,
+   "end": 19.309
+  },
+  {
+   "text": "Every claim resolves to a row.",
+   "start": 19.559,
+   "end": 21.216
+  },
+  {
+   "text": "Seven sources, one data path: Zetaris.",
+   "start": 21.466,
+   "end": 24.231
+  },
+  {
+   "text": "Five agents: plan, reconcile, attack, defend, report.",
+   "start": 24.481,
+   "end": 28.026
+  },
+  {
+   "text": "A deterministic score.",
+   "start": 28.276,
+   "end": 29.56
+  },
+  {
+   "text": "A tamper-evident ledger.",
+   "start": 29.81,
+   "end": 31.21
+  },
+  {
+   "text": "A human reviews it.",
+   "start": 31.459,
+   "end": 32.643
+  },
+  {
+   "text": "A human signs it.",
+   "start": 32.894,
+   "end": 34.004
+  },
+  {
+   "text": "OVERTURN does the reading.",
+   "start": 34.253,
+   "end": 35.61
+  },
+  {
+   "text": "And the one document that's missing?",
+   "start": 35.86,
+   "end": 37.572
+  },
+  {
+   "text": "It won't invent it.",
+   "start": 37.822,
+   "end": 38.83
+  },
+  {
+   "text": "It tells you to get it.",
+   "start": 39.081,
+   "end": 40.246
+  },
+  {
+   "text": "Eighty-four out of one hundred.",
+   "start": 40.496,
+   "end": 41.998
+  },
+  {
+   "text": "Solid.",
+   "start": 42.248,
+   "end": 42.833
+  },
+  {
+   "text": "Conditional.",
+   "start": 43.083,
+   "end": 43.827
+  },
+  {
+   "text": "Send the letter, and it's one hundred.",
+   "start": 44.077,
+   "end": 45.848
+  },
+  {
+   "text": "One worker.",
+   "start": 46.098,
+   "end": 46.899
+  },
+  {
+   "text": "One denial.",
+   "start": 47.149,
+   "end": 47.959
+  },
+  {
+   "text": "One document a human can send.",
+   "start": 48.209,
+   "end": 50.284
+  },
+  {
+   "text": "Built with Zetaris, Meterless, and NVIDIA Nemotron.",
+   "start": 50.534,
+   "end": 53.662
+  },
+  {
+   "text": "OVERTURN.",
+   "start": 53.912,
+   "end": 54.655
+  },
+  {
+   "text": "The denial, answered with evidence.",
+   "start": 54.905,
+   "end": 56.865
+  }
+ ],
+ "words": [
+  {
+   "word": "Your",
+   "start": 0,
+   "end": 0.207
+  },
+  {
+   "word": "insurer",
+   "start": 0.207,
+   "end": 0.827
+  },
+  {
+   "word": "said",
+   "start": 0.827,
+   "end": 1.034
+  },
+  {
+   "word": "no",
+   "start": 1.034,
+   "end": 1.241
+  },
+  {
+   "word": "Four",
+   "start": 1.491,
+   "end": 1.767
+  },
+  {
+   "word": "reasons",
+   "start": 1.767,
+   "end": 2.321
+  },
+  {
+   "word": "Three",
+   "start": 2.57,
+   "end": 2.759
+  },
+  {
+   "word": "of",
+   "start": 2.759,
+   "end": 2.948
+  },
+  {
+   "word": "them",
+   "start": 2.948,
+   "end": 3.137
+  },
+  {
+   "word": "are",
+   "start": 3.137,
+   "end": 3.514
+  },
+  {
+   "word": "wrong",
+   "start": 3.514,
+   "end": 3.703
+  },
+  {
+   "word": "Most",
+   "start": 3.953,
+   "end": 4.127
+  },
+  {
+   "word": "people",
+   "start": 4.127,
+   "end": 4.474
+  },
+  {
+   "word": "can't",
+   "start": 4.474,
+   "end": 4.821
+  },
+  {
+   "word": "prove",
+   "start": 4.821,
+   "end": 5.168
+  },
+  {
+   "word": "what",
+   "start": 5.168,
+   "end": 5.342
+  },
+  {
+   "word": "the",
+   "start": 5.342,
+   "end": 5.515
+  },
+  {
+   "word": "file",
+   "start": 5.515,
+   "end": 5.863
+  },
+  {
+   "word": "already",
+   "start": 5.863,
+   "end": 6.383
+  },
+  {
+   "word": "says",
+   "start": 6.383,
+   "end": 6.557
+  },
+  {
+   "word": "OVERTURN",
+   "start": 6.807,
+   "end": 7.514
+  },
+  {
+   "word": "can",
+   "start": 7.514,
+   "end": 7.75
+  },
+  {
+   "word": "It",
+   "start": 8,
+   "end": 8.176
+  },
+  {
+   "word": "reads",
+   "start": 8.176,
+   "end": 8.351
+  },
+  {
+   "word": "the",
+   "start": 8.351,
+   "end": 8.527
+  },
+  {
+   "word": "denial",
+   "start": 8.527,
+   "end": 8.879
+  },
+  {
+   "word": "the",
+   "start": 8.879,
+   "end": 9.261
+  },
+  {
+   "word": "policy",
+   "start": 9.261,
+   "end": 9.791
+  },
+  {
+   "word": "the",
+   "start": 9.791,
+   "end": 10.194
+  },
+  {
+   "word": "clinical",
+   "start": 10.194,
+   "end": 10.72
+  },
+  {
+   "word": "record",
+   "start": 10.72,
+   "end": 11.07
+  },
+  {
+   "word": "and",
+   "start": 11.07,
+   "end": 11.247
+  },
+  {
+   "word": "the",
+   "start": 11.247,
+   "end": 11.423
+  },
+  {
+   "word": "codes",
+   "start": 11.423,
+   "end": 11.777
+  },
+  {
+   "word": "It",
+   "start": 12.027,
+   "end": 12.226
+  },
+  {
+   "word": "finds",
+   "start": 12.226,
+   "end": 12.426
+  },
+  {
+   "word": "the",
+   "start": 12.426,
+   "end": 12.625
+  },
+  {
+   "word": "contradiction",
+   "start": 12.625,
+   "end": 13.423
+  },
+  {
+   "word": "It",
+   "start": 13.672,
+   "end": 13.85
+  },
+  {
+   "word": "re-queries",
+   "start": 13.85,
+   "end": 14.384
+  },
+  {
+   "word": "the",
+   "start": 14.384,
+   "end": 14.562
+  },
+  {
+   "word": "source",
+   "start": 14.562,
+   "end": 14.918
+  },
+  {
+   "word": "It",
+   "start": 15.168,
+   "end": 15.422
+  },
+  {
+   "word": "shows",
+   "start": 15.422,
+   "end": 15.675
+  },
+  {
+   "word": "its",
+   "start": 15.675,
+   "end": 15.929
+  },
+  {
+   "word": "work",
+   "start": 15.929,
+   "end": 16.182
+  },
+  {
+   "word": "No",
+   "start": 16.432,
+   "end": 16.743
+  },
+  {
+   "word": "dashboard",
+   "start": 16.743,
+   "end": 17.366
+  },
+  {
+   "word": "No",
+   "start": 17.616,
+   "end": 17.804
+  },
+  {
+   "word": "score",
+   "start": 17.804,
+   "end": 18.18
+  },
+  {
+   "word": "without",
+   "start": 18.18,
+   "end": 18.557
+  },
+  {
+   "word": "a",
+   "start": 18.557,
+   "end": 18.745
+  },
+  {
+   "word": "citation",
+   "start": 18.745,
+   "end": 19.309
+  },
+  {
+   "word": "Every",
+   "start": 19.559,
+   "end": 20.056
+  },
+  {
+   "word": "claim",
+   "start": 20.056,
+   "end": 20.221
+  },
+  {
+   "word": "resolves",
+   "start": 20.221,
+   "end": 20.718
+  },
+  {
+   "word": "to",
+   "start": 20.718,
+   "end": 20.884
+  },
+  {
+   "word": "a",
+   "start": 20.884,
+   "end": 21.05
+  },
+  {
+   "word": "row",
+   "start": 21.05,
+   "end": 21.216
+  },
+  {
+   "word": "Seven",
+   "start": 21.466,
+   "end": 21.865
+  },
+  {
+   "word": "sources",
+   "start": 21.865,
+   "end": 22.264
+  },
+  {
+   "word": "one",
+   "start": 22.264,
+   "end": 22.661
+  },
+  {
+   "word": "data",
+   "start": 22.661,
+   "end": 23.058
+  },
+  {
+   "word": "path",
+   "start": 23.058,
+   "end": 23.627
+  },
+  {
+   "word": "Zetaris",
+   "start": 23.627,
+   "end": 24.231
+  },
+  {
+   "word": "Five",
+   "start": 24.481,
+   "end": 24.912
+  },
+  {
+   "word": "agents",
+   "start": 24.912,
+   "end": 25.61
+  },
+  {
+   "word": "plan",
+   "start": 25.61,
+   "end": 25.841
+  },
+  {
+   "word": "reconcile",
+   "start": 25.841,
+   "end": 26.703
+  },
+  {
+   "word": "attack",
+   "start": 26.703,
+   "end": 27.144
+  },
+  {
+   "word": "defend",
+   "start": 27.144,
+   "end": 27.585
+  },
+  {
+   "word": "report",
+   "start": 27.585,
+   "end": 28.026
+  },
+  {
+   "word": "A",
+   "start": 28.276,
+   "end": 28.437
+  },
+  {
+   "word": "deterministic",
+   "start": 28.437,
+   "end": 29.239
+  },
+  {
+   "word": "score",
+   "start": 29.239,
+   "end": 29.56
+  },
+  {
+   "word": "A",
+   "start": 29.81,
+   "end": 29.985
+  },
+  {
+   "word": "tamper-evident",
+   "start": 29.985,
+   "end": 30.86
+  },
+  {
+   "word": "ledger",
+   "start": 30.86,
+   "end": 31.21
+  },
+  {
+   "word": "A",
+   "start": 31.459,
+   "end": 31.657
+  },
+  {
+   "word": "human",
+   "start": 31.657,
+   "end": 32.051
+  },
+  {
+   "word": "reviews",
+   "start": 32.051,
+   "end": 32.446
+  },
+  {
+   "word": "it",
+   "start": 32.446,
+   "end": 32.643
+  },
+  {
+   "word": "A",
+   "start": 32.894,
+   "end": 33.116
+  },
+  {
+   "word": "human",
+   "start": 33.116,
+   "end": 33.56
+  },
+  {
+   "word": "signs",
+   "start": 33.56,
+   "end": 33.782
+  },
+  {
+   "word": "it",
+   "start": 33.782,
+   "end": 34.004
+  },
+  {
+   "word": "OVERTURN",
+   "start": 34.253,
+   "end": 34.835
+  },
+  {
+   "word": "does",
+   "start": 34.835,
+   "end": 35.029
+  },
+  {
+   "word": "the",
+   "start": 35.029,
+   "end": 35.222
+  },
+  {
+   "word": "reading",
+   "start": 35.222,
+   "end": 35.61
+  },
+  {
+   "word": "And",
+   "start": 35.86,
+   "end": 36.015
+  },
+  {
+   "word": "the",
+   "start": 36.015,
+   "end": 36.171
+  },
+  {
+   "word": "one",
+   "start": 36.171,
+   "end": 36.482
+  },
+  {
+   "word": "document",
+   "start": 36.482,
+   "end": 36.949
+  },
+  {
+   "word": "that's",
+   "start": 36.949,
+   "end": 37.261
+  },
+  {
+   "word": "missing",
+   "start": 37.261,
+   "end": 37.572
+  },
+  {
+   "word": "It",
+   "start": 37.822,
+   "end": 37.99
+  },
+  {
+   "word": "won't",
+   "start": 37.99,
+   "end": 38.326
+  },
+  {
+   "word": "invent",
+   "start": 38.326,
+   "end": 38.662
+  },
+  {
+   "word": "it",
+   "start": 38.662,
+   "end": 38.83
+  },
+  {
+   "word": "It",
+   "start": 39.081,
+   "end": 39.275
+  },
+  {
+   "word": "tells",
+   "start": 39.275,
+   "end": 39.469
+  },
+  {
+   "word": "you",
+   "start": 39.469,
+   "end": 39.663
+  },
+  {
+   "word": "to",
+   "start": 39.663,
+   "end": 39.857
+  },
+  {
+   "word": "get",
+   "start": 39.857,
+   "end": 40.051
+  },
+  {
+   "word": "it",
+   "start": 40.051,
+   "end": 40.246
+  },
+  {
+   "word": "Eighty-four",
+   "start": 40.496,
+   "end": 40.997
+  },
+  {
+   "word": "out",
+   "start": 40.997,
+   "end": 41.163
+  },
+  {
+   "word": "of",
+   "start": 41.163,
+   "end": 41.33
+  },
+  {
+   "word": "one",
+   "start": 41.33,
+   "end": 41.664
+  },
+  {
+   "word": "hundred",
+   "start": 41.664,
+   "end": 41.998
+  },
+  {
+   "word": "Solid",
+   "start": 42.248,
+   "end": 42.833
+  },
+  {
+   "word": "Conditional",
+   "start": 43.083,
+   "end": 43.827
+  },
+  {
+   "word": "Send",
+   "start": 44.077,
+   "end": 44.253
+  },
+  {
+   "word": "the",
+   "start": 44.253,
+   "end": 44.429
+  },
+  {
+   "word": "letter",
+   "start": 44.429,
+   "end": 44.781
+  },
+  {
+   "word": "and",
+   "start": 44.964,
+   "end": 45.09
+  },
+  {
+   "word": "it's",
+   "start": 45.09,
+   "end": 45.343
+  },
+  {
+   "word": "one",
+   "start": 45.343,
+   "end": 45.595
+  },
+  {
+   "word": "hundred",
+   "start": 45.595,
+   "end": 45.848
+  },
+  {
+   "word": "One",
+   "start": 46.098,
+   "end": 46.498
+  },
+  {
+   "word": "worker",
+   "start": 46.498,
+   "end": 46.899
+  },
+  {
+   "word": "One",
+   "start": 47.149,
+   "end": 47.554
+  },
+  {
+   "word": "denial",
+   "start": 47.554,
+   "end": 47.959
+  },
+  {
+   "word": "One",
+   "start": 48.209,
+   "end": 48.59
+  },
+  {
+   "word": "document",
+   "start": 48.59,
+   "end": 49.332
+  },
+  {
+   "word": "a",
+   "start": 49.332,
+   "end": 49.522
+  },
+  {
+   "word": "human",
+   "start": 49.522,
+   "end": 49.903
+  },
+  {
+   "word": "can",
+   "start": 49.903,
+   "end": 50.094
+  },
+  {
+   "word": "send",
+   "start": 50.094,
+   "end": 50.284
+  },
+  {
+   "word": "Built",
+   "start": 50.534,
+   "end": 50.742
+  },
+  {
+   "word": "with",
+   "start": 50.742,
+   "end": 50.949
+  },
+  {
+   "word": "Zetaris",
+   "start": 50.949,
+   "end": 51.572
+  },
+  {
+   "word": "Meterless",
+   "start": 51.572,
+   "end": 52.421
+  },
+  {
+   "word": "and",
+   "start": 52.421,
+   "end": 52.628
+  },
+  {
+   "word": "NVIDIA",
+   "start": 52.628,
+   "end": 53.042
+  },
+  {
+   "word": "Nemotron",
+   "start": 53.042,
+   "end": 53.662
+  },
+  {
+   "word": "OVERTURN",
+   "start": 53.912,
+   "end": 54.655
+  },
+  {
+   "word": "The",
+   "start": 54.905,
+   "end": 55.113
+  },
+  {
+   "word": "denial",
+   "start": 55.113,
+   "end": 55.528
+  },
+  {
+   "word": "answered",
+   "start": 55.732,
+   "end": 56.157
+  },
+  {
+   "word": "with",
+   "start": 56.157,
+   "end": 56.298
+  },
+  {
+   "word": "evidence",
+   "start": 56.298,
+   "end": 56.865
+  }
+ ]
+}

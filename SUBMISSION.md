@@ -69,7 +69,7 @@ Paste the contents of `SUBMISSION_COPY.md` (four paragraphs, ~450 words).
 https://github.com/Aryamanironman/overturn
 
 **Demo video**
-`video/out/overturn-demo.mp4` — 2 min 20 s, 1920×1080, 30 fps, H.264/AAC.
+`video/out/overturn-demo.mp4` — 1 min 00 s, 1920×1080, 30 fps, H.264/AAC.
 Upload to YouTube (unlisted or public) and paste the link here.
 
 **Slide deck**
