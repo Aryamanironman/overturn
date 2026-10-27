@@ -1,0 +1,5 @@
+reason_id,reason_text,cited_clause,cited_code,cited_diagnosis,denial_date,reviewer,appeal_deadline
+DEN-01,The service is experimental or investigational.,POL-4.3,MRI-LS-001,M54.5,2026-10-01,Northbridge Health Claims Review,2026-11-30
+DEN-02,Procedure code MRI-LS-002 (MRI with contrast) is not covered without prior authorisation.,POL-7.2,MRI-LS-002,M51.1,2026-10-01,Northbridge Health Claims Review,2026-11-30
+DEN-03,No conservative treatment is documented.,POL-5.1,MRI-LS-001,M54.5,2026-10-01,Northbridge Health Claims Review,2026-11-30
+DEN-04,A specialist referral letter was not provided.,POL-6.4,MRI-LS-001,M54.5,2026-10-01,Northbridge Health Claims Review,2026-11-30

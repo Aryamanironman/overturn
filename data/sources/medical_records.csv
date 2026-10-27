@@ -1,0 +1,21 @@
+record_id,record_date,record_type,provider,summary,diagnosis_code,procedure_code,weeks_of_therapy,notes
+REC-001,2026-05-12,GP consultation,Dr Chen (GP),"Low back pain, no red flags; referred to physiotherapy.",M54.5,,0,Pain 7/10. Commenced analgesia and physiotherapy referral.
+REC-002,2026-05-20,Physiotherapy,Northside Physiotherapy,Physiotherapy session 1 of 12; home exercise programme.,M54.5,,1,Attended week 1; pain improved from 7/10 to 4/10.
+REC-003,2026-05-27,Physiotherapy,Northside Physiotherapy,Physiotherapy session 2 of 12; home exercise programme.,M54.5,,2,Attended week 2; pain improved from 7/10 to 4/10.
+REC-004,2026-06-03,Physiotherapy,Northside Physiotherapy,Physiotherapy session 3 of 12; home exercise programme.,M54.5,,3,Attended week 3; pain improved from 7/10 to 4/10.
+REC-005,2026-06-10,GP review,Dr Chen (GP),NSAID trial commenced; continue physiotherapy.,M54.5,,3,Naproxen 500 mg twice daily for four weeks; no adverse effects.
+REC-006,2026-06-10,Physiotherapy,Northside Physiotherapy,Physiotherapy session 4 of 12; home exercise programme.,M54.5,,4,Attended week 4; pain improved from 7/10 to 4/10.
+REC-007,2026-06-17,Physiotherapy,Northside Physiotherapy,Physiotherapy session 5 of 12; home exercise programme.,M54.5,,5,Attended week 5; pain improved from 7/10 to 4/10.
+REC-008,2026-06-24,Physiotherapy,Northside Physiotherapy,Physiotherapy session 6 of 12; home exercise programme.,M54.5,,6,Attended week 6; pain improved from 7/10 to 4/10.
+REC-009,2026-07-01,Physiotherapy,Northside Physiotherapy,Physiotherapy session 7 of 12; home exercise programme.,M54.5,,7,Attended week 7; pain improved from 7/10 to 4/10.
+REC-010,2026-07-01,Physiotherapy review,Northside Physiotherapy,Progress review; continue programme.,M54.5,,7,Range of motion improved; pain 5/10.
+REC-011,2026-07-08,Physiotherapy,Northside Physiotherapy,Physiotherapy session 8 of 12; home exercise programme.,M54.5,,8,Attended week 8; pain improved from 7/10 to 4/10.
+REC-012,2026-07-15,Physiotherapy,Northside Physiotherapy,Physiotherapy session 9 of 12; home exercise programme.,M54.5,,9,Attended week 9; pain improved from 7/10 to 4/10.
+REC-013,2026-07-22,Physiotherapy,Northside Physiotherapy,Physiotherapy session 10 of 12; home exercise programme.,M54.5,,10,Attended week 10; pain improved from 7/10 to 4/10.
+REC-014,2026-07-29,Physiotherapy,Northside Physiotherapy,Physiotherapy session 11 of 12; home exercise programme.,M54.5,,11,Attended week 11; pain improved from 7/10 to 4/10.
+REC-015,2026-08-05,Physiotherapy,Northside Physiotherapy,Physiotherapy session 12 of 12; home exercise programme.,M54.5,,12,Attended week 12; pain improved from 7/10 to 4/10.
+REC-016,2026-08-12,GP consultation,Dr Chen (GP),Twelve weeks of conservative therapy completed; MRI requested; specialist referral requested.,M54.5,MRI-LS-001,12,MRI lumbar spine without contrast ordered. Specialist letter requested the same day.
+REC-017,2026-08-20,Specialist administration,Ava's specialist,Referral letter requested from the specialist; not received.,M54.5,,12,Letter still outstanding. Do not treat as present.
+REC-018,2026-09-02,Claims administration,Northbridge Health,Claim submitted for MRI-LS-001.,M54.5,MRI-LS-001,12,Claim CLM-2026-0915 submitted.
+REC-019,2026-09-15,Imaging service,Metro Imaging,MRI lumbar spine without contrast performed.,M54.5,MRI-LS-001,12,Service date 15 September 2026. Billed AUD 850.
+REC-020,2026-09-20,Specialist administration,Ava's specialist,Second request for the specialist letter; still outstanding.,M54.5,,12,Left voicemail. Letter not received by the appeal date.

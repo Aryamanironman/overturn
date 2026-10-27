@@ -1,0 +1,3 @@
+# Optional recorded Nightshift responses for replay mode.
+# One JSON object per line, keyed by "<agent>|<kind>|<iteration>".
+# SAMPLE_MODE uses the deterministic agent implementations when a key is absent.

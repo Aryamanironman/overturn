@@ -1,0 +1,55 @@
+{
+  "claim_id": "CLM-2026-0915",
+  "documents": [
+    {
+      "document_id": "DOC-001",
+      "name": "Imaging order",
+      "required_by": "POL-4.1",
+      "status": "present",
+      "source": "medical_records:REC-017",
+      "document_date": "2026-08-12",
+      "requested_date": "",
+      "note": "MRI-LS-001 ordered by the treating GP."
+    },
+    {
+      "document_id": "DOC-002",
+      "name": "Physiotherapy notes",
+      "required_by": "POL-5.1",
+      "status": "present",
+      "source": "medical_records: physiotherapy rows (12 sessions)",
+      "document_date": "2026-08-05",
+      "requested_date": "",
+      "note": "Twelve weekly sessions, weeks 1-12."
+    },
+    {
+      "document_id": "DOC-003",
+      "name": "Specialist referral letter",
+      "required_by": "POL-6.4",
+      "status": "missing",
+      "source": "",
+      "document_date": "",
+      "requested_date": "2026-08-20",
+      "note": "Requested from the treating specialist; not received. The appeal is conditional until it is supplied. Never fabricate it."
+    },
+    {
+      "document_id": "DOC-004",
+      "name": "Explanation of Benefits",
+      "required_by": "POL-6.4",
+      "status": "present",
+      "source": "eob:EOB-001",
+      "document_date": "2026-10-01",
+      "requested_date": "",
+      "note": "Shows the billed code MRI-LS-001 and the zero payment."
+    },
+    {
+      "document_id": "DOC-005",
+      "name": "Clinical notes",
+      "required_by": "POL-5.1",
+      "status": "present",
+      "source": "medical_records: all dated rows",
+      "document_date": "2026-09-20",
+      "requested_date": "",
+      "note": "Dated GP, physiotherapy and specialist-admin notes."
+    }
+  ]
+}

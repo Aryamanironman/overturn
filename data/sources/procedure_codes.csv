@@ -1,0 +1,7 @@
+code,description,contrast,prior_auth_required,covered,notes
+MRI-LS-001,MRI lumbar spine without contrast,no,0,1,Covered under POL-4.1 when conservative therapy is at least six weeks.
+MRI-LS-002,MRI lumbar spine with contrast,yes,1,1,Requires prior authorisation under POL-7.2.
+MRI-LS-003,MRI lumbar spine with and without contrast,yes,1,1,Requires prior authorisation.
+MRI-LS-004,CT lumbar spine,no,0,1,Alternative imaging.
+MRI-LS-005,X-ray lumbar spine,no,0,1,Initial imaging.
+SPINE-FUSION-001,Investigational spinal fusion,no,1,0,Experimental exclusion under POL-4.3.

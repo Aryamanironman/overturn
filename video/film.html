@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en" data-composition-id="overturn-film" data-fps="30" data-width="1920" data-height="1080">
+<head>
+<meta charset="utf-8">
+<title>OVERTURN — the denial, answered</title>
+<style>
+@font-face{font-family:"Archivo";src:url("assets/fonts/ArchivoBlack-400.woff") format("woff");font-weight:400;font-style:normal}
+@font-face{font-family:"Inter";src:url("assets/fonts/Inter-var.woff") format("woff");font-weight:100 900;font-style:normal}
+:root{
+  --paper:#eef1f4; --ink:#10202b; --muted:#5f6d79; --rule:#c4cfd8;
+  --blue:#1d4ed8; --green:#1b6b4a; --amber:#8a5a12; --red:#b3261e;
+  --sans:"Inter",ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --display:"Archivo",ui-sans-serif,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--paper)}
+#film{position:relative;width:1920px;height:1080px;overflow:hidden;color:var(--ink);font-family:var(--sans);background:var(--paper)}
+.grid{position:absolute;inset:0;background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);background-size:48px 48px;opacity:.30}
+.grid::after{content:"";position:absolute;inset:0;background:radial-gradient(1200px 700px at 18% 0%,#ffffffdd,transparent 62%),radial-gradient(900px 600px at 100% 100%,#dfe7ee99,transparent 60%)}
+#spine{position:absolute;left:140px;right:140px;bottom:148px;height:2px;background:var(--rule);transform-origin:0 50%;z-index:4}
+#spine-label{position:absolute;right:140px;bottom:118px;font:600 13px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);z-index:4}
+#scenes{position:absolute;inset:0;z-index:2}
+.scene{position:absolute;inset:0;padding:128px 140px 210px;display:flex;flex-direction:column;justify-content:center;opacity:0;visibility:hidden}
+.scene.ink{color:var(--paper)}
+.wash{position:absolute;inset:0;z-index:-1;background:var(--paper);opacity:0}
+.wash.amber{background:var(--amber);opacity:.075}
+.wash.cobalt{background:var(--blue);opacity:.075}
+.wash.red{background:var(--red);opacity:.07}
+.wash.green{background:var(--green);opacity:.07}
+.wash.ink{background:var(--ink);opacity:1}
+.frame{position:relative;z-index:1;max-width:1680px}
+.verdict-stamp{position:absolute;right:20px;bottom:-155px;border:5px solid var(--green);color:var(--green);
+  padding:2px 16px 8px;font:400 56px/0.95 var(--display);letter-spacing:-.02em;transform:rotate(-2deg);
+  opacity:0;visibility:hidden;z-index:2}
+.evidence-strip{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;max-width:1560px}
+.evidence-chip{font:17px/1.4 var(--mono);color:#344551;background:#ffffff;border:1px solid var(--rule);padding:8px 12px}
+.agent-loop{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:28px}
+.agent-chip{font:600 19px/1.3 var(--sans);border:1px solid var(--rule);background:#fff;padding:10px 15px;color:#344551}
+.agent-chip[data-agent="Reconciler"]{border-color:var(--blue);color:var(--blue)}
+.agent-chip[data-agent="Critic"]{border-color:var(--amber);color:var(--amber)}
+.agent-chip[data-agent="Advocate"]{border-color:var(--red);color:var(--red)}
+.agent-chip[data-agent="Reporter"]{border-color:var(--green);color:var(--green)}
+.arrow{font:21px var(--mono);color:var(--muted)}
+.loopback{font:14px/1.3 var(--mono);color:var(--blue);border:1px dashed var(--blue);padding:8px 10px}
+.sponsors{display:flex;gap:26px;flex-wrap:wrap;margin-top:34px;font:600 16px/1.3 var(--sans);
+  letter-spacing:.16em;text-transform:uppercase;color:#8fa0ad}
+#case-tag{position:absolute;top:48px;right:140px;font:600 14px/1.4 var(--sans);
+  letter-spacing:.16em;text-transform:uppercase;color:var(--muted);z-index:5}
+
+.kicker{font:600 19px/1.4 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:26px}
+.scene.ink .kicker{color:#a9b7c2}
+.big{margin:0;font:700 124px/0.98 var(--sans);letter-spacing:-.055em}
+.line{display:block;overflow:hidden;padding-bottom:.09em}
+.line .inner{display:block;transform:translateY(110%)}
+#scene-ava .line .inner{transform:none}
+.name{font:400 300px/0.88 var(--display);letter-spacing:-.04em;margin:0}
+.num{font:400 360px/0.86 var(--display);letter-spacing:-.06em;margin:0}
+.num.red{color:var(--red)}
+.sub{margin:20px 0 0;font:400 46px/1.25 var(--sans);color:#394956;max-width:1400px}
+.scene.ink .sub{color:#c7d2da}
+.note{margin:26px 0 0;font:400 30px/1.45 var(--sans);color:var(--muted);max-width:1200px}
+.cols{display:grid;grid-template-columns:1fr 2px 1fr;gap:54px;align-items:end;max-width:1620px}
+.seam{height:240px;background:var(--rule);align-self:end;opacity:.8}
+.label{font:600 18px/1.4 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.value{font:400 190px/0.9 var(--display);letter-spacing:-.055em}
+.value.amber{color:var(--amber)}
+.value.dim{opacity:.34}
+.delta{font:400 120px/1 var(--display);color:var(--amber);letter-spacing:-.04em;margin:18px 0 0}
+.question-state{position:relative}
+.state-b{position:absolute;left:0;top:0;width:100%;opacity:0;visibility:hidden}
+.state-b .big{font-size:150px}
+.stamp{display:inline-block;margin:28px 0 0;border:8px solid var(--red);color:var(--red);padding:6px 26px 12px;font:400 170px/0.95 var(--display);letter-spacing:-.03em;opacity:0;visibility:hidden;transform-origin:20% 50%}
+.strike-wrap{position:relative;display:inline-block}
+.strike{position:absolute;left:-.02em;right:-.02em;top:52%;height:10px;background:var(--red);transform:scaleX(0);transform-origin:0 50%}
+.score-wrap{position:relative;width:520px;height:520px;display:flex;align-items:center;justify-content:center}
+.score-wrap svg{position:absolute;inset:0;width:520px;height:520px;transform:rotate(-90deg)}
+.score{position:relative;font:400 330px/1 var(--display);letter-spacing:-.05em}
+.mark{font:400 230px/0.9 var(--display);letter-spacing:.02em;margin:0}
+#signature-story{position:absolute;right:140px;bottom:70px;font:500 13px/1.4 var(--sans);letter-spacing:.06em;color:var(--muted);opacity:0;visibility:hidden;z-index:5}
+.scene.ink #signature-story{color:#8fa0ad}
+#scene-ava{opacity:1;visibility:visible}
+#scene-letter .note{opacity:0;visibility:hidden}
+@media (max-width:900px){
+  html,body,#film{width:100vw;height:56.25vw}
+  .scene{padding:6.6vw 7.3vw 10.9vw}
+  .kicker{font-size:1vw;margin-bottom:1.4vw}
+  .big{font-size:6.45vw}
+  .name{font-size:15.6vw}
+  .num{font-size:18.7vw}
+  .sub{font-size:2.4vw;margin-top:1vw}
+  .note{font-size:1.56vw}
+  .label{font-size:.94vw;margin-bottom:.8vw}
+  .value{font-size:9.9vw}
+  .delta{font-size:6.25vw}
+  .stamp{font-size:8.85vw;border-width:.42vw;padding:.3vw 1.35vw .6vw}
+  .score-wrap,.score-wrap svg{width:27vw;height:27vw}
+  .score{font-size:17vw}
+  .mark{font-size:12vw}
+}
+</style>
+</head>
+<body>
+<div id="film">
+  <div class="grid"></div>
+  <div id="spine"></div>
+  <div id="spine-label">ONE EVIDENCE FILE</div>
+  <div id="case-tag">CASE CLM-2026-0915 · NORTHBRIDGE HEALTH</div>
+  <div id="scenes"></div>
+  <div id="signature-story">Made with huashu-motion</div>
+</div>
+
+<script src="vendor/gsap.min.js"></script>
+<script src="film-data.js"></script>
+<script>
+const S = window.STORY;
+const scenes = S.scenes;
+const $ = (s) => document.querySelector(s);
+const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const WASH = {
+  paper:'#eef1f4', amber:'#8a5a12', cobalt:'#1d4ed8', red:'#b3261e', green:'#1b6b4a', ink:'#10202b'
+};
+
+function lines(text, cls='big'){
+  return String(text || '').split('\n').map(line =>
+    `<span class="line"><span class="inner">${esc(line)}</span></span>`
+  ).join('');
+}
+
+function renderScene(scene){
+  const ink = scene.wash === 'ink' ? ' ink' : '';
+  const kicker = scene.kicker ? `<div class="kicker">${esc(scene.kicker)}</div>` : '';
+  const evidence = (scene.evidence || []).map(item => `<span class="evidence-chip">${esc(item)}</span>`).join('');
+  const evidenceHtml = evidence ? `<div class="evidence-strip">${evidence}</div>` : '';
+  const stampHtml = scene.stamp ? `<div class="verdict-stamp">${esc(scene.stamp)}</div>` : '';
+  const sponsorItems = (scene.sponsors || []).map(item => `<span>${esc(item)}</span>`).join('');
+  const sponsorsHtml = sponsorItems ? `<div class="sponsors">${sponsorItems}</div>` : '';
+  let body = '';
+  switch (scene.layout) {
+    case 'name':
+      body = `<h1 class="name"><span class="line"><span class="inner">${esc(scene.big)}</span></span></h1>
+              ${scene.sub ? `<p class="sub">${esc(scene.sub)}</p>` : ''}`;
+      break;
+    case 'lines':
+      body = `<h2 class="big">${lines(scene.big)}</h2>${scene.sub ? `<p class="sub">${esc(scene.sub)}</p>` : ''}`;
+      break;
+    case 'loop':
+      body = `<h2 class="big">${lines(scene.big)}</h2>
+        <div class="agent-loop">
+          <span class="agent-chip" data-agent="Planner">Planner</span><span class="arrow">→</span>
+          <span class="agent-chip" data-agent="Reconciler">Reconciler</span><span class="arrow">→</span>
+          <span class="agent-chip" data-agent="Critic">Critic</span><span class="arrow">→</span>
+          <span class="agent-chip" data-agent="Advocate">Advocate</span><span class="arrow">→</span>
+          <span class="agent-chip" data-agent="Reporter">Reporter</span>
+          <span class="loopback">re-query ⟲</span>
+        </div>`;
+      break;
+    case 'number':
+      body = `<div class="num">${esc(scene.big)}</div>${scene.sub ? `<p class="sub">${esc(scene.sub)}</p>` : ''}`;
+      break;
+    case 'bank':
+      body = `<div class="cols">
+        <div class="col"><div class="label">${esc(scene.leftLabel)}</div><div class="value dim">${esc(scene.leftValue)}</div></div>
+        <div class="seam"></div>
+        <div class="col"><div class="label">${esc(scene.rightLabel)}</div><div class="value amber">${esc(scene.rightValue)}</div></div>
+      </div>${scene.sub ? `<p class="sub">${esc(scene.sub)}</p>` : ''}`;
+      break;
+    case 'question':
+      body = `<div class="question-state">
+        <div class="state-a"><h2 class="big">${lines(scene.big)}</h2></div>
+        <div class="state-b"><h2 class="big">${lines(scene.second)}</h2></div>
+      </div>`;
+      break;
+    case 'conflict':
+      body = `<div class="cols">
+        <div class="col"><div class="label">${esc(scene.leftLabel)}</div><div class="value">${esc(scene.leftValue)}</div></div>
+        <div class="seam"></div>
+        <div class="col"><div class="label">${esc(scene.rightLabel)}</div><div class="value amber">${esc(scene.rightValue)}</div></div>
+      </div>
+      <div class="delta">${esc(scene.delta)}</div>
+      ${scene.sub ? `<p class="sub">${esc(scene.sub)}</p>` : ''}`;
+      break;
+    case 'bigsub':
+      body = `<div class="num">${esc(scene.big)}</div>${scene.sub ? `<p class="sub">${esc(scene.sub)}</p>` : ''}`;
+      break;
+    case 'honesty':
+      body = `<div class="strike-wrap"><div class="num red">${esc(scene.big)}</div><span class="strike"></span></div>
+              ${scene.sub ? `<p class="sub">${esc(scene.sub)}</p>` : ''}
+              <div class="stamp">${esc(scene.second)}</div>
+              ${scene.note ? `<p class="note">${esc(scene.note)}</p>` : ''}`;
+      break;
+    case 'score':
+      body = `<div class="score-wrap">
+        <svg viewBox="0 0 520 520" aria-hidden="true">
+          <circle cx="260" cy="260" r="238" fill="none" stroke="#c4cfd8" stroke-width="10"/>
+          <circle id="ring-story" cx="260" cy="260" r="238" fill="none" stroke="#1b6b4a" stroke-width="10"
+                  stroke-linecap="round" stroke-dasharray="1495.4" stroke-dashoffset="1495.4"/>
+        </svg>
+        <div class="score" data-score="${esc(scene.big)}">0</div>
+      </div>
+      <p class="sub" style="color:var(--green);font-weight:700;letter-spacing:.06em">${esc(scene.sub)}</p>
+      ${scene.note ? `<p class="note">${esc(scene.note)}</p>` : ''}`;
+      break;
+    case 'mark':
+      body = `<h1 class="mark"><span class="line"><span class="inner">${esc(scene.big)}</span></span></h1>
+              ${scene.sub ? `<p class="sub">${esc(scene.sub)}</p>` : ''}`;
+      break;
+    default:
+      body = `<h2 class="big">${lines(scene.big)}</h2>`;
+  }
+  return `<section class="scene${ink}" id="scene-${scene.id}" data-wash="${scene.wash}">
+    <div class="wash ${scene.wash}"></div>
+    <div class="frame">${kicker}${body}${evidenceHtml}${stampHtml}${sponsorsHtml}</div>
+  </section>`;
+}
+
+$('#scenes').innerHTML = scenes.map(renderScene).join('');
+
+const tl = gsap.timeline({paused:true});
+window.__timelines = {'overturn-film': tl};
+window.STORY_DURATION = S.total;
+
+tl.set('#spine', {scaleX:0}, 0);
+tl.to('#spine', {scaleX:1, duration:1.7, ease:'power2.inOut'}, 0.2);
+tl.set('#signature-story', {autoAlpha:0}, 0);
+
+scenes.forEach((scene, index) => {
+  const el = document.getElementById('scene-' + scene.id);
+  const start = scene.start;
+  const voiceAt = scene.voice_start;
+  const color = scene.wash === 'ink' ? '#eef1f4' : (WASH[scene.wash] || '#c4cfd8');
+
+  if (index === 0) {
+    tl.set(el, {autoAlpha:1}, 0);
+    tl.fromTo('#scene-ava .name', {scale:0.985, opacity:1}, {scale:1, opacity:1, duration:1.4, ease:'power3.out'}, 0.05);
+  } else {
+    const prev = document.getElementById('scene-' + scenes[index - 1].id);
+    tl.to(prev, {autoAlpha:0, y:-16, duration:0.55, ease:'power2.in'}, start - 0.38);
+    tl.to(el, {autoAlpha:1, y:0, duration:0.65, ease:'power2.out'}, start);
+  }
+
+  tl.to('#spine', {backgroundColor:color, duration:0.5, ease:'power1.out'}, start);
+  tl.to('#spine-label', {color: scene.wash === 'ink' ? '#8fa0ad' : '#5f6d79', duration:0.5}, start);
+
+  const kicker = el.querySelector('.kicker');
+  if (kicker && index > 0) tl.fromTo(kicker, {autoAlpha:0, y:14}, {autoAlpha:1, y:0, duration:0.6, ease:'power2.out'}, start + 0.1);
+  const sub = el.querySelector('.sub');
+  if (sub && index > 0) tl.fromTo(sub, {autoAlpha:0, y:16}, {autoAlpha:1, y:0, duration:0.7, ease:'power2.out'}, start + 0.4);
+  const note = el.querySelector('.note');
+  if (note && scene.layout !== 'honesty') tl.fromTo(note, {autoAlpha:0, y:14}, {autoAlpha:1, y:0, duration:0.6, ease:'power2.out'}, start + 0.7);
+
+  const inners = el.querySelectorAll(scene.layout === 'question' ? '.state-a .line .inner' : '.line .inner');
+  if (index > 0 && inners.length) {
+    tl.to(inners, {y:'0%', duration:1.0, stagger:0.13, ease:'power3.out'}, start + 0.18);
+  }
+
+  const values = el.querySelectorAll('.value, .num, .delta');
+  if (index > 0 && values.length) {
+    tl.fromTo(values, {autoAlpha:0, y:24}, {autoAlpha:1, y:0, duration:0.9, stagger:0.12, ease:'power3.out'}, start + 0.2);
+  }
+
+  const chips = el.querySelectorAll('.evidence-chip');
+  if (chips.length) {
+    tl.fromTo(chips, {autoAlpha:0, y:10}, {autoAlpha:1, y:0, duration:0.45, stagger:0.08, ease:'power2.out'}, start + 0.55);
+  }
+  const stampEl = el.querySelector('.verdict-stamp');
+  if (stampEl) {
+    const stampAt = voiceAt + (scene.stampAt || 2.6);
+    tl.fromTo(stampEl, {autoAlpha:0, scale:1.35, rotation:-10},
+      {autoAlpha:1, scale:1, rotation:-2, duration:0.5, ease:'back.out(1.6)'}, stampAt);
+  }
+  if (scene.layout === 'loop') {
+    tl.fromTo(el.querySelectorAll('.agent-chip'), {autoAlpha:0, y:14},
+      {autoAlpha:1, y:0, duration:0.35, stagger:0.14, ease:'power2.out'}, start + 0.35);
+    tl.fromTo(el.querySelector('.loopback'), {autoAlpha:0, x:-12},
+      {autoAlpha:1, x:0, duration:0.45, ease:'power2.out'}, start + 1.35);
+  }
+  const sponsorEls = el.querySelectorAll('.sponsors span');
+  if (sponsorEls.length) {
+    tl.fromTo(sponsorEls, {autoAlpha:0}, {autoAlpha:1, duration:0.5, stagger:0.1}, start + 0.6);
+  }
+
+  if (scene.layout === 'question') {
+    const secondAt = voiceAt + (scene.secondAt || 2.4);
+    tl.to(el.querySelector('.state-a'), {autoAlpha:0, y:-22, duration:0.45, ease:'power2.in'}, secondAt);
+    tl.to(el.querySelector('.state-b'), {autoAlpha:1, duration:0.5, ease:'power2.out'}, secondAt + 0.18);
+    tl.to(el.querySelectorAll('.state-b .line .inner'), {y:'0%', duration:0.8, stagger:0.12, ease:'power3.out'}, secondAt + 0.2);
+  }
+
+  if (scene.layout === 'honesty') {
+    const stampAt = voiceAt + (scene.secondAt || 4.2);
+    tl.to(el.querySelector('.strike'), {scaleX:1, duration:0.45, ease:'power2.inOut'}, stampAt - 0.15);
+    tl.to(el.querySelector('.stamp'), {autoAlpha:1, scale:1, rotation:-2, duration:0.55, ease:'back.out(1.5)'}, stampAt);
+    tl.to(el.querySelector('.stamp'), {autoAlpha:1, duration:0.01}, stampAt);
+    if (el.querySelector('.note')) {
+      tl.to(el.querySelector('.note'), {autoAlpha:1, y:0, duration:0.5, ease:'power2.out'}, stampAt + 0.35);
+    }
+  }
+
+  if (scene.layout === 'score') {
+    const ring = el.querySelector('#ring-story');
+    if (ring) tl.to(ring, {attr:{'stroke-dashoffset':1495.4 * 0.15}, duration:1.8, ease:'power2.out'}, start + 0.35);
+    const scoreEl = el.querySelector('.score');
+    const target = Number(scene.big);
+    if (scoreEl && target) {
+      const counter = {v:0};
+      tl.to(counter, {v:target, duration:1.3, ease:'power2.out',
+        onUpdate: () => { scoreEl.textContent = String(Math.round(counter.v)); }}, start + 0.4);
+    }
+  }
+
+  if (scene.layout === 'mark') {
+    tl.to('#case-tag', {autoAlpha:0, duration:0.4}, start);
+    tl.to('#signature-story', {autoAlpha:1, duration:0.7, ease:'power2.out'}, S.total - 1.35);
+  }
+});
+
+tl.to({}, {duration:1.0}, S.total - 1.0);
+
+function seek(t){
+  tl.seek(clamp(t, 0, S.total), false);
+}
+window.seek = seek;
+
+window.addEventListener('load', () => {
+  seek(0);
+  window.__storyReady = true;
+});
+</script>
+</body>
+</html>
