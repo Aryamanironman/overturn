@@ -1,0 +1,14 @@
+This is OVERTURN. It answers a health-insurance denial with evidence. This is the system running.
+Ava is thirty-four. Northbridge Health denied her lumbar MRI. Four reasons. Three are contradicted by the file.
+Every fact comes through one door: Zetaris. Seven tables: policy, denial, medical record, benefits, procedure codes, claim documents and diagnosis codes.
+A planner queries. A reconciler builds the ledger. A critic attacks it. An advocate argues the insurer's side. Either can force a re-query. A deterministic scorer grades it, and a reporter writes the packet.
+One command runs the loop. This run is sample mode: same control flow, deterministic stubs, SQLite mirror. Every step is traced.
+Reason one: they call the MRI experimental. The clause they cite excludes spinal fusion, not diagnostic imaging. The clause that applies covers this scan. Rebutted.
+Reason two: they cite the contrast study, which needs prior authorisation. The order and the record use the non-contrast code. Code mismatch. Rebutted.
+Reason three: no conservative treatment documented. The record shows twelve physiotherapy sessions over twelve weeks. The policy asks for six. Rebutted.
+Reason four: a specialist letter is missing. It is genuinely missing. OVERTURN names the exact document and refuses to invent it. The appeal is conditional, not perfect.
+Forty-seven evidence lines. Each carries its source row, its status, and a SHA-256 hash chained to the line before it. Change one row and the chain breaks.
+Remove a source and the score tells you what it was worth. Pull the policy, the record, or the codes, and eighty-four drops to sixty-five.
+Zetaris is the only data path: one tool, run SQL. Meterless H-MEM remembers the case across runs. The World Model is the shared ledger. Nightshift is the primary model provider, with critic and advocate pinned to NVIDIA Nemotron.
+The output is one document a human can send: cover letter, four cited rebuttals, evidence map, and one action left — get the letter.
+Eighty-four. Solid. Conditional. Supply the letter, and it becomes one hundred. The denial, answered.
